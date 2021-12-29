@@ -1,0 +1,26 @@
+name: Build Artifact
+
+on:
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Checkout GitHub Action Repo
+        uses: actions/checkout@v2
+        with:
+          repository: valitydev/action-jdk-build
+          ref: v1.0.17
+          path: .github/actions/action-jdk-build
+
+      - name: Run Build Java
+        uses: ./.github/actions/action-jdk-build
+        with:
+          github-pat: '${{ secrets.GH_PACKAGES_RO_PAT }}'
+          github-user: 'strug'

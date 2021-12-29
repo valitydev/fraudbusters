@@ -1,0 +1,46 @@
+name: Deploy Docker Image
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'main'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Checkout GitHub Action JDK Build Repo
+        uses: actions/checkout@v2
+        with:
+          repository: valitydev/action-jdk-build
+          ref: v1.0.17
+          path: .github/actions/action-jdk-build
+
+      - name: Checkout GitHub Action Deploy Docker Repo
+        uses: actions/checkout@v2
+        with:
+          repository: valitydev/action-deploy-docker
+          ref: v1.0.13
+          path: .github/actions/action-deploy-docker
+
+      - name: Run Build Java
+        uses: ./.github/actions/action-jdk-build
+        with:
+          github-pat: '${{ secrets.GH_PACKAGES_RO_PAT }}'
+          github-user: 'strug'
+
+      - name: Deploy image
+        uses: ./.github/actions/action-deploy-docker
+        with:
+          registry-username: ${{ github.actor }}
+          registry-access-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
