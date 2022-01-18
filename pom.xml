@@ -96,8 +96,11 @@
         <!--rbk libs-->
         <dependency>
             <groupId>com.rbkmoney</groupId>
-            <artifactId>spring-boot-starter-metrics-statsd</artifactId>
-            <version>1.1.3</version>
+            <artifactId>custom-metrics-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rbkmoney</groupId>
+            <artifactId>custom-actuator-endpoints</artifactId>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney.logback</groupId>
