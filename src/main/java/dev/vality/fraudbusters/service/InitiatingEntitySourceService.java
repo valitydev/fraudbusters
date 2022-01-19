@@ -1,0 +1,29 @@
+package dev.vality.fraudbusters.service;
+
+import dev.vality.damsel.fraudbusters.ReferenceInfo;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class InitiatingEntitySourceService {
+
+    private final KafkaTemplate<String, ReferenceInfo> kafkaUnknownInitiatingEntityTemplate;
+
+    @Value("${kafka.topic.unknown-initiating-entity}")
+    private String topic;
+
+    public void sendToSource(ReferenceInfo referenceInfo) {
+        try {
+            log.info("Got a new entity ('{}'). We should try to create a default template.", referenceInfo);
+            kafkaUnknownInitiatingEntityTemplate.send(topic, referenceInfo);
+            log.info("New entity with successfully send to source entity ('{}')", referenceInfo);
+        } catch (Exception e) {
+            log.error("Could send referenceInfo: {} to topic: {}", referenceInfo, topic, e);
+        }
+    }
+}

@@ -1,5 +1,5 @@
-## @vtlvariable name="chargeback" type="com.rbkmoney.fraudbusters.domain.dgraph.common.DgraphChargeback"
-## @vtlvariable name="constants" type="com.rbkmoney.fraudbusters.constant.DgraphPaymentUpsertConstants"
+## @vtlvariable name="chargeback" type="dev.vality.fraudbusters.domain.dgraph.common.DgraphChargeback"
+## @vtlvariable name="constants" type="dev.vality.fraudbusters.constant.DgraphPaymentUpsertConstants"
 #set ($paymentId = $!chargeback.paymentId)
 #set ($cardToken = $!chargeback.cardToken)
 #set ($fingerprint = $!chargeback.fingerprint)
@@ -9,7 +9,8 @@
 #set ($ip = $!chargeback.operationIp)
 #set ($bin = $!chargeback.bin)
 #set ($payment = $!chargeback.payment)
-uid($constants.tokenUid) <dgraph.type> "$!cardToken.type" .
+uid($constants.tokenUid)
+<dgraph.type> "$!cardToken.type" .
 uid($constants.tokenUid) <tokenId> "$!cardToken.tokenId" .
 uid($constants.tokenUid) <bin> uid($constants.binUid) .
 uid($constants.tokenUid) <maskedPan> "$!cardToken.maskedPan" .

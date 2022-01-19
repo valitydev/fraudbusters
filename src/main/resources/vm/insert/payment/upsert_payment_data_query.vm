@@ -1,15 +1,15 @@
-## @vtlvariable name="payment" type="com.rbkmoney.fraudbusters.domain.dgraph.common.DgraphPayment"
-## @vtlvariable name="constants" type="com.rbkmoney.fraudbusters.constant.DgraphPaymentUpsertConstants"
+## @vtlvariable name="payment" type="dev.vality.fraudbusters.domain.dgraph.common.DgraphPayment"
+## @vtlvariable name="constants" type="dev.vality.fraudbusters.constant.DgraphPaymentUpsertConstants"
 query all() {
-    getTokenUid(func: type(Token)) @filter(eq(tokenId, "$payment.cardToken.tokenId")) {
-        $constants.tokenUid as uid
-    }
+getTokenUid(func: type(Token)) @filter(eq(tokenId, "$payment.cardToken.tokenId")) {
+$constants.tokenUid as uid
+}
 
-    getCurrencyUid(func: type(Currency)) @filter(eq(currencyCode, "$payment.currency.currencyCode")) {
-        $constants.currencyUid as uid
-    }
+getCurrencyUid(func: type(Currency)) @filter(eq(currencyCode, "$payment.currency.currencyCode")) {
+$constants.currencyUid as uid
+}
 
-    getPartyUid(func: type(Party)) @filter(eq(partyId, "$payment.party.partyId")) {
+getPartyUid(func: type(Party)) @filter(eq(partyId, "$payment.party.partyId")) {
         $constants.partyUid as uid
     }
 

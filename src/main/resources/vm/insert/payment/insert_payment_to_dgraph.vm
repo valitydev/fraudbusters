@@ -1,5 +1,5 @@
-## @vtlvariable name="payment" type="com.rbkmoney.fraudbusters.domain.dgraph.common.DgraphPayment"
-## @vtlvariable name="constants" type="com.rbkmoney.fraudbusters.constant.DgraphPaymentUpsertConstants"
+## @vtlvariable name="payment" type="dev.vality.fraudbusters.domain.dgraph.common.DgraphPayment"
+## @vtlvariable name="constants" type="dev.vality.fraudbusters.constant.DgraphPaymentUpsertConstants"
 #set ($paymentId = $!payment.paymentId)
 #set ($cardToken = $!payment.cardToken)
 #set ($fingerprint = $!payment.fingerprint)
@@ -9,7 +9,8 @@
 #set ($bin = $!payment.bin)
 #set ($country = $!payment.country)
 #set ($ip = $!payment.operationIp)
-uid($constants.tokenUid) <dgraph.type> "$!cardToken.type" .
+uid($constants.tokenUid)
+<dgraph.type> "$!cardToken.type" .
 uid($constants.tokenUid) <tokenId> "$!cardToken.tokenId" .
 uid($constants.tokenUid) <bin> uid($constants.binUid) .
 uid($constants.tokenUid) <maskedPan> "$!cardToken.maskedPan" .
