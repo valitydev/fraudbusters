@@ -14,13 +14,6 @@ jobs:
 
       - name: Checkout GitHub Action Repo
         uses: actions/checkout@v2
-        with:
-          repository: valitydev/action-jdk-build
-          ref: v1.0.17
-          path: .github/actions/action-jdk-build
 
       - name: Run Build Java
-        uses: ./.github/actions/action-jdk-build
-        with:
-          github-pat: '${{ secrets.GH_PACKAGES_RO_PAT }}'
-          github-user: 'strug'
+        uses: valitydev/action-jdk-build@v0.0.7
