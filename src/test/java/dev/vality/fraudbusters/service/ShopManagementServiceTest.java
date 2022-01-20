@@ -9,7 +9,6 @@ import dev.vality.fraudbusters.repository.clickhouse.impl.AggregationGeneralRepo
 import dev.vality.fraudbusters.repository.clickhouse.impl.FraudResultRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -54,7 +53,6 @@ public class ShopManagementServiceTest {
 
     @Test
     public void testIsNewShop() {
-        MockitoAnnotations.initMocks(this);
         when(fraudResultRepository.countOperationByField(anyString(), anyString(), anyLong(), anyLong())).thenReturn(0);
         shopManagementService.isNewShop("s1");
         verify(fraudResultRepository).countOperationByField(anyString(), anyString(), anyLong(), anyLong());
