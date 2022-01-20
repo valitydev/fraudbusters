@@ -7,6 +7,7 @@ import dev.vality.damsel.domain.*;
 import dev.vality.damsel.fraudbusters.ClientInfo;
 import dev.vality.damsel.fraudbusters.*;
 import dev.vality.damsel.payment_processing.*;
+import dev.vality.damsel.proxy_inspector.Invoice;
 import dev.vality.damsel.proxy_inspector.InvoicePayment;
 import dev.vality.damsel.proxy_inspector.Party;
 import dev.vality.damsel.proxy_inspector.Shop;
@@ -80,7 +81,7 @@ public class BeanUtil {
                                 new CurrencyRef("RUB")
                         )
                 ),
-                new dev.vality.damsel.proxy_inspector.Invoice(
+                new Invoice(
                         "iId",
                         TypeUtil.temporalToString(Instant.now()),
                         "",
@@ -102,7 +103,7 @@ public class BeanUtil {
         ));
     }
 
-    public static dev.vality.damsel.domain.PaymentTool createPaymentTool() {
+    public static PaymentTool createPaymentTool() {
         PaymentTool paymentTool = new PaymentTool();
         paymentTool.setBankCard(createBankCard());
         return paymentTool;
@@ -215,7 +216,7 @@ public class BeanUtil {
 
     @NotNull
     public static InvoiceCreated createInvoiceCreate(String sourceId) {
-        dev.vality.damsel.domain.Invoice invoice = new dev.vality.damsel.domain.Invoice();
+        var invoice = new dev.vality.damsel.domain.Invoice();
 
         invoice.setId(sourceId);
         invoice.setOwnerId("owner_id");
@@ -503,8 +504,8 @@ public class BeanUtil {
         );
     }
 
-    private static dev.vality.damsel.fraudbusters.ClientInfo createEmail() {
-        return new dev.vality.damsel.fraudbusters.ClientInfo()
+    private static ClientInfo createEmail() {
+        return new ClientInfo()
                 .setEmail(EMAIL)
                 .setFingerprint("fingerprint")
                 .setIp("123.123.123.123");
