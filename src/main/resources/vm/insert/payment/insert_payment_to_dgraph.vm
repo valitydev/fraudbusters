@@ -9,8 +9,7 @@
 #set ($bin = $!payment.bin)
 #set ($country = $!payment.country)
 #set ($ip = $!payment.operationIp)
-uid($constants.tokenUid)
-<dgraph.type> "$!cardToken.type" .
+uid($constants.tokenUid) <dgraph.type> "$!cardToken.type" .
 uid($constants.tokenUid) <tokenId> "$!cardToken.tokenId" .
 uid($constants.tokenUid) <bin> uid($constants.binUid) .
 uid($constants.tokenUid) <maskedPan> "$!cardToken.maskedPan" .

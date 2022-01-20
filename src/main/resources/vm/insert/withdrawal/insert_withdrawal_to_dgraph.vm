@@ -3,20 +3,13 @@
 #set ($cardToken = $!withdrawal.cardToken)
 #set ($bin = $!withdrawal.bin)
 #set ($country = $!withdrawal.country)
-uid($constants.withdrawalUid)
-<dgraph.type> "$!withdrawal.type" .
-    uid($constants.withdrawalUid)
-<withdrawalId> "$!withdrawal.withdrawalId" .
-    uid($constants.withdrawalUid)
-<createdAt> "$!withdrawal.createdAt" .
-    uid($constants.withdrawalUid)
-<amount> "$!withdrawal.amount" .
-    uid($constants.withdrawalUid)
-<status> "$!withdrawal.status" .
-    uid($constants.withdrawalUid)
-<providerId> "$!withdrawal.providerId" .
-    uid($constants.withdrawalUid)
-<terminalId> "$!withdrawal.terminalId" .
+uid($constants.withdrawalUid) <dgraph.type> "$!withdrawal.type" .
+uid($constants.withdrawalUid) <withdrawalId> "$!withdrawal.withdrawalId" .
+uid($constants.withdrawalUid) <createdAt> "$!withdrawal.createdAt" .
+uid($constants.withdrawalUid) <amount> "$!withdrawal.amount" .
+uid($constants.withdrawalUid) <status> "$!withdrawal.status" .
+uid($constants.withdrawalUid) <providerId> "$!withdrawal.providerId" .
+uid($constants.withdrawalUid) <terminalId> "$!withdrawal.terminalId" .
 #if ($withdrawal.accountId)
 uid($constants.withdrawalUid) <accountId> "$!withdrawal.accountId" .
 uid($constants.withdrawalUid) <accountIdentity> "$!withdrawal.accountIdentity" .

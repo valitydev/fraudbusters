@@ -2,14 +2,14 @@
 ## @vtlvariable name="constants" type="dev.vality.fraudbusters.constant.DgraphPaymentUpsertConstants"
 query all() {
 
-getCurrencyUid(func: type(Currency)) @filter(eq(currencyCode, "$withdrawal.currency.currencyCode")) {
-$constants.currencyUid as uid
-}
+    getCurrencyUid(func: type(Currency)) @filter(eq(currencyCode, "$withdrawal.currency.currencyCode")) {
+        $constants.currencyUid as uid
+    }
 
 #if ($withdrawal.accountCurrency)
-getAccountCurrencyUid(func: type(Currency)) @filter(eq(currencyCode, "$withdrawal.accountCurrency.currencyCode")) {
-    $constants.accountCurrencyUid as uid
-}
+    getAccountCurrencyUid(func: type(Currency)) @filter(eq(currencyCode, "$withdrawal.accountCurrency.currencyCode")) {
+        $constants.accountCurrencyUid as uid
+    }
 
 #end
 #if ($withdrawal.cryptoWalletCurrency)
