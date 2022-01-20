@@ -18,7 +18,6 @@ public final class DgraphSchemaFieldsConstants {
             cardholderName: string .
             cardToken: uid .
             category: string .
-            category: string .
             chargebackId: string @index(hash) @upsert .
             chargebacks: [uid] .
             checkedResultsJson: string .
@@ -58,7 +57,6 @@ public final class DgraphSchemaFieldsConstants {
             payerType: string .
             paymentId: string @index(hash) @upsert .
             payments: [uid] @count .
-            paymentSystem: string .
             paymentSystem: string .
             paymentTool: string .
             providerId: string .
