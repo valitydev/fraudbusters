@@ -1,5 +1,5 @@
-## @vtlvariable name="withdrawal" type="com.rbkmoney.fraudbusters.domain.dgraph.common.DgraphWithdrawal"
-## @vtlvariable name="constants" type="com.rbkmoney.fraudbusters.constant.DgraphPaymentUpsertConstants"
+## @vtlvariable name="withdrawal" type="dev.vality.fraudbusters.domain.dgraph.common.DgraphWithdrawal"
+## @vtlvariable name="constants" type="dev.vality.fraudbusters.constant.DgraphPaymentUpsertConstants"
 #set ($cardToken = $!withdrawal.cardToken)
 #set ($bin = $!withdrawal.bin)
 #set ($country = $!withdrawal.country)

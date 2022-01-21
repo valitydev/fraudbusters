@@ -1,5 +1,5 @@
-## @vtlvariable name="refund" type="com.rbkmoney.fraudbusters.domain.dgraph.common.DgraphRefund"
-## @vtlvariable name="constants" type="com.rbkmoney.fraudbusters.constant.DgraphPaymentUpsertConstants"
+## @vtlvariable name="refund" type="dev.vality.fraudbusters.domain.dgraph.common.DgraphRefund"
+## @vtlvariable name="constants" type="dev.vality.fraudbusters.constant.DgraphPaymentUpsertConstants"
 query all() {
     getTokenUid(func: type(Token)) @filter(eq(tokenId, "$refund.cardToken.tokenId")) {
         $constants.tokenUid as uid

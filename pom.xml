@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.rbkmoney</groupId>
+        <groupId>dev.vality</groupId>
         <artifactId>service-parent-pom</artifactId>
-        <version>2.0.11</version>
+        <version>1.0.2</version>
     </parent>
 
     <name>fraudbusters</name>
@@ -24,11 +24,11 @@
         <dockerfile.registry>dr2.rbkmoney.com</dockerfile.registry>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <fraudo.version>0.2.0</fraudo.version>
-        <trusted.tokens.proto.version>1.4-0b2a8d8</trusted.tokens.proto.version>
-        <wb.list.proto.version>1.33-554d59c</wb.list.proto.version>
         <clickhouse-jdbc.version>0.3.1</clickhouse-jdbc.version>
-        <fraudbusters-proto.version>1.99-2a8f6ca</fraudbusters-proto.version>
-        <machinegun-proto.version>1.18-d814d69</machinegun-proto.version>
+        <fraudbusters-proto.version>1.102-269908f</fraudbusters-proto.version>
+        <machinegun-proto.version>1.21-e4784ab</machinegun-proto.version>
+        <trusted.tokens.proto.version>1.7-6d29f86</trusted.tokens.proto.version>
+        <wb.list.proto.version>1.44-5dbd6d4</wb.list.proto.version>
         <dgraph4j.version>21.03.1</dgraph4j.version>
         <velocity.version>2.2</velocity.version>
 
@@ -37,7 +37,8 @@
         <sonar.issue.ignore.multicriteria.e1.resourceKey>
             **/*StreamFactoryImpl.java
         </sonar.issue.ignore.multicriteria.e1.resourceKey>
-        <checkstyle.config.suppressions.path>./src/main/resources/checkstyle/checkstyle-suppressions.xml</checkstyle.config.suppressions.path>
+        <checkstyle.config.suppressions.path>./src/main/resources/checkstyle/checkstyle-suppressions.xml
+        </checkstyle.config.suppressions.path>
     </properties>
     <dependencies>
         <!--spring-->
@@ -93,11 +94,14 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--rbk libs-->
+        <!--rbk&valityDev libs-->
         <dependency>
             <groupId>com.rbkmoney</groupId>
-            <artifactId>spring-boot-starter-metrics-statsd</artifactId>
-            <version>1.1.3</version>
+            <artifactId>custom-metrics-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rbkmoney</groupId>
+            <artifactId>custom-actuator-endpoints</artifactId>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney.logback</groupId>
@@ -117,15 +121,16 @@
             <artifactId>serializer</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>damsel</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>mamsel</artifactId>
+            <version>0.2.0</version>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney.woody</groupId>
+            <groupId>dev.vality.woody</groupId>
             <artifactId>woody-thrift</artifactId>
         </dependency>
         <dependency>
@@ -133,26 +138,22 @@
             <artifactId>kafka-common-lib</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>fraudbusters-proto</artifactId>
             <version>${fraudbusters-proto.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>machinegun-proto</artifactId>
             <version>${machinegun-proto.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
-            <artifactId>custom-actuator-endpoints</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>wb-list-proto</artifactId>
             <version>${wb.list.proto.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>trusted-tokens-proto</artifactId>
             <version>${trusted.tokens.proto.version}</version>
         </dependency>
