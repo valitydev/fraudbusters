@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.config;
 
 import dev.vality.fraudbusters.aspect.SimpleMeasureAspect;
-import io.micrometer.statsd.StatsdMeterRegistry;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 public class MetricsConfiguration {
 
     @Bean
-    SimpleMeasureAspect simpleMeasureAspect(StatsdMeterRegistry registry) {
+    SimpleMeasureAspect simpleMeasureAspect(PrometheusMeterRegistry registry) {
         return new SimpleMeasureAspect(registry);
     }
 

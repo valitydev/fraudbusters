@@ -6,9 +6,6 @@ management:
     port: '@management.port@'
   metrics:
     export:
-      statsd:
-        flavor: etsy
-        enabled: true
       resolveCountry: true
       findInListSome: true
       findInListConcrete: true
