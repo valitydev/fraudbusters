@@ -1,11 +1,11 @@
 package dev.vality.fraudbusters.converter;
 
-import com.rbkmoney.fraudo.constant.ResultStatus;
 import dev.vality.damsel.fraudbusters.Accept;
 import dev.vality.damsel.fraudbusters.CheckResult;
 import dev.vality.damsel.fraudbusters.ConcreteCheckResult;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
 import dev.vality.fraudbusters.domain.ConcreteResultModel;
+import dev.vality.fraudo.constant.ResultStatus;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

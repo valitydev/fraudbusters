@@ -1,9 +1,5 @@
 package dev.vality.fraudbusters.factory;
 
-import com.rbkmoney.fraudo.constant.ResultStatus;
-import com.rbkmoney.fraudo.model.ResultModel;
-import com.rbkmoney.fraudo.model.RuleResult;
-import com.rbkmoney.fraudo.model.TrustCondition;
 import dev.vality.damsel.base.TimestampInterval;
 import dev.vality.damsel.base.TimestampIntervalBound;
 import dev.vality.damsel.domain.*;
@@ -18,6 +14,10 @@ import dev.vality.fraudbusters.domain.*;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.service.dto.CascadingTemplateDto;
 import dev.vality.fraudbusters.util.BeanUtil;
+import dev.vality.fraudo.constant.ResultStatus;
+import dev.vality.fraudo.model.ResultModel;
+import dev.vality.fraudo.model.RuleResult;
+import dev.vality.fraudo.model.TrustCondition;
 import dev.vality.trusted.tokens.Condition;
 import dev.vality.trusted.tokens.*;
 

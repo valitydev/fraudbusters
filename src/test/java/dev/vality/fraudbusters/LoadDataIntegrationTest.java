@@ -1,12 +1,12 @@
 package dev.vality.fraudbusters;
 
-import com.rbkmoney.fraudo.constant.ResultStatus;
 import dev.vality.damsel.fraudbusters.Payment;
 import dev.vality.damsel.fraudbusters.PaymentServiceSrv;
 import dev.vality.damsel.fraudbusters.PaymentStatus;
 import dev.vality.damsel.fraudbusters.WithdrawalStatus;
 import dev.vality.fraudbusters.constant.EventSource;
 import dev.vality.fraudbusters.util.BeanUtil;
+import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.woody.thrift.impl.http.THClientBuilder;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

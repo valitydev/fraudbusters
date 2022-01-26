@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.fraud.finder;
 
-import com.rbkmoney.fraudo.finder.InListFinder;
-import com.rbkmoney.fraudo.model.Pair;
 import dev.vality.damsel.wb_list.CountInfo;
 import dev.vality.damsel.wb_list.Result;
 import dev.vality.damsel.wb_list.RowInfo;
@@ -11,6 +9,8 @@ import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.finder.PaymentInListFinderImpl;
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.repository.PaymentRepository;
+import dev.vality.fraudo.finder.InListFinder;
+import dev.vality.fraudo.model.Pair;
 import org.apache.thrift.TException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

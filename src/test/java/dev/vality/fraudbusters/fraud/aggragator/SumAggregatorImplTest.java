@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.fraud.aggragator;
 
-import com.rbkmoney.fraudo.model.TimeWindow;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.FieldModel;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
@@ -8,6 +7,7 @@ import dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse.SumAggregator
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.repository.AggregationRepository;
 import dev.vality.fraudbusters.repository.PaymentRepository;
+import dev.vality.fraudo.model.TimeWindow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

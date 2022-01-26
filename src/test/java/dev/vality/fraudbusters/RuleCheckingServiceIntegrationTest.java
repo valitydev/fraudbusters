@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters;
 
-import com.rbkmoney.fraudo.FraudoPaymentParser;
-import com.rbkmoney.fraudo.constant.ResultStatus;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
 import dev.vality.fraudbusters.factory.TestObjectsFactory;
 import dev.vality.fraudbusters.fraud.FraudContextParser;
@@ -10,6 +8,8 @@ import dev.vality.fraudbusters.pool.HistoricalPool;
 import dev.vality.fraudbusters.service.RuleCheckingServiceImpl;
 import dev.vality.fraudbusters.service.dto.CascadingTemplateDto;
 import dev.vality.fraudbusters.util.BeanUtil;
+import dev.vality.fraudo.FraudoPaymentParser;
+import dev.vality.fraudo.constant.ResultStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.junit.jupiter.api.BeforeEach;

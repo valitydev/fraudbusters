@@ -1,9 +1,9 @@
 package dev.vality.fraudbusters.dgraph.service.aggregator;
 
-import com.rbkmoney.fraudo.aggregator.UniqueValueAggregator;
 import dev.vality.fraudbusters.factory.properties.OperationProperties;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
+import dev.vality.fraudo.aggregator.UniqueValueAggregator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

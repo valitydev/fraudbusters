@@ -1,7 +1,6 @@
 package dev.vality.fraudbusters.repository;
 
 import com.rbkmoney.clickhouse.initializer.ChInitializer;
-import com.rbkmoney.fraudo.constant.ResultStatus;
 import dev.vality.damsel.geo_ip.GeoIpServiceSrv;
 import dev.vality.fraudbusters.config.ClickhouseConfig;
 import dev.vality.fraudbusters.constant.EventField;
@@ -16,6 +15,7 @@ import dev.vality.fraudbusters.repository.clickhouse.impl.FraudResultRepository;
 import dev.vality.fraudbusters.repository.clickhouse.mapper.EventMapper;
 import dev.vality.fraudbusters.util.BeanUtil;
 import dev.vality.fraudbusters.util.TimestampUtil;
+import dev.vality.fraudo.constant.ResultStatus;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;

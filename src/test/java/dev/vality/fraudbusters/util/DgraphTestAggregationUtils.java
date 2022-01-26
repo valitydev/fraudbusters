@@ -1,10 +1,10 @@
 package dev.vality.fraudbusters.util;
 
-import com.rbkmoney.fraudo.model.TimeWindow;
 import dev.vality.fraudbusters.factory.properties.OperationProperties;
 import dev.vality.fraudbusters.fraud.constant.DgraphEntity;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
+import dev.vality.fraudo.model.TimeWindow;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
