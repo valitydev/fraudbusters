@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.fraud.payment.aggregator.dgraph;
 
-import com.rbkmoney.fraudo.aggregator.UniqueValueAggregator;
-import com.rbkmoney.fraudo.model.TimeWindow;
 import dev.vality.fraudbusters.constant.PaymentStatus;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.FieldModel;
@@ -10,6 +8,8 @@ import dev.vality.fraudbusters.fraud.payment.aggregator.dgraph.query.builder.Dgr
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.fraud.payment.resolver.DgraphEntityResolver;
 import dev.vality.fraudbusters.repository.DgraphAggregatesRepository;
+import dev.vality.fraudo.aggregator.UniqueValueAggregator;
+import dev.vality.fraudo.model.TimeWindow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;

@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.fraud.payment.aggregator.dgraph;
 
-import com.rbkmoney.fraudo.model.TimeWindow;
-import com.rbkmoney.fraudo.payment.aggregator.SumPaymentAggregator;
 import dev.vality.fraudbusters.aspect.BasicMetric;
 import dev.vality.fraudbusters.constant.ChargebackStatus;
 import dev.vality.fraudbusters.constant.PaymentStatus;
@@ -12,6 +10,8 @@ import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.aggregator.dgraph.query.builder.DgraphAggregationQueryBuilderService;
 import dev.vality.fraudbusters.fraud.payment.resolver.DgraphEntityResolver;
 import dev.vality.fraudbusters.repository.DgraphAggregatesRepository;
+import dev.vality.fraudo.model.TimeWindow;
+import dev.vality.fraudo.payment.aggregator.SumPaymentAggregator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

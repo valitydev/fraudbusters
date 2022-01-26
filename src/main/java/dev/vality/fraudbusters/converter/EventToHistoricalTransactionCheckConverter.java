@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.converter;
 
-import com.rbkmoney.fraudo.constant.ResultStatus;
 import dev.vality.damsel.domain.BankCard;
 import dev.vality.damsel.domain.Cash;
 import dev.vality.damsel.domain.CurrencyRef;
@@ -8,6 +7,7 @@ import dev.vality.damsel.domain.PaymentTool;
 import dev.vality.damsel.fraudbusters.*;
 import dev.vality.fraudbusters.domain.Event;
 import dev.vality.fraudbusters.util.TimestampUtil;
+import dev.vality.fraudo.constant.ResultStatus;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.convert.converter.Converter;

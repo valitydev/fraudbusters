@@ -1,10 +1,10 @@
 package dev.vality.fraudbusters.util;
 
-import com.rbkmoney.fraudo.constant.ResultStatus;
-import com.rbkmoney.fraudo.model.ResultModel;
-import com.rbkmoney.fraudo.utils.ResultUtils;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
 import dev.vality.fraudbusters.domain.ConcreteResultModel;
+import dev.vality.fraudo.constant.ResultStatus;
+import dev.vality.fraudo.model.ResultModel;
+import dev.vality.fraudo.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;

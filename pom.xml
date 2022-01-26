@@ -23,7 +23,7 @@
         <dockerfile.base.service.tag>57e26d8ee999d7b0b50248c22afc63e6f926d276</dockerfile.base.service.tag>
         <dockerfile.registry>dr2.rbkmoney.com</dockerfile.registry>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <fraudo.version>0.2.0</fraudo.version>
+        <fraudo.version>0.3.0</fraudo.version>
         <clickhouse-jdbc.version>0.3.1</clickhouse-jdbc.version>
         <fraudbusters-proto.version>1.102-269908f</fraudbusters-proto.version>
         <machinegun-proto.version>1.21-e4784ab</machinegun-proto.version>
@@ -108,7 +108,7 @@
             <artifactId>nop-rolling</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>fraudo</artifactId>
             <version>${fraudo.version}</version>
         </dependency>

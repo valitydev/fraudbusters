@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse;
 
-import com.rbkmoney.fraudo.model.TimeWindow;
-import com.rbkmoney.fraudo.payment.aggregator.CountPaymentAggregator;
 import dev.vality.fraudbusters.aspect.BasicMetric;
 import dev.vality.fraudbusters.exception.RuleFunctionException;
 import dev.vality.fraudbusters.fraud.AggregateGroupingFunction;
@@ -12,6 +10,8 @@ import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolv
 import dev.vality.fraudbusters.repository.AggregationRepository;
 import dev.vality.fraudbusters.repository.PaymentRepository;
 import dev.vality.fraudbusters.util.TimestampUtil;
+import dev.vality.fraudo.model.TimeWindow;
+import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;

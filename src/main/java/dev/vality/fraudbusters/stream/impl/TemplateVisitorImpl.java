@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.stream.impl;
 
-import com.rbkmoney.fraudo.constant.ResultStatus;
 import dev.vality.fraudbusters.constant.TemplateLevel;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
 import dev.vality.fraudbusters.domain.ConcreteResultModel;
@@ -8,6 +7,7 @@ import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.pool.Pool;
 import dev.vality.fraudbusters.stream.TemplateVisitor;
 import dev.vality.fraudbusters.util.ReferenceKeyGenerator;
+import dev.vality.fraudo.constant.ResultStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;

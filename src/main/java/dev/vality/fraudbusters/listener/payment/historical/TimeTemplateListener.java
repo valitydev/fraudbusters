@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.listener.payment.historical;
 
-import com.rbkmoney.fraudo.FraudoPaymentParser;
 import dev.vality.damsel.fraudbusters.Command;
 import dev.vality.damsel.fraudbusters.CommandType;
 import dev.vality.damsel.fraudbusters.Template;
@@ -9,6 +8,7 @@ import dev.vality.fraudbusters.fraud.payment.validator.PaymentTemplateValidator;
 import dev.vality.fraudbusters.listener.CommandListener;
 import dev.vality.fraudbusters.pool.HistoricalPool;
 import dev.vality.fraudbusters.util.TimestampUtil;
+import dev.vality.fraudo.FraudoPaymentParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.ParserRuleContext;

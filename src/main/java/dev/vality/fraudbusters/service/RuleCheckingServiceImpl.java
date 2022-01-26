@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.service;
 
-import com.rbkmoney.fraudo.FraudoPaymentParser;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
 import dev.vality.fraudbusters.exception.InvalidTemplateException;
 import dev.vality.fraudbusters.fraud.FraudContextParser;
@@ -11,6 +10,7 @@ import dev.vality.fraudbusters.service.dto.CascadingTemplateDto;
 import dev.vality.fraudbusters.stream.impl.RuleCheckingApplierImpl;
 import dev.vality.fraudbusters.util.CheckedResultFactory;
 import dev.vality.fraudbusters.util.CheckedResultModelUtil;
+import dev.vality.fraudo.FraudoPaymentParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

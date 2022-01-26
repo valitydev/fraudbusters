@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.fraud.model;
 
-import com.rbkmoney.fraudo.model.BaseModel;
+import dev.vality.fraudo.model.BaseModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

@@ -1,9 +1,9 @@
 package dev.vality.fraudbusters;
 
-import com.rbkmoney.fraudo.payment.visitor.impl.FirstFindVisitorImpl;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.stream.StreamManager;
+import dev.vality.fraudo.payment.visitor.impl.FirstFindVisitorImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;

@@ -1,8 +1,8 @@
 package dev.vality.fraudbusters.fraud.payment;
 
-import com.rbkmoney.fraudo.FraudoPaymentLexer;
-import com.rbkmoney.fraudo.FraudoPaymentParser;
 import dev.vality.fraudbusters.fraud.FraudContextParser;
+import dev.vality.fraudo.FraudoPaymentLexer;
+import dev.vality.fraudo.FraudoPaymentParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.springframework.stereotype.Component;

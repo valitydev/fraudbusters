@@ -1,18 +1,5 @@
 package dev.vality.fraudbusters.config.payment;
 
-import com.rbkmoney.fraudo.aggregator.UniqueValueAggregator;
-import com.rbkmoney.fraudo.finder.InListFinder;
-import com.rbkmoney.fraudo.payment.aggregator.CountPaymentAggregator;
-import com.rbkmoney.fraudo.payment.aggregator.SumPaymentAggregator;
-import com.rbkmoney.fraudo.payment.factory.FraudVisitorFactoryImpl;
-import com.rbkmoney.fraudo.payment.factory.FullVisitorFactoryImpl;
-import com.rbkmoney.fraudo.payment.resolver.CustomerTypeResolver;
-import com.rbkmoney.fraudo.payment.resolver.PaymentGroupResolver;
-import com.rbkmoney.fraudo.payment.resolver.PaymentTimeWindowResolver;
-import com.rbkmoney.fraudo.payment.resolver.PaymentTypeResolver;
-import com.rbkmoney.fraudo.payment.visitor.impl.FirstFindVisitorImpl;
-import com.rbkmoney.fraudo.resolver.CountryResolver;
-import com.rbkmoney.fraudo.resolver.FieldResolver;
 import dev.vality.damsel.wb_list.WbListServiceSrv;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.localstorage.LocalResultStorageRepository;
@@ -37,6 +24,24 @@ import dev.vality.fraudbusters.repository.DgraphAggregatesRepository;
 import dev.vality.fraudbusters.repository.PaymentRepository;
 import dev.vality.fraudbusters.repository.clickhouse.impl.ChargebackRepository;
 import dev.vality.fraudbusters.repository.clickhouse.impl.RefundRepository;
+import dev.vality.fraudo.aggregator.UniqueValueAggregator;
+import dev.vality.fraudo.bundle.AggregatorBundle;
+import dev.vality.fraudo.bundle.FinderBundle;
+import dev.vality.fraudo.bundle.ResolverBundle;
+import dev.vality.fraudo.bundle.VisitorBundle;
+import dev.vality.fraudo.finder.InListFinder;
+import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
+import dev.vality.fraudo.payment.aggregator.SumPaymentAggregator;
+import dev.vality.fraudo.payment.factory.FraudVisitorFactoryImpl;
+import dev.vality.fraudo.payment.factory.FullVisitorFactoryImpl;
+import dev.vality.fraudo.payment.resolver.CustomerTypeResolver;
+import dev.vality.fraudo.payment.resolver.PaymentGroupResolver;
+import dev.vality.fraudo.payment.resolver.PaymentTimeWindowResolver;
+import dev.vality.fraudo.payment.resolver.PaymentTypeResolver;
+import dev.vality.fraudo.payment.visitor.impl.FirstFindVisitorImpl;
+import dev.vality.fraudo.resolver.CountryResolver;
+import dev.vality.fraudo.resolver.FieldResolver;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -108,18 +113,38 @@ public class PaymentFraudoConfig {
             FieldResolver<PaymentModel, PaymentCheckedField> paymentModelFieldResolver,
             PaymentTypeResolver<PaymentModel> paymentTypeResolver,
             CustomerTypeResolver<PaymentModel> customerTypeResolver) {
-        return new FraudVisitorFactoryImpl().createVisitor(
+        VisitorBundle<PaymentModel, PaymentCheckedField> visitorBundle = getVisitorBundle(
                 countAggregator,
                 sumAggregator,
                 uniqueValueAggregator,
                 countryResolver,
                 paymentInListFinder,
                 paymentModelFieldResolver,
+                paymentTypeResolver,
+                customerTypeResolver);
+        return new FraudVisitorFactoryImpl().createVisitor(visitorBundle);
+    }
+
+    @NotNull
+    private VisitorBundle<PaymentModel, PaymentCheckedField> getVisitorBundle(
+            CountPaymentAggregator<PaymentModel, PaymentCheckedField> countAggregator,
+            SumPaymentAggregator<PaymentModel, PaymentCheckedField> sumAggregator,
+            UniqueValueAggregator<PaymentModel, PaymentCheckedField> uniqueValueAggregator,
+            CountryResolver<PaymentCheckedField> countryResolver,
+            InListFinder<PaymentModel, PaymentCheckedField> paymentInListFinder,
+            FieldResolver<PaymentModel, PaymentCheckedField> paymentModelFieldResolver,
+            PaymentTypeResolver<PaymentModel> paymentTypeResolver,
+            CustomerTypeResolver<PaymentModel> customerTypeResolver) {
+        var aggregatorBundle = new AggregatorBundle<>(countAggregator, sumAggregator, uniqueValueAggregator);
+        var resolverBundle = new ResolverBundle<>(
+                countryResolver,
+                paymentModelFieldResolver,
                 new PaymentGroupResolver<>(paymentModelFieldResolver),
                 new PaymentTimeWindowResolver(),
                 paymentTypeResolver,
-                customerTypeResolver
-        );
+                customerTypeResolver);
+        var finderBundle = new FinderBundle<>(paymentInListFinder);
+        return new VisitorBundle<>(aggregatorBundle, resolverBundle, finderBundle);
     }
 
 
@@ -190,19 +215,16 @@ public class PaymentFraudoConfig {
             FieldResolver<PaymentModel, PaymentCheckedField> paymentModelFieldResolver,
             PaymentTypeResolver<PaymentModel> paymentTypeResolver,
             CustomerTypeResolver<PaymentModel> customerTypeResolver) {
-
-        return new FullVisitorFactoryImpl().createVisitor(
+        VisitorBundle<PaymentModel, PaymentCheckedField> visitorBundle = getVisitorBundle(
                 countResultAggregator,
                 sumResultAggregator,
                 uniqueValueResultAggregator,
                 countryResolver,
                 paymentInListFinder,
                 paymentModelFieldResolver,
-                new PaymentGroupResolver<>(paymentModelFieldResolver),
-                new PaymentTimeWindowResolver(),
                 paymentTypeResolver,
-                customerTypeResolver
-        );
+                customerTypeResolver);
+        return new FullVisitorFactoryImpl().createVisitor(visitorBundle);
     }
 
     @Bean
