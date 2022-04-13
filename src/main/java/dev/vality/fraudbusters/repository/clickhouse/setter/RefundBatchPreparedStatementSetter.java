@@ -1,6 +1,7 @@
 package dev.vality.fraudbusters.repository.clickhouse.setter;
 
 import com.rbkmoney.geck.common.util.TBaseUtil;
+import dev.vality.damsel.domain.PaymentSystemRef;
 import dev.vality.damsel.domain.PaymentTool;
 import dev.vality.damsel.fraudbusters.Error;
 import dev.vality.damsel.fraudbusters.*;
@@ -53,7 +54,7 @@ public class RefundBatchPreparedStatementSetter implements BatchPreparedStatemen
         ps.setString(l++, paymentTool.isSetBankCard() ? paymentTool.getBankCard().getLastDigits() : UNKNOWN);
         ps.setString(l++, paymentTool.isSetBankCard() ? paymentTool.getBankCard().getToken() : UNKNOWN);
         ps.setString(l++, paymentTool.isSetBankCard()
-                ? Optional.of(paymentTool.getBankCard().getPaymentSystem()).orElse(null).getId()
+                ? Optional.of(paymentTool.getBankCard().getPaymentSystem()).map(PaymentSystemRef::getId).orElse(null)
                 : UNKNOWN);
         ps.setString(l++, TBaseUtil.unionFieldToEnum(paymentTool, PaymentToolType.class).name());
 
