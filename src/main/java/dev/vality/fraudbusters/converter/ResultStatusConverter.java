@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.converter;
 
-import com.rbkmoney.fraudo.constant.ResultStatus;
+import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.damsel.fraudbusters.*;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

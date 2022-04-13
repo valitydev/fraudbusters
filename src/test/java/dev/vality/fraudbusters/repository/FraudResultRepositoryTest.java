@@ -1,8 +1,8 @@
 package dev.vality.fraudbusters.repository;
 
-import com.rbkmoney.clickhouse.initializer.ChInitializer;
-import com.rbkmoney.fraudo.constant.ResultStatus;
-import dev.vality.damsel.geo_ip.GeoIpServiceSrv;
+import dev.vality.clickhouse.initializer.ChInitializer;
+import dev.vality.fraudo.constant.ResultStatus;
+import dev.vality.columbus.ColumbusServiceSrv;
 import dev.vality.fraudbusters.config.ClickhouseConfig;
 import dev.vality.fraudbusters.constant.EventField;
 import dev.vality.fraudbusters.converter.FraudResultToEventConverter;
@@ -62,7 +62,7 @@ public class FraudResultRepositoryTest {
     @Autowired
     DatabasePaymentFieldResolver databasePaymentFieldResolver;
     @MockBean
-    GeoIpServiceSrv.Iface iface;
+    ColumbusServiceSrv.Iface iface;
     @Autowired
     private FraudResultRepository fraudResultRepository;
     @Autowired

@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.fraud.aggragator;
 
-import com.rbkmoney.fraudo.model.TimeWindow;
+import dev.vality.fraudo.model.TimeWindow;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.FieldModel;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;

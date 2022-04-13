@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.fraud.finder;
 
-import com.rbkmoney.fraudo.finder.InListFinder;
-import com.rbkmoney.fraudo.model.Pair;
+import dev.vality.fraudo.finder.InListFinder;
+import dev.vality.fraudo.model.Pair;
 import dev.vality.damsel.wb_list.CountInfo;
 import dev.vality.damsel.wb_list.Result;
 import dev.vality.damsel.wb_list.RowInfo;

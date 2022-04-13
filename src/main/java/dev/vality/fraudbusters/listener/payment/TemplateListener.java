@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.listener.payment;
 
-import com.rbkmoney.fraudo.FraudoPaymentParser;
+import dev.vality.fraudo.FraudoPaymentParser;
 import dev.vality.damsel.fraudbusters.Command;
 import dev.vality.damsel.fraudbusters.CommandType;
 import dev.vality.damsel.fraudbusters.Template;

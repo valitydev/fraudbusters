@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.repository.clickhouse.impl;
 
-import com.rbkmoney.clickhouse.initializer.ChInitializer;
+import dev.vality.clickhouse.initializer.ChInitializer;
 import dev.vality.fraudbusters.config.ClickhouseConfig;
 import dev.vality.fraudbusters.constant.PaymentField;
 import dev.vality.fraudbusters.constant.SortOrder;

@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.util;
 
-import com.rbkmoney.mamsel.TokenProviderUtil;
+import dev.vality.mamsel.TokenProviderUtil;
 import dev.vality.damsel.domain.BankCard;
 import dev.vality.damsel.domain.Payer;
 import org.springframework.stereotype.Component;

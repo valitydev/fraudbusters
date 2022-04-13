@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.rbkmoney.kafka.common.retry.ConfigurableRetryPolicy;
+import dev.vality.kafka.common.retry.ConfigurableRetryPolicy;
 import dev.vality.damsel.fraudbusters.Chargeback;
 import dev.vality.damsel.fraudbusters.FraudPayment;
 import dev.vality.damsel.fraudbusters.Refund;

@@ -2,8 +2,8 @@ package dev.vality.fraudbusters.dgraph;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rbkmoney.kafka.common.serialization.ThriftSerializer;
-import dev.vality.damsel.geo_ip.GeoIpServiceSrv;
+import dev.vality.kafka.common.serialization.ThriftSerializer;
+import dev.vality.columbus.ColumbusServiceSrv;
 import dev.vality.damsel.wb_list.WbListServiceSrv;
 import dev.vality.fraudbusters.FraudBustersApplication;
 import dev.vality.fraudbusters.dgraph.insert.model.Aggregates;
@@ -87,7 +87,7 @@ public abstract class DgraphAbstractIntegrationTest {
     protected DgraphClient dgraphClient;
 
     @MockBean
-    private GeoIpServiceSrv.Iface geoIpServiceSrv;
+    private ColumbusServiceSrv.Iface geoIpServiceSrv;
 
     @MockBean
     private WbListServiceSrv.Iface wbListServiceSrv;

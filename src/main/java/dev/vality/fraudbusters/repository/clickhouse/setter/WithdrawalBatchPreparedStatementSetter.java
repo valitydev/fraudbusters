@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.repository.clickhouse.setter;
 
-import com.rbkmoney.mamsel.PaymentSystemUtil;
+import dev.vality.mamsel.PaymentSystemUtil;
 import dev.vality.damsel.fraudbusters.Resource;
 import dev.vality.damsel.fraudbusters.Withdrawal;
 import dev.vality.fraudbusters.domain.TimeProperties;

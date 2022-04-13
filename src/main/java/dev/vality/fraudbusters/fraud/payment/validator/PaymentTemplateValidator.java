@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.fraud.payment.validator;
 
-import com.rbkmoney.fraudo.FraudoPaymentLexer;
-import com.rbkmoney.fraudo.FraudoPaymentParser;
+import dev.vality.fraudo.FraudoPaymentLexer;
+import dev.vality.fraudo.FraudoPaymentParser;
 import dev.vality.fraudbusters.fraud.FraudTemplateValidator;
 import dev.vality.fraudbusters.fraud.listener.ValidateErrorListener;
 import lombok.extern.slf4j.Slf4j;

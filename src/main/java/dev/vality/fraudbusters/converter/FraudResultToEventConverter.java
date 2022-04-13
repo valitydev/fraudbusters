@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.converter;
 
-import dev.vality.damsel.geo_ip.GeoIpServiceSrv;
+import dev.vality.columbus.ColumbusServiceSrv;
 import dev.vality.fraudbusters.constant.ClickhouseUtilsValue;
 import dev.vality.fraudbusters.domain.*;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
@@ -17,7 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FraudResultToEventConverter implements BatchConverter<FraudResult, Event> {
 
-    private final GeoIpServiceSrv.Iface geoIpService;
+    private final ColumbusServiceSrv.Iface geoIpService;
 
     @Override
     public Event convert(FraudResult fraudResult) {

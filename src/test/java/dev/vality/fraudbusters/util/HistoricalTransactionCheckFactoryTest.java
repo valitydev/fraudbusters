@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.util;
 
-import com.rbkmoney.fraudo.constant.ResultStatus;
+import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.damsel.fraudbusters.CheckResult;
 import dev.vality.damsel.fraudbusters.ConcreteCheckResult;
 import dev.vality.damsel.fraudbusters.Payment;

@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.config.service;
 
-import com.rbkmoney.kafka.common.serialization.ThriftSerializer;
+import dev.vality.kafka.common.serialization.ThriftSerializer;
 import dev.vality.damsel.fraudbusters.ReferenceInfo;
 import dev.vality.fraudbusters.config.properties.KafkaSslProperties;
 import dev.vality.fraudbusters.util.SslKafkaUtils;

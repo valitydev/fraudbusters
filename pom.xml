@@ -7,7 +7,7 @@
     <parent>
         <groupId>dev.vality</groupId>
         <artifactId>service-parent-pom</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.16</version>
     </parent>
 
     <name>fraudbusters</name>
@@ -16,14 +16,16 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <project.maintainer>Struzhkin Konstantin &lt;k.struzhkin@rbkmoney.com&gt;</project.maintainer>
+        <project.maintainer>Vality.Dev &lt;support@vality.dev&gt;</project.maintainer>
+        <maven.compiler.source>15</maven.compiler.source>
+        <maven.compiler.target>15</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
         <server.port>8022</server.port>
         <management.port>8023</management.port>
         <exposed.ports>${server.port} ${management.port}</exposed.ports>
-        <dockerfile.base.service.tag>57e26d8ee999d7b0b50248c22afc63e6f926d276</dockerfile.base.service.tag>
-        <dockerfile.registry>dr2.rbkmoney.com</dockerfile.registry>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <fraudo.version>0.2.0</fraudo.version>
+        <fraudo.version>0.3.0</fraudo.version>
         <clickhouse-jdbc.version>0.3.1</clickhouse-jdbc.version>
         <fraudbusters-proto.version>1.102-269908f</fraudbusters-proto.version>
         <machinegun-proto.version>1.21-e4784ab</machinegun-proto.version>
@@ -31,12 +33,9 @@
         <wb.list.proto.version>1.44-5dbd6d4</wb.list.proto.version>
         <dgraph4j.version>21.03.1</dgraph4j.version>
         <velocity.version>2.2</velocity.version>
+        <mapstruct.version>1.4.2.Final</mapstruct.version>
+        <columbus-proto.version>1.3-979c2b6</columbus-proto.version>
 
-        <sonar.issue.ignore.multicriteria>e1</sonar.issue.ignore.multicriteria>
-        <sonar.issue.ignore.multicriteria.e1.ruleKey>squid:S2095</sonar.issue.ignore.multicriteria.e1.ruleKey>
-        <sonar.issue.ignore.multicriteria.e1.resourceKey>
-            **/*StreamFactoryImpl.java
-        </sonar.issue.ignore.multicriteria.e1.resourceKey>
         <checkstyle.config.suppressions.path>./src/main/resources/checkstyle/checkstyle-suppressions.xml
         </checkstyle.config.suppressions.path>
     </properties>
@@ -90,11 +89,11 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.4</version>
+            <version>1.18.20</version>
             <scope>provided</scope>
         </dependency>
 
-        <!--rbk&valityDev libs-->
+        <!-- valityDev libs-->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-core</artifactId>
@@ -104,20 +103,20 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney.logback</groupId>
+            <groupId>dev.vality.logback</groupId>
             <artifactId>nop-rolling</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>fraudo</artifactId>
             <version>${fraudo.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney.geck</groupId>
+            <groupId>dev.vality.geck</groupId>
             <artifactId>common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney.geck</groupId>
+            <groupId>dev.vality.geck</groupId>
             <artifactId>serializer</artifactId>
         </dependency>
         <dependency>
@@ -127,14 +126,13 @@
         <dependency>
             <groupId>dev.vality</groupId>
             <artifactId>mamsel</artifactId>
-            <version>0.2.0</version>
         </dependency>
         <dependency>
             <groupId>dev.vality.woody</groupId>
             <artifactId>woody-thrift</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>kafka-common-lib</artifactId>
         </dependency>
         <dependency>
@@ -156,6 +154,11 @@
             <groupId>dev.vality</groupId>
             <artifactId>trusted-tokens-proto</artifactId>
             <version>${trusted.tokens.proto.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.vality</groupId>
+            <artifactId>columbus-proto</artifactId>
+            <version>${columbus-proto.version}</version>
         </dependency>
 
         <!--Thrirdparty libs-->
@@ -266,9 +269,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>clickhouse-test</artifactId>
-            <version>0.0.1</version>
+            <version>1.0.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -277,7 +280,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 
     <build>
         <resources>
@@ -309,7 +311,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-remote-resources-plugin</artifactId>
-                <version>1.5</version>
+                <version>1.7.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.maven.shared</groupId>
@@ -319,7 +321,7 @@
                 </dependencies>
                 <configuration>
                     <resourceBundles>
-                        <resourceBundle>com.rbkmoney:shared-resources:${shared-resources.version}</resourceBundle>
+                        <resourceBundle>dev.vality:shared-resources:${shared-resources.version}</resourceBundle>
                     </resourceBundles>
                     <attachToMain>false</attachToMain>
                     <attachToTest>false</attachToTest>
