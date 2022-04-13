@@ -75,7 +75,8 @@ public class DgraphConfig {
                                      @Value("${dgraph.withAuthHeader}") boolean withAuthHeader) {
         log.info("Create dgraph client (host: {}, port: {})", host, port);
         DgraphClient dgraphClient = new DgraphClient(createStub(host, port, withAuthHeader));
-        log.info("Dgraph client was created (host: {}, port: {})", host, port);
+        log.info("Dgraph client was created (host: {}, port: {}, version: {})",
+                host, port, dgraphClient.checkVersion());
         dgraphClient.alter(
                 DgraphProto.Operation.newBuilder()
                         .setDropAll(true)
