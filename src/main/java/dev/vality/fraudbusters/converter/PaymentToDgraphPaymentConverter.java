@@ -1,7 +1,6 @@
 package dev.vality.fraudbusters.converter;
 
 import com.rbkmoney.geck.common.util.TBaseUtil;
-import com.rbkmoney.mamsel.TokenProviderUtil;
 import dev.vality.damsel.domain.BankCard;
 import dev.vality.damsel.domain.PaymentTool;
 import dev.vality.damsel.fraudbusters.Error;
@@ -43,7 +42,7 @@ public class PaymentToDgraphPaymentConverter implements Converter<Payment, Dgrap
                 ? null : new DgraphCountry(providerInfo.getCountry()));
         dgraphPayment.setTokenProvider(paymentTool.isSetBankCard()
                 && paymentTypeByContextResolver.isMobile(paymentTool.getBankCard())
-                ? TokenProviderUtil.getTokenProviderName(paymentTool.getBankCard())
+                ? paymentTool.getBankCard().getPaymentToken().getId()
                 : UNKNOWN);
         dgraphPayment.setMobile(payment.isMobile());
         dgraphPayment.setRecurrent(payment.isRecurrent());

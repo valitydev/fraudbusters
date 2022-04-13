@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.util;
 
-import com.rbkmoney.mamsel.TokenProviderUtil;
 import dev.vality.damsel.domain.BankCard;
 import dev.vality.damsel.domain.Payer;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,7 @@ public class PaymentTypeByContextResolver {
     }
 
     public boolean isMobile(BankCard bankCard) {
-        return TokenProviderUtil.getTokenProviderName(bankCard) != null;
+        return bankCard.getPaymentToken() != null;
     }
 
 }

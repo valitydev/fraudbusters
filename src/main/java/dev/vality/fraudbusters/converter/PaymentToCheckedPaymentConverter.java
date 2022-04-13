@@ -1,8 +1,6 @@
 package dev.vality.fraudbusters.converter;
 
 import com.rbkmoney.geck.common.util.TBaseUtil;
-import com.rbkmoney.mamsel.PaymentSystemUtil;
-import com.rbkmoney.mamsel.TokenProviderUtil;
 import dev.vality.damsel.domain.PaymentTool;
 import dev.vality.damsel.fraudbusters.Error;
 import dev.vality.damsel.fraudbusters.*;
@@ -47,7 +45,7 @@ public class PaymentToCheckedPaymentConverter implements Converter<Payment, Chec
         checkedPayment.setMaskedPan(paymentTool.isSetBankCard() ? paymentTool.getBankCard().getLastDigits() : UNKNOWN);
         checkedPayment.setCardToken(paymentTool.isSetBankCard() ? paymentTool.getBankCard().getToken() : UNKNOWN);
         checkedPayment.setPaymentSystem(paymentTool.isSetBankCard()
-                ? PaymentSystemUtil.getPaymentSystemName(paymentTool.getBankCard())
+                ? paymentTool.getBankCard().payment_system.getId()
                 : UNKNOWN);
 
         ProviderInfo providerInfo = payment.getProviderInfo();
@@ -72,7 +70,7 @@ public class PaymentToCheckedPaymentConverter implements Converter<Payment, Chec
         checkedPayment.setPayerType(payment.isSetPayerType() ? payment.getPayerType().name() : UNKNOWN);
         checkedPayment.setTokenProvider(paymentTool.isSetBankCard()
                 && paymentTypeByContextResolver.isMobile(paymentTool.getBankCard())
-                ? TokenProviderUtil.getTokenProviderName(paymentTool.getBankCard())
+                ? paymentTool.getBankCard().getPaymentToken().getId()
                 : UNKNOWN);
         checkedPayment.setMobile(payment.isMobile());
         checkedPayment.setRecurrent(payment.isRecurrent());

@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.repository.clickhouse.setter;
 
-import com.rbkmoney.mamsel.PaymentSystemUtil;
 import dev.vality.damsel.fraudbusters.Resource;
 import dev.vality.damsel.fraudbusters.Withdrawal;
 import dev.vality.fraudbusters.domain.TimeProperties;
@@ -49,7 +48,7 @@ public class WithdrawalBatchPreparedStatementSetter implements BatchPreparedStat
         );
         ps.setString(l++, destinationResource.isSetBankCard() ? destinationResource.getBankCard().getToken() : UNKNOWN);
         ps.setString(l++, destinationResource.isSetBankCard()
-                ? PaymentSystemUtil.getPaymentSystemName(destinationResource.getBankCard())
+                ? destinationResource.getBankCard().getPaymentSystem().getId()
                 : UNKNOWN
         );
 

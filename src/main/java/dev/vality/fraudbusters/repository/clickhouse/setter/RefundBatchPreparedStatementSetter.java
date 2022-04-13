@@ -1,8 +1,6 @@
 package dev.vality.fraudbusters.repository.clickhouse.setter;
 
 import com.rbkmoney.geck.common.util.TBaseUtil;
-import com.rbkmoney.mamsel.PaymentSystemUtil;
-import com.rbkmoney.mamsel.TokenProviderUtil;
 import dev.vality.damsel.domain.PaymentTool;
 import dev.vality.damsel.fraudbusters.Error;
 import dev.vality.damsel.fraudbusters.*;
@@ -16,6 +14,7 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import static dev.vality.fraudbusters.constant.ClickhouseUtilsValue.UNKNOWN;
 
@@ -54,7 +53,7 @@ public class RefundBatchPreparedStatementSetter implements BatchPreparedStatemen
         ps.setString(l++, paymentTool.isSetBankCard() ? paymentTool.getBankCard().getLastDigits() : UNKNOWN);
         ps.setString(l++, paymentTool.isSetBankCard() ? paymentTool.getBankCard().getToken() : UNKNOWN);
         ps.setString(l++, paymentTool.isSetBankCard()
-                ? PaymentSystemUtil.getPaymentSystemName(paymentTool.getBankCard())
+                ? Optional.of(paymentTool.getBankCard().getPaymentSystem()).orElse(null).getId()
                 : UNKNOWN);
         ps.setString(l++, TBaseUtil.unionFieldToEnum(paymentTool, PaymentToolType.class).name());
 
@@ -86,7 +85,7 @@ public class RefundBatchPreparedStatementSetter implements BatchPreparedStatemen
 
         ps.setString(l++, event.isSetPayerType() ? event.getPayerType().name() : UNKNOWN);
         ps.setString(l, paymentTool.isSetBankCard() && paymentTypeByContextResolver.isMobile(paymentTool.getBankCard())
-                ? TokenProviderUtil.getTokenProviderName(paymentTool.getBankCard())
+                ? paymentTool.getBankCard().getPaymentToken().getId()
                 : UNKNOWN
         );
     }
