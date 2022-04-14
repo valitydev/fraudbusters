@@ -104,8 +104,9 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney.logback</groupId>
+            <groupId>dev.vality.logback</groupId>
             <artifactId>nop-rolling</artifactId>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney</groupId>
