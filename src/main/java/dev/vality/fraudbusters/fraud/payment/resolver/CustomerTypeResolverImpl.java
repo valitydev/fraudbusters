@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.fraud.payment.resolver;
 
-import com.rbkmoney.fraudo.model.TrustCondition;
-import com.rbkmoney.fraudo.payment.resolver.CustomerTypeResolver;
+import dev.vality.fraudo.model.TrustCondition;
+import dev.vality.fraudo.payment.resolver.CustomerTypeResolver;
 import dev.vality.fraudbusters.exception.RuleFunctionException;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.pool.CardTokenPool;

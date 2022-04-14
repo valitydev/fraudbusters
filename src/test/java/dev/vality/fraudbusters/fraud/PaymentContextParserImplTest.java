@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.fraud;
 
-import com.rbkmoney.fraudo.FraudoPaymentParser;
+import dev.vality.fraudo.FraudoPaymentParser;
 import dev.vality.fraudbusters.fraud.payment.PaymentContextParserImpl;
 import org.junit.jupiter.api.Test;
 

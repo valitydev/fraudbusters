@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.stream.impl;
 
-import com.rbkmoney.fraudo.constant.ResultStatus;
+import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.fraudbusters.constant.TemplateLevel;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
 import dev.vality.fraudbusters.domain.ConcreteResultModel;

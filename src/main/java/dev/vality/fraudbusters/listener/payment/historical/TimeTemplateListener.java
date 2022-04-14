@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.listener.payment.historical;
 
-import com.rbkmoney.fraudo.FraudoPaymentParser;
+import dev.vality.fraudo.FraudoPaymentParser;
 import dev.vality.damsel.fraudbusters.Command;
 import dev.vality.damsel.fraudbusters.CommandType;
 import dev.vality.damsel.fraudbusters.Template;
@@ -19,7 +19,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
 
 @Slf4j
 @Component

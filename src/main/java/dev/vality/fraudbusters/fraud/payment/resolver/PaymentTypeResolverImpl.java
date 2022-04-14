@@ -1,7 +1,6 @@
 package dev.vality.fraudbusters.fraud.payment.resolver;
 
-
-import com.rbkmoney.fraudo.payment.resolver.PaymentTypeResolver;
+import dev.vality.fraudo.payment.resolver.PaymentTypeResolver;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import org.springframework.stereotype.Component;
 

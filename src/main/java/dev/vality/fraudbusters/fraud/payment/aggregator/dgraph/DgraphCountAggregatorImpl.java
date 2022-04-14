@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.fraud.payment.aggregator.dgraph;
 
-import com.rbkmoney.fraudo.model.TimeWindow;
-import com.rbkmoney.fraudo.payment.aggregator.CountPaymentAggregator;
+import dev.vality.fraudo.model.TimeWindow;
+import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
 import dev.vality.fraudbusters.aspect.BasicMetric;
 import dev.vality.fraudbusters.constant.ChargebackStatus;
 import dev.vality.fraudbusters.constant.PaymentStatus;

@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.config.payment;
 
-import com.rbkmoney.fraudo.payment.visitor.impl.FirstFindVisitorImpl;
+import dev.vality.fraudo.payment.visitor.impl.FirstFindVisitorImpl;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.pool.Pool;

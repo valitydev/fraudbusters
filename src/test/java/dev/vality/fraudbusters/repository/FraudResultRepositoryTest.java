@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.repository;
 
 import com.rbkmoney.clickhouse.initializer.ChInitializer;
-import com.rbkmoney.fraudo.constant.ResultStatus;
+import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.damsel.geo_ip.GeoIpServiceSrv;
 import dev.vality.fraudbusters.config.ClickhouseConfig;
 import dev.vality.fraudbusters.constant.EventField;

@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.dgraph.service.aggregator;
 
-import com.rbkmoney.fraudo.payment.aggregator.CountPaymentAggregator;
+import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
 import dev.vality.fraudbusters.factory.properties.OperationProperties;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
