@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.repository;
 
-import com.rbkmoney.clickhouse.initializer.ChInitializer;
+import dev.vality.clickhouse.initializer.ChInitializer;
 import dev.vality.damsel.fraudbusters.FraudPayment;
 import dev.vality.damsel.fraudbusters.PaymentStatus;
 import dev.vality.damsel.geo_ip.GeoIpServiceSrv;

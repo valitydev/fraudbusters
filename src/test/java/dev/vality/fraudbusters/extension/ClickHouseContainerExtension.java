@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.extension;
 
-import com.rbkmoney.clickhouse.initializer.ChInitializer;
+import dev.vality.clickhouse.initializer.ChInitializer;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.ClickHouseContainer;

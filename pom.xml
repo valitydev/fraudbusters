@@ -16,7 +16,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <project.maintainer>Struzhkin Konstantin &lt;k.struzhkin@rbkmoney.com&gt;</project.maintainer>
+        <project.maintainer>Dev.Vality &lt;support@vality.dev&gt;</project.maintainer>
         <server.port>8022</server.port>
         <management.port>8023</management.port>
         <exposed.ports>${server.port} ${management.port}</exposed.ports>
@@ -94,7 +94,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--rbk&valityDev libs-->
+        <!--valityDev libs-->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-core</artifactId>
@@ -265,9 +265,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>clickhouse-test</artifactId>
-            <version>0.0.1</version>
+            <version>1.0.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -276,7 +276,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 
     <build>
         <resources>
