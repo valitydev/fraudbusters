@@ -7,7 +7,7 @@
     <parent>
         <groupId>dev.vality</groupId>
         <artifactId>service-parent-pom</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.16</version>
     </parent>
 
     <name>fraudbusters</name>
@@ -31,6 +31,7 @@
         <wb.list.proto.version>1.44-5dbd6d4</wb.list.proto.version>
         <dgraph4j.version>21.03.1</dgraph4j.version>
         <velocity.version>2.2</velocity.version>
+        <shared-resources.version>1.4.0</shared-resources.version>
 
         <sonar.issue.ignore.multicriteria>e1</sonar.issue.ignore.multicriteria>
         <sonar.issue.ignore.multicriteria.e1.ruleKey>squid:S2095</sonar.issue.ignore.multicriteria.e1.ruleKey>
@@ -126,6 +127,7 @@
         <dependency>
             <groupId>dev.vality</groupId>
             <artifactId>damsel</artifactId>
+            <version>1.538-5addc41</version>
         </dependency>
         <dependency>
             <groupId>dev.vality.woody</groupId>
