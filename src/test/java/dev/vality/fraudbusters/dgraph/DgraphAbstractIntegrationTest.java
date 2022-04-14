@@ -2,7 +2,7 @@ package dev.vality.fraudbusters.dgraph;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rbkmoney.kafka.common.serialization.ThriftSerializer;
+import dev.vality.kafka.common.serialization.ThriftSerializer;
 import dev.vality.damsel.geo_ip.GeoIpServiceSrv;
 import dev.vality.damsel.wb_list.WbListServiceSrv;
 import dev.vality.fraudbusters.FraudBustersApplication;

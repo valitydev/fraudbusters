@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.config.service;
 
-import com.rbkmoney.kafka.common.exception.handler.SeekToCurrentWithSleepBatchErrorHandler;
+import dev.vality.kafka.common.exception.handler.SeekToCurrentWithSleepBatchErrorHandler;
 import dev.vality.damsel.fraudbusters.Command;
 import dev.vality.fraudbusters.config.properties.KafkaSslProperties;
 import dev.vality.fraudbusters.serde.CommandDeserializer;

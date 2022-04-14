@@ -132,8 +132,9 @@
             <artifactId>woody-thrift</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>kafka-common-lib</artifactId>
+            <version>0.0.3</version>
         </dependency>
         <dependency>
             <groupId>dev.vality</groupId>

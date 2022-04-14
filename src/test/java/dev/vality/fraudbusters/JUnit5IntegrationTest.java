@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters;
 
-import com.rbkmoney.kafka.common.serialization.ThriftSerializer;
+import dev.vality.kafka.common.serialization.ThriftSerializer;
 import dev.vality.damsel.fraudbusters.*;
 import dev.vality.damsel.geo_ip.GeoIpServiceSrv;
 import dev.vality.damsel.wb_list.WbListServiceSrv;
