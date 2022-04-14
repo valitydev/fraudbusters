@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.converter;
 
-import com.rbkmoney.geck.common.util.TypeUtil;
+import dev.vality.geck.common.util.TypeUtil;
 import dev.vality.damsel.domain.Cash;
 import dev.vality.damsel.domain.Payer;
 import dev.vality.damsel.proxy_inspector.Context;

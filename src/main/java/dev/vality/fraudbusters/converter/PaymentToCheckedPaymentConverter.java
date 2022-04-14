@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.converter;
 
-import com.rbkmoney.geck.common.util.TBaseUtil;
+import dev.vality.geck.common.util.TBaseUtil;
 import dev.vality.damsel.domain.PaymentTool;
 import dev.vality.damsel.fraudbusters.Error;
 import dev.vality.damsel.fraudbusters.*;
