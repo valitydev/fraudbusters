@@ -7,7 +7,7 @@
     <parent>
         <groupId>dev.vality</groupId>
         <artifactId>service-parent-pom</artifactId>
-        <version>1.0.14</version>
+        <version>1.0.13</version>
     </parent>
 
     <name>fraudbusters</name>
@@ -20,8 +20,8 @@
         <server.port>8022</server.port>
         <management.port>8023</management.port>
         <exposed.ports>${server.port} ${management.port}</exposed.ports>
-        <dockerfile.base.service.tag>57e26d8ee999d7b0b50248c22afc63e6f926d276</dockerfile.base.service.tag>
-        <dockerfile.registry>dr2.rbkmoney.com</dockerfile.registry>
+<!--        <dockerfile.base.service.tag>57e26d8ee999d7b0b50248c22afc63e6f926d276</dockerfile.base.service.tag>-->
+<!--        <dockerfile.registry>dr2.rbkmoney.com</dockerfile.registry>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <fraudo.version>0.3.0</fraudo.version>
         <clickhouse-jdbc.version>0.3.1</clickhouse-jdbc.version>
@@ -31,7 +31,7 @@
         <wb.list.proto.version>1.44-5dbd6d4</wb.list.proto.version>
         <dgraph4j.version>21.03.1</dgraph4j.version>
         <velocity.version>2.2</velocity.version>
-        <shared-resources.version>1.4.0</shared-resources.version>
+        <shared-resources.version>1.0.1</shared-resources.version>
 
         <sonar.issue.ignore.multicriteria>e1</sonar.issue.ignore.multicriteria>
         <sonar.issue.ignore.multicriteria.e1.ruleKey>squid:S2095</sonar.issue.ignore.multicriteria.e1.ruleKey>
@@ -319,7 +319,7 @@
                 </dependencies>
                 <configuration>
                     <resourceBundles>
-                        <resourceBundle>com.rbkmoney:shared-resources:${shared-resources.version}</resourceBundle>
+                        <resourceBundle>dev.vality:shared-resources:${shared-resources.version}</resourceBundle>
                     </resourceBundles>
                     <attachToMain>false</attachToMain>
                     <attachToTest>false</attachToTest>
@@ -333,19 +333,5 @@
                 </executions>
             </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.10.0</version>
-                    <configuration>
-                        <source>15</source>
-                        <target>15</target>
-                        <encoding>UTF-8</encoding>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 </project>
