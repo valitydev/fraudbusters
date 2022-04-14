@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.util;
 
-import com.rbkmoney.geck.common.util.TypeUtil;
+import dev.vality.geck.common.util.TypeUtil;
 import com.rbkmoney.kafka.common.serialization.ThriftSerializer;
 import dev.vality.damsel.base.Content;
 import dev.vality.damsel.domain.*;

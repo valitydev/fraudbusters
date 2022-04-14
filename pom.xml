@@ -113,12 +113,14 @@
             <version>${fraudo.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney.geck</groupId>
+            <groupId>dev.vality.geck</groupId>
             <artifactId>common</artifactId>
+            <version>0.0.1</version>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney.geck</groupId>
+            <groupId>dev.vality.geck</groupId>
             <artifactId>serializer</artifactId>
+            <version>0.0.1</version>
         </dependency>
         <dependency>
             <groupId>dev.vality</groupId>
