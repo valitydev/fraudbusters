@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.fraud.resolver;
 
-import dev.vality.damsel.geo_ip.GeoIpServiceSrv;
+import dev.vality.columbus.ColumbusServiceSrv;
 import dev.vality.fraudbusters.config.CachingConfig;
 import dev.vality.fraudbusters.constant.ClickhouseUtilsValue;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
@@ -30,7 +30,7 @@ public class CountryResolverImplTest {
     public static final String COUNTRY_GEO_ISO_CODE = "RU";
 
     @MockBean
-    private GeoIpServiceSrv.Iface geoIpServiceSrv;
+    private ColumbusServiceSrv.Iface geoIpServiceSrv;
 
     @Autowired
     private CountryResolverImpl countryResolver;
