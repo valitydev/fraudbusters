@@ -1,7 +1,6 @@
 package dev.vality.fraudbusters.converter;
 
 import com.rbkmoney.geck.common.util.TypeUtil;
-import com.rbkmoney.mamsel.TokenProviderUtil;
 import dev.vality.damsel.domain.Cash;
 import dev.vality.damsel.domain.Payer;
 import dev.vality.damsel.proxy_inspector.Context;
@@ -85,7 +84,7 @@ public class ContextToFraudRequestConverter implements Converter<Context, FraudR
                     metadata.setPayerType(
                             PayerFieldExtractor.getPayerType(context.getPayment().getPayment().getPayer()));
                     metadata.setTokenProvider(paymentTypeByContextResolver.isMobile(bankCard)
-                            ? TokenProviderUtil.getTokenProviderName(bankCard)
+                            ? bankCard.getPaymentToken().getId()
                             : ClickhouseUtilsValue.UNKNOWN);
                 });
         return metadata;
