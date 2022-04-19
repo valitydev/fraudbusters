@@ -9,7 +9,7 @@ public class PaymentQuery {
 
     public static final String SELECT_HISTORY_PAYMENT = String.format("""
                     SELECT
-                         eventTime,
+                        eventTime,
                         partyId,
                         shopId,
                         email,
@@ -40,6 +40,7 @@ public class PaymentQuery {
                         timestamp >= toDate(:from)
                         and timestamp <= toDate(:to)
                         and toDateTime(eventTime) >= toDateTime(:from)
-                        and toDateTime(eventTime) <= toDateTime(:to)""",
+                        and toDateTime(eventTime) <= toDateTime(:to)
+                        and shopId != 'TEST'""",
             EventSource.FRAUD_EVENTS_PAYMENT.getTable());
 }

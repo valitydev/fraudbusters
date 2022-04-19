@@ -35,6 +35,7 @@ public class ChargeBackQuery {
                 timestamp >= toDate(:from)
                 and timestamp <= toDate(:to)
                 and toDateTime(eventTime) >= toDateTime(:from)
-                and toDateTime(eventTime) <= toDateTime(:to)""",
+                and toDateTime(eventTime) <= toDateTime(:to)
+                and shopId != 'TEST'""",
             EventSource.FRAUD_EVENTS_CHARGEBACK.getTable());
 }
