@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.fraud.payment.resolver;
 
-import com.rbkmoney.fraudo.resolver.CountryResolver;
+import dev.vality.fraudo.resolver.CountryResolver;
 import dev.vality.fraudbusters.constant.ClickhouseUtilsValue;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.payment.CountryByIpResolver;

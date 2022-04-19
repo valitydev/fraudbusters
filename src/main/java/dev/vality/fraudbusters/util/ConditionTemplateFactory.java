@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.util;
 
-import com.rbkmoney.fraudo.model.TrustCondition;
+import dev.vality.fraudo.model.TrustCondition;
 import dev.vality.fraudbusters.converter.TrustConditionToConditionConverter;
 import dev.vality.trusted.tokens.ConditionTemplate;
 import dev.vality.trusted.tokens.PaymentsConditions;

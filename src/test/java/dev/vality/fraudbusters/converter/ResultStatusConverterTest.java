@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.converter;
 
-import com.rbkmoney.fraudo.constant.ResultStatus;
+import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.damsel.fraudbusters.*;
 import org.junit.jupiter.api.Test;
 

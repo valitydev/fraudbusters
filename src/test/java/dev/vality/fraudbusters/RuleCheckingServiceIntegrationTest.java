@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters;
 
-import com.rbkmoney.fraudo.FraudoPaymentParser;
-import com.rbkmoney.fraudo.constant.ResultStatus;
+import dev.vality.fraudo.FraudoPaymentParser;
+import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
 import dev.vality.fraudbusters.factory.TestObjectsFactory;
 import dev.vality.fraudbusters.fraud.FraudContextParser;

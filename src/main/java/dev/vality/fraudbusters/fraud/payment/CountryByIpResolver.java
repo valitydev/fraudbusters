@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.fraud.payment;
 
-import dev.vality.damsel.geo_ip.GeoIpServiceSrv;
+import dev.vality.columbus.ColumbusServiceSrv;
 import dev.vality.fraudbusters.aspect.BasicMetric;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CountryByIpResolver {
 
-    private final GeoIpServiceSrv.Iface geoIpServiceSrv;
+    private final ColumbusServiceSrv.Iface geoIpServiceSrv;
 
     @Cacheable(value = "resolveCountry", key = "#ip")
     @BasicMetric("resolveCountry")

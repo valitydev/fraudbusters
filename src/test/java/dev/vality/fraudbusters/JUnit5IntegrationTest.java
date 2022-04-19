@@ -1,8 +1,8 @@
 package dev.vality.fraudbusters;
 
-import com.rbkmoney.kafka.common.serialization.ThriftSerializer;
+import dev.vality.kafka.common.serialization.ThriftSerializer;
 import dev.vality.damsel.fraudbusters.*;
-import dev.vality.damsel.geo_ip.GeoIpServiceSrv;
+import dev.vality.columbus.ColumbusServiceSrv;
 import dev.vality.damsel.wb_list.WbListServiceSrv;
 import dev.vality.fraudbusters.config.properties.KafkaTopics;
 import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
@@ -67,7 +67,7 @@ public class JUnit5IntegrationTest {
     @Autowired
     protected KafkaTopics kafkaTopics;
     @MockBean
-    GeoIpServiceSrv.Iface geoIpServiceSrv;
+    ColumbusServiceSrv.Iface geoIpServiceSrv;
     @MockBean
     WbListServiceSrv.Iface wbListServiceSrv;
     @MockBean

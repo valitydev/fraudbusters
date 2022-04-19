@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.resource.payment.handler;
 
-import com.rbkmoney.geck.common.util.TBaseUtil;
+import dev.vality.geck.common.util.TBaseUtil;
 import dev.vality.damsel.fraudbusters.*;
 import dev.vality.fraudbusters.constant.PaymentToolType;
 import dev.vality.fraudbusters.converter.*;
@@ -458,9 +458,9 @@ class HistoricalDataHandlerTest {
         Payment firstPayment = createPayment(firstAmount);
         Payment secondPayment = createPayment(secondAmount);
         CheckedResultModel firstResultModel =
-                createCheckedResultModel(TEMPLATE, com.rbkmoney.fraudo.constant.ResultStatus.ACCEPT);
+                createCheckedResultModel(TEMPLATE, dev.vality.fraudo.constant.ResultStatus.ACCEPT);
         CheckedResultModel secondResultModel =
-                createCheckedResultModel(TEMPLATE, com.rbkmoney.fraudo.constant.ResultStatus.DECLINE);
+                createCheckedResultModel(TEMPLATE, dev.vality.fraudo.constant.ResultStatus.DECLINE);
         Map<String, CheckedResultModel> resultModelMap = new LinkedHashMap<>();
         resultModelMap.put(firstPayment.getId(), firstResultModel);
         resultModelMap.put(secondPayment.getId(), secondResultModel);
@@ -544,9 +544,9 @@ class HistoricalDataHandlerTest {
         Payment firstPayment = createPayment(firstAmount);
         Payment secondPayment = createPayment(secondAmount);
         CheckedResultModel firstResultModel =
-                createCheckedResultModel(TEMPLATE, com.rbkmoney.fraudo.constant.ResultStatus.ACCEPT);
+                createCheckedResultModel(TEMPLATE, dev.vality.fraudo.constant.ResultStatus.ACCEPT);
         CheckedResultModel secondResultModel =
-                createCheckedResultModel(TEMPLATE, com.rbkmoney.fraudo.constant.ResultStatus.DECLINE);
+                createCheckedResultModel(TEMPLATE, dev.vality.fraudo.constant.ResultStatus.DECLINE);
         Map<String, CheckedResultModel> resultModelMap = new LinkedHashMap<>();
         resultModelMap.put(firstPayment.getId(), firstResultModel);
         resultModelMap.put(secondPayment.getId(), secondResultModel);

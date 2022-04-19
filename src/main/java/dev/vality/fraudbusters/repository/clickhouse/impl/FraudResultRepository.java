@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.repository.clickhouse.impl;
 
 import com.google.common.collect.Lists;
-import com.rbkmoney.fraudo.constant.ResultStatus;
+import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.fraudbusters.constant.ClickhouseSchemeNames;
 import dev.vality.fraudbusters.constant.EventSource;
 import dev.vality.fraudbusters.domain.Event;

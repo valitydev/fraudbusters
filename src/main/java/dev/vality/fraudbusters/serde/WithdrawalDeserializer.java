@@ -1,7 +1,6 @@
 package dev.vality.fraudbusters.serde;
 
-
-import com.rbkmoney.kafka.common.serialization.AbstractThriftDeserializer;
+import dev.vality.kafka.common.serialization.AbstractThriftDeserializer;
 import dev.vality.damsel.fraudbusters.Withdrawal;
 import dev.vality.fraudbusters.config.service.ListenersConfigurationService;
 import lombok.SneakyThrows;

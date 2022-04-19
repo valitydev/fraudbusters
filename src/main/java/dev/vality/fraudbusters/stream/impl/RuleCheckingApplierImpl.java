@@ -1,8 +1,8 @@
 package dev.vality.fraudbusters.stream.impl;
 
-import com.rbkmoney.fraudo.model.BaseModel;
-import com.rbkmoney.fraudo.model.ResultModel;
-import com.rbkmoney.fraudo.visitor.TemplateVisitor;
+import dev.vality.fraudo.model.BaseModel;
+import dev.vality.fraudo.model.ResultModel;
+import dev.vality.fraudo.visitor.TemplateVisitor;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
 import dev.vality.fraudbusters.pool.HistoricalPool;
 import dev.vality.fraudbusters.stream.RuleCheckingApplier;

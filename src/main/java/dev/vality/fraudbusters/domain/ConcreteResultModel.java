@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.domain;
 
-import com.rbkmoney.fraudo.constant.ResultStatus;
+import dev.vality.fraudo.constant.ResultStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

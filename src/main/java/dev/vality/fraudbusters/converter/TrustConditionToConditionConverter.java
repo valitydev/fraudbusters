@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.converter;
 
-import com.rbkmoney.fraudo.model.TrustCondition;
+import dev.vality.fraudo.model.TrustCondition;
 import dev.vality.trusted.tokens.Condition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;

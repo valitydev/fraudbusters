@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.fraud.localstorage.aggregator;
 
-import com.rbkmoney.fraudo.model.TimeWindow;
-import com.rbkmoney.fraudo.payment.aggregator.CountPaymentAggregator;
+import dev.vality.fraudo.model.TimeWindow;
+import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
 import dev.vality.fraudbusters.exception.RuleFunctionException;
 import dev.vality.fraudbusters.fraud.AggregateGroupingFunction;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;

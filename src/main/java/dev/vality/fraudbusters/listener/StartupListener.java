@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.listener;
 
-import com.rbkmoney.kafka.common.loader.PreloadListener;
-import com.rbkmoney.kafka.common.loader.PreloadListenerImpl;
+import dev.vality.kafka.common.loader.PreloadListener;
+import dev.vality.kafka.common.loader.PreloadListenerImpl;
 import dev.vality.damsel.fraudbusters.Command;
 import dev.vality.fraudbusters.config.properties.KafkaTopics;
 import dev.vality.fraudbusters.exception.StartException;

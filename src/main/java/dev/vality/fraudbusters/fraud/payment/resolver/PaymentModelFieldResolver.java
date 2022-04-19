@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.fraud.payment.resolver;
 
-import com.rbkmoney.fraudo.exception.UnresolvableFieldException;
-import com.rbkmoney.fraudo.resolver.FieldResolver;
+import dev.vality.fraudo.exception.UnresolvableFieldException;
+import dev.vality.fraudo.resolver.FieldResolver;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 
