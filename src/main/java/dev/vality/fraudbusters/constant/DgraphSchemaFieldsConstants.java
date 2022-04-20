@@ -13,7 +13,7 @@ public final class DgraphSchemaFieldsConstants {
             accountIdentity: string .
             amount: int .
             bankName: string .
-            bin: uid .
+            binX: uid .
             cardBin: string @index(hash) @upsert .
             cardholderName: string .
             cardToken: uid .
