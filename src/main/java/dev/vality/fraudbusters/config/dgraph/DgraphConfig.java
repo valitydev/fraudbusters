@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import dev.vality.fraudbusters.config.properties.DgraphProperties;
 import dev.vality.kafka.common.retry.ConfigurableRetryPolicy;
 import dev.vality.damsel.fraudbusters.Chargeback;
 import dev.vality.damsel.fraudbusters.FraudPayment;
@@ -70,15 +71,17 @@ public class DgraphConfig {
     }
 
     @Bean
-    public DgraphClient dgraphClient(@Value("${dgraph.host}") String host,
-                                     @Value("${dgraph.port}") int port,
-                                     @Value("${dgraph.withAuthHeader}") boolean withAuthHeader) {
+    public DgraphClient dgraphClient(DgraphProperties dgraphProperties) {
+        String host = dgraphProperties.getHost();
+        int port = dgraphProperties.getPort();
         log.info("Create dgraph client (host: {}, port: {})", host, port);
-        DgraphClient dgraphClient = new DgraphClient(createStub(host, port, withAuthHeader));
+        DgraphClient dgraphClient = new DgraphClient(createStub(host, port));
+        if (dgraphProperties.isAuth()) {
+            dgraphClient.login(dgraphProperties.getLogin(), dgraphProperties.getPassword());
+        }
         log.info("Dgraph client was created (host: {}, port: {})", host, port);
         dgraphClient.alter(
                 DgraphProto.Operation.newBuilder()
-                        .setDropAll(true)
                         .setSchema(DgraphSchemaConstants.SCHEMA)
                         .build()
         );
@@ -145,20 +148,12 @@ public class DgraphConfig {
         return new DgraphWithdrawalEventListener(repository, converter);
     }
 
-    private DgraphGrpc.DgraphStub createStub(String host, int port, boolean withAuthHeader) {
+    private DgraphGrpc.DgraphStub createStub(String host, int port) {
         ManagedChannel channel = ManagedChannelBuilder
                 .forAddress(host, port)
                 .usePlaintext()
                 .build();
-        DgraphGrpc.DgraphStub stub = DgraphGrpc.newStub(channel);
-
-        if (withAuthHeader) {
-            Metadata metadata = new Metadata();
-            metadata.put(
-                    Metadata.Key.of("auth-token", Metadata.ASCII_STRING_MARSHALLER), "the-auth-token-value");
-            stub = MetadataUtils.attachHeaders(stub, metadata);
-        }
-        return stub;
+        return DgraphGrpc.newStub(channel);
     }
 
     private static final class RegisterJobFailListener extends RetryListenerSupport {
