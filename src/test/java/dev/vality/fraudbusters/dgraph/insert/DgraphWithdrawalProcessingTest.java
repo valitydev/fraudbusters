@@ -2,7 +2,6 @@ package dev.vality.fraudbusters.dgraph.insert;
 
 import dev.vality.damsel.fraudbusters.Resource;
 import dev.vality.damsel.fraudbusters.Withdrawal;
-import dev.vality.fraudbusters.constant.DgraphSchemaConstants;
 import dev.vality.fraudbusters.dgraph.DgraphAbstractIntegrationTest;
 import dev.vality.fraudbusters.factory.TestDgraphObjectFactory;
 import dev.vality.fraudbusters.serde.WithdrawalDeserializer;
@@ -29,7 +28,7 @@ public class DgraphWithdrawalProcessingTest extends DgraphAbstractIntegrationTes
         dgraphClient.alter(
                 DgraphProto.Operation.newBuilder()
                         .setDropAll(true)
-                        .setSchema(DgraphSchemaConstants.SCHEMA)
+                        //.setSchema(DgraphSchemaConstants.SCHEMA)
                         .build()
         );
     }

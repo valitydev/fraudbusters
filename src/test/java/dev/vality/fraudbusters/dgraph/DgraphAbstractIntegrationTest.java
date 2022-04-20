@@ -139,12 +139,14 @@ public abstract class DgraphAbstractIntegrationTest {
     }
 
     public void clearDb(DgraphClient dgraphClient) {
+        log.error(">> >> clear db");
         dgraphClient.alter(
                 DgraphProto.Operation.newBuilder()
                         .setDropAll(true)
                         //.setSchema(DgraphSchemaConstants.SCHEMA)
                         .build()
         );
+        log.error(">> >> completed db");
     }
 
     private static void cleanupBeforeTermination() {

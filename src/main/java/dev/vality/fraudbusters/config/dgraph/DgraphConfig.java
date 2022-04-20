@@ -81,12 +81,13 @@ public class DgraphConfig {
             dgraphClient.login(dgraphProperties.getLogin(), dgraphProperties.getPassword());
         }
         log.error("Dgraph client was created (host: {}, port: {})", host, port);
-        log.warn("Schema will be altered");
+        log.error("Schema will be altered \n {}", DgraphSchemaConstants.SCHEMA);
         dgraphClient.alter(
                 DgraphProto.Operation.newBuilder()
                         .setSchema(DgraphSchemaConstants.SCHEMA)
                         .build()
         );
+        log.error("scheme completed");
         return dgraphClient;
     }
 
