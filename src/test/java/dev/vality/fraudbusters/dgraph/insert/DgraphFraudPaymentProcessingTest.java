@@ -38,6 +38,8 @@ public class DgraphFraudPaymentProcessingTest extends DgraphAbstractIntegrationT
 
     @Test
     public void processPaymentFromKafkaTest() throws Exception {
+        clearDb(dgraphClient);
+
         List<FraudPayment> fraudPayments = generatePayments(5);
         producePayments(KAFKA_PAYMENT_TOPIC, fraudPayments);
         waitingTopic(KAFKA_PAYMENT_TOPIC, FraudPaymentDeserializer.class);

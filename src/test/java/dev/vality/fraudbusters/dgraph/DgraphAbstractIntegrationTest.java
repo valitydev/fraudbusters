@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.vality.columbus.ColumbusServiceSrv;
 import dev.vality.damsel.wb_list.WbListServiceSrv;
 import dev.vality.fraudbusters.FraudBustersApplication;
+import dev.vality.fraudbusters.constant.DgraphSchemaConstants;
 import dev.vality.fraudbusters.dgraph.insert.model.Aggregates;
 import dev.vality.fraudbusters.dgraph.insert.model.TestQuery;
 import dev.vality.fraudbusters.exception.DgraphException;
@@ -69,6 +70,9 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         properties = {
                 "kafka.listen.result.concurrency=1",
                 "dgraph.service.enabled=true",
+                "kafka.reconnect-backoff-ms=100",
+                "kafka.reconnect-backoff-max-ms=100",
+                "kafka.retry-backoff-ms=100",
                 "kafka.dgraph.topics.payment.enabled=true",
                 "kafka.dgraph.topics.refund.enabled=true",
                 "kafka.dgraph.topics.fraud_payment.enabled=true",
@@ -133,6 +137,15 @@ public abstract class DgraphAbstractIntegrationTest {
             cleanupBeforeTermination();
             isDgraphStarted = true;
         }
+    }
+
+    public void clearDb(DgraphClient dgraphClient) {
+        dgraphClient.alter(
+                DgraphProto.Operation.newBuilder()
+                        .setDropAll(true)
+                        .setSchema(DgraphSchemaConstants.SCHEMA)
+                        .build()
+        );
     }
 
     private static void cleanupBeforeTermination() {
