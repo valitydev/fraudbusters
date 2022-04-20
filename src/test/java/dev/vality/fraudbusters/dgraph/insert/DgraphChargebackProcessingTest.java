@@ -1,7 +1,6 @@
 package dev.vality.fraudbusters.dgraph.insert;
 
 import dev.vality.damsel.fraudbusters.Chargeback;
-import dev.vality.fraudbusters.constant.DgraphSchemaConstants;
 import dev.vality.fraudbusters.dgraph.DgraphAbstractIntegrationTest;
 import dev.vality.fraudbusters.factory.TestDgraphObjectFactory;
 import dev.vality.fraudbusters.factory.properties.OperationProperties;
@@ -30,7 +29,7 @@ public class DgraphChargebackProcessingTest extends DgraphAbstractIntegrationTes
         dgraphClient.alter(
                 DgraphProto.Operation.newBuilder()
                         .setDropAll(true)
-                        .setSchema(DgraphSchemaConstants.SCHEMA)
+                        //.setSchema(DgraphSchemaConstants.SCHEMA)
                         .build()
         );
     }

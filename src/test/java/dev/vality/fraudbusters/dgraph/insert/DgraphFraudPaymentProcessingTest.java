@@ -1,7 +1,6 @@
 package dev.vality.fraudbusters.dgraph.insert;
 
 import dev.vality.damsel.fraudbusters.FraudPayment;
-import dev.vality.fraudbusters.constant.DgraphSchemaConstants;
 import dev.vality.fraudbusters.dgraph.DgraphAbstractIntegrationTest;
 import dev.vality.fraudbusters.factory.TestDgraphObjectFactory;
 import dev.vality.fraudbusters.serde.FraudPaymentDeserializer;
@@ -31,7 +30,7 @@ public class DgraphFraudPaymentProcessingTest extends DgraphAbstractIntegrationT
         dgraphClient.alter(
                 DgraphProto.Operation.newBuilder()
                         .setDropAll(true)
-                        .setSchema(DgraphSchemaConstants.SCHEMA)
+                        //.setSchema(DgraphSchemaConstants.SCHEMA)
                         .build()
         );
     }

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.vality.columbus.ColumbusServiceSrv;
 import dev.vality.damsel.wb_list.WbListServiceSrv;
 import dev.vality.fraudbusters.FraudBustersApplication;
-import dev.vality.fraudbusters.constant.DgraphSchemaConstants;
 import dev.vality.fraudbusters.dgraph.insert.model.Aggregates;
 import dev.vality.fraudbusters.dgraph.insert.model.TestQuery;
 import dev.vality.fraudbusters.exception.DgraphException;
@@ -143,7 +142,7 @@ public abstract class DgraphAbstractIntegrationTest {
         dgraphClient.alter(
                 DgraphProto.Operation.newBuilder()
                         .setDropAll(true)
-                        .setSchema(DgraphSchemaConstants.SCHEMA)
+                        //.setSchema(DgraphSchemaConstants.SCHEMA)
                         .build()
         );
     }
