@@ -82,6 +82,7 @@ public class DgraphConfig {
         log.info("Dgraph client was created (host: {}, port: {})", host, port);
         dgraphClient.alter(
                 DgraphProto.Operation.newBuilder()
+                        .setDropAll(true)
                         .setSchema(DgraphSchemaConstants.SCHEMA)
                         .build()
         );
