@@ -2,8 +2,6 @@ package dev.vality.fraudbusters.dgraph;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.vality.fraudbusters.constant.DgraphSchemaConstants;
-import dev.vality.kafka.common.serialization.ThriftSerializer;
 import dev.vality.columbus.ColumbusServiceSrv;
 import dev.vality.damsel.wb_list.WbListServiceSrv;
 import dev.vality.fraudbusters.FraudBustersApplication;
@@ -20,6 +18,7 @@ import dev.vality.fraudbusters.repository.clickhouse.impl.PaymentRepositoryImpl;
 import dev.vality.fraudbusters.service.CardPoolManagementService;
 import dev.vality.fraudbusters.service.ShopManagementService;
 import dev.vality.fraudbusters.util.KeyGenerator;
+import dev.vality.kafka.common.serialization.ThriftSerializer;
 import dev.vality.trusted.tokens.TrustedTokensSrv;
 import io.dgraph.DgraphClient;
 import io.dgraph.DgraphProto;
@@ -37,7 +36,6 @@ import org.apache.thrift.TBase;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.rnorth.ducttape.unreliables.Unreliables;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,16 +125,6 @@ public abstract class DgraphAbstractIntegrationTest {
         registry.add("kafka.bootstrap.servers", KafkaContainerExtension.KAFKA::getBootstrapServers);
         registry.add("dgraph.host", () -> testHostname);
     }
-
-//    @BeforeEach
-//    void prepateSchema() {
-//        dgraphClient.alter(
-//                DgraphProto.Operation.newBuilder()
-//                        .setDropAll(true)
-//                        .setSchema(DgraphSchemaConstants.SCHEMA)
-//                        .build()
-//        );
-//    }
 
     @BeforeAll
     public static void setup() throws Exception {

@@ -1,13 +1,16 @@
 package dev.vality.fraudbusters.dgraph.insert;
 
 import dev.vality.damsel.fraudbusters.Payment;
+import dev.vality.fraudbusters.constant.DgraphSchemaConstants;
 import dev.vality.fraudbusters.dgraph.DgraphAbstractIntegrationTest;
 import dev.vality.fraudbusters.factory.TestDgraphObjectFactory;
 import dev.vality.fraudbusters.factory.properties.OperationProperties;
 import dev.vality.fraudbusters.serde.PaymentDeserializer;
+import io.dgraph.DgraphProto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -20,6 +23,16 @@ import java.util.concurrent.ExecutionException;
 public class DgraphPaymentProcessingTest extends DgraphAbstractIntegrationTest {
 
     private static final String KAFKA_PAYMENT_TOPIC = "payment_event";
+
+    @BeforeEach
+    void prepateSchema() {
+        dgraphClient.alter(
+                DgraphProto.Operation.newBuilder()
+                        .setDropAll(true)
+                        .setSchema(DgraphSchemaConstants.SCHEMA)
+                        .build()
+        );
+    }
 
     @Test
     public void processPaymentFromKafkaTest() throws Exception {

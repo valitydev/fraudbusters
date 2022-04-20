@@ -5,12 +5,11 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import dev.vality.fraudbusters.config.properties.DgraphProperties;
-import dev.vality.kafka.common.retry.ConfigurableRetryPolicy;
 import dev.vality.damsel.fraudbusters.Chargeback;
 import dev.vality.damsel.fraudbusters.FraudPayment;
 import dev.vality.damsel.fraudbusters.Refund;
 import dev.vality.damsel.fraudbusters.Withdrawal;
+import dev.vality.fraudbusters.config.properties.DgraphProperties;
 import dev.vality.fraudbusters.constant.DgraphSchemaConstants;
 import dev.vality.fraudbusters.converter.PaymentToDgraphPaymentConverter;
 import dev.vality.fraudbusters.converter.PaymentToPaymentModelConverter;
@@ -18,13 +17,12 @@ import dev.vality.fraudbusters.domain.dgraph.common.*;
 import dev.vality.fraudbusters.listener.events.dgraph.*;
 import dev.vality.fraudbusters.repository.Repository;
 import dev.vality.fraudbusters.stream.impl.FullTemplateVisitorImpl;
+import dev.vality.kafka.common.retry.ConfigurableRetryPolicy;
 import io.dgraph.DgraphClient;
 import io.dgraph.DgraphGrpc;
 import io.dgraph.DgraphProto;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import io.grpc.Metadata;
-import io.grpc.stub.MetadataUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -82,7 +80,6 @@ public class DgraphConfig {
         log.info("Dgraph client was created (host: {}, port: {})", host, port);
         dgraphClient.alter(
                 DgraphProto.Operation.newBuilder()
-                        .setDropAll(true)
                         .setSchema(DgraphSchemaConstants.SCHEMA)
                         .build()
         );
