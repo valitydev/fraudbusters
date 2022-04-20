@@ -70,20 +70,17 @@ public class DgraphConfig {
 
     @Bean
     public DgraphClient dgraphClient(DgraphProperties dgraphProperties) {
+        log.info("Connecting to the dgraph cluster");
         String host = dgraphProperties.getHost();
         int port = dgraphProperties.getPort();
         log.info("Create dgraph client (host: {}, port: {})", host, port);
         DgraphClient dgraphClient = new DgraphClient(createStub(host, port));
         if (dgraphProperties.isAuth()) {
+            log.info("Connect to the Dgraph cluster with login and password...");
             dgraphClient.login(dgraphProperties.getLogin(), dgraphProperties.getPassword());
         }
         log.info("Dgraph client was created (host: {}, port: {})", host, port);
-        dgraphClient.alter(
-                DgraphProto.Operation.newBuilder()
-                        .setSchema(DgraphSchemaConstants.SCHEMA)
-                        .build()
-        );
-        // duplicate for syntax check
+        log.warn("Schema will be altered");
         dgraphClient.alter(
                 DgraphProto.Operation.newBuilder()
                         .setSchema(DgraphSchemaConstants.SCHEMA)
