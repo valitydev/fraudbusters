@@ -23,8 +23,6 @@ public class DgraphPaymentProcessingTest extends DgraphAbstractIntegrationTest {
 
     @Test
     public void processPaymentFromKafkaTest() throws Exception {
-        clearDb(dgraphClient);
-
         OperationProperties operationProperties = OperationProperties.builder()
                  .tokenId("token1")
                  .email("email1")

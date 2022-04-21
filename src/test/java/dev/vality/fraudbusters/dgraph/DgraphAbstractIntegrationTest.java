@@ -21,7 +21,10 @@ import dev.vality.fraudbusters.util.KeyGenerator;
 import dev.vality.kafka.common.serialization.ThriftSerializer;
 import dev.vality.trusted.tokens.TrustedTokensSrv;
 import io.dgraph.DgraphClient;
+import io.dgraph.DgraphGrpc;
 import io.dgraph.DgraphProto;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -136,17 +139,24 @@ public abstract class DgraphAbstractIntegrationTest {
             cleanupBeforeTermination();
             isDgraphStarted = true;
         }
+        clearDb();
     }
 
-    public void clearDb(DgraphClient dgraphClient) {
-        log.error(">> >> clear db");
+    private static void clearDb() {
+        DgraphClient dgraphClient = new DgraphClient(createStub(testHostname, 9080));
         dgraphClient.alter(
                 DgraphProto.Operation.newBuilder()
                         .setDropAll(true)
-                        //.setSchema(DgraphSchemaConstants.SCHEMA)
                         .build()
         );
-        log.error(">> >> completed db");
+    }
+
+    private static DgraphGrpc.DgraphStub createStub(String host, int port) {
+        ManagedChannel channel = ManagedChannelBuilder
+                .forAddress(host, port)
+                .usePlaintext()
+                .build();
+        return DgraphGrpc.newStub(channel);
     }
 
     private static void cleanupBeforeTermination() {

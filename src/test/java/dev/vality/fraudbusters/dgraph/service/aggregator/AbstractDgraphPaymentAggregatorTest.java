@@ -16,8 +16,6 @@ public abstract class AbstractDgraphPaymentAggregatorTest extends DgraphAbstract
     private static final String KAFKA_PAYMENT_TOPIC = "payment_event";
 
     void prepareGraphDb(OperationProperties properties) throws Exception {
-        clearDb(dgraphClient);
-
         producePayments(KAFKA_PAYMENT_TOPIC, TestDgraphObjectFactory.generatePayments(5, properties));
         waitingTopic(KAFKA_PAYMENT_TOPIC, PaymentDeserializer.class);
 
