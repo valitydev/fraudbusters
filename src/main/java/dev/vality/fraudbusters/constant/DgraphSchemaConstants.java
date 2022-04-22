@@ -31,7 +31,7 @@ public final class DgraphSchemaConstants {
                 contactEmail: Email
                 party: Party
                 shop: Shop
-                binX: Bin
+                bin: Bin
                 country: Country
                 fraudPayment: FraudPayment
                 refunds: Refund
@@ -57,7 +57,7 @@ public final class DgraphSchemaConstants {
                 payerType
                 errorCode
                 errorReason
-                binX: Bin
+                bin: Bin
                 sourcePayment: Payment
                 cardToken: Token
                 fingerprint: Fingerprint
@@ -77,7 +77,7 @@ public final class DgraphSchemaConstants {
                 category
                 code
                 payerType
-                binX: Bin
+                bin: Bin
                 sourcePayment: Payment
                 cardToken: Token
                 fingerprint: Fingerprint
@@ -110,7 +110,7 @@ public final class DgraphSchemaConstants {
                 chargebacks: Chargeback
                 emails: Email
                 fingerprints: Fingerprint
-                binX: Bin
+                bin: Bin
             }
             
             type Bin {
@@ -209,7 +209,7 @@ public final class DgraphSchemaConstants {
                 cryptoWalletId
                 cryptoWalletCurrency: Currency
                 country: Country
-                binX: Bin
+                bin: Bin
                 cardToken: Token
             }
             
