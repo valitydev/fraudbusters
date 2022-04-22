@@ -85,7 +85,7 @@ public class DgraphConfig {
                         .setSchema(DgraphSchemaConstants.SCHEMA)
                         .build()
         );
-        log.error("Altering of the scheme was completed");
+        log.info("Altering of the schema was completed");
         return dgraphClient;
     }
 
