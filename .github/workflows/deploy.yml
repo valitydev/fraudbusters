@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-deploy:
     uses: valitydev/java-workflow/.github/workflows/maven-service-deploy.yml@v1
+    with:
+      ignore-coverage: true
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
       mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
