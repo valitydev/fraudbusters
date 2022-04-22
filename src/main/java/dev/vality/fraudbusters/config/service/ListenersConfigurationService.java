@@ -50,6 +50,12 @@ public class ListenersConfigurationService {
     private int listenResultConcurrency;
     @Value("${kafka.dgraph.topics.payment.concurrency}")
     private int dgraphPaymentConcurrency;
+    @Value("${kafka.reconnect-backoff-ms}")
+    private int reconnectBackoffMs;
+    @Value("${kafka.reconnect-backoff-max-ms}")
+    private int reconnectBackoffMaxMs;
+    @Value("${kafka.retry-backoff-ms}")
+    private int retryBackoffMs;
 
     public Map<String, Object> createDefaultProperties(String value) {
         final Map<String, Object> props = new HashMap<>();
@@ -57,6 +63,9 @@ public class ListenersConfigurationService {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, value);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, EARLIEST);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
+        props.put(ConsumerConfig.RECONNECT_BACKOFF_MS_CONFIG, reconnectBackoffMs);
+        props.put(ConsumerConfig.RECONNECT_BACKOFF_MAX_MS_CONFIG, reconnectBackoffMaxMs);
+        props.put(ConsumerConfig.RETRY_BACKOFF_MS_CONFIG, retryBackoffMs);
         props.putAll(SslKafkaUtils.sslConfigure(kafkaSslProperties));
         return props;
     }

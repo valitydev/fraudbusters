@@ -2,7 +2,6 @@ package dev.vality.fraudbusters.dgraph;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.vality.kafka.common.serialization.ThriftSerializer;
 import dev.vality.columbus.ColumbusServiceSrv;
 import dev.vality.damsel.wb_list.WbListServiceSrv;
 import dev.vality.fraudbusters.FraudBustersApplication;
@@ -19,9 +18,13 @@ import dev.vality.fraudbusters.repository.clickhouse.impl.PaymentRepositoryImpl;
 import dev.vality.fraudbusters.service.CardPoolManagementService;
 import dev.vality.fraudbusters.service.ShopManagementService;
 import dev.vality.fraudbusters.util.KeyGenerator;
+import dev.vality.kafka.common.serialization.ThriftSerializer;
 import dev.vality.trusted.tokens.TrustedTokensSrv;
 import io.dgraph.DgraphClient;
+import io.dgraph.DgraphGrpc;
 import io.dgraph.DgraphProto;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -69,6 +72,9 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         properties = {
                 "kafka.listen.result.concurrency=1",
                 "dgraph.service.enabled=true",
+                "kafka.reconnect-backoff-ms=100",
+                "kafka.reconnect-backoff-max-ms=100",
+                "kafka.retry-backoff-ms=100",
                 "kafka.dgraph.topics.payment.enabled=true",
                 "kafka.dgraph.topics.refund.enabled=true",
                 "kafka.dgraph.topics.fraud_payment.enabled=true",
@@ -119,6 +125,8 @@ public abstract class DgraphAbstractIntegrationTest {
     private static GenericContainer dgraphServer;
     private static volatile boolean isDgraphStarted;
     private static String testHostname = "localhost";
+    private static final int RETRIES_COUNT = 10;
+    private static final long TIMEOUT = 5000L;
 
     @DynamicPropertySource
     static void connectionConfigs(DynamicPropertyRegistry registry) {
@@ -133,6 +141,35 @@ public abstract class DgraphAbstractIntegrationTest {
             cleanupBeforeTermination();
             isDgraphStarted = true;
         }
+
+        int count = 0;
+        while (!clearDb() && count < RETRIES_COUNT) {
+            count++;
+            Thread.sleep(TIMEOUT);
+        }
+    }
+
+    private static boolean clearDb() {
+        try {
+            DgraphClient dgraphClient = new DgraphClient(createStub(testHostname, 9080));
+            dgraphClient.alter(
+                    DgraphProto.Operation.newBuilder()
+                            .setDropAll(true)
+                            .build()
+            );
+            return true;
+        } catch (RuntimeException ex) {
+            log.error("Received error while the service cleaned the database", ex);
+            return false;
+        }
+    }
+
+    private static DgraphGrpc.DgraphStub createStub(String host, int port) {
+        ManagedChannel channel = ManagedChannelBuilder
+                .forAddress(host, port)
+                .usePlaintext()
+                .build();
+        return DgraphGrpc.newStub(channel);
     }
 
     private static void cleanupBeforeTermination() {

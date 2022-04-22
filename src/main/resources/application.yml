@@ -40,6 +40,9 @@ spring:
 kafka:
   bootstrap.servers: "localhost:29092"
   backoff.interval: 1000
+  reconnect-backoff-ms: 1500
+  reconnect-backoff-max-ms: 3000
+  retry-backoff-ms: 1000
   historical.listener:
     enable: false
   reply:
@@ -118,7 +121,9 @@ clickhouse.db:
 dgraph:
   host: localhost
   port: 9080
-  withAuthHeader: false
+  auth: false
+  login: "login"
+  password: "password"
   maxAttempts: -1
   service:
     enabled: false

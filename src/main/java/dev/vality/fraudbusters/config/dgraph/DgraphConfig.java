@@ -5,11 +5,11 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import dev.vality.kafka.common.retry.ConfigurableRetryPolicy;
 import dev.vality.damsel.fraudbusters.Chargeback;
 import dev.vality.damsel.fraudbusters.FraudPayment;
 import dev.vality.damsel.fraudbusters.Refund;
 import dev.vality.damsel.fraudbusters.Withdrawal;
+import dev.vality.fraudbusters.config.properties.DgraphProperties;
 import dev.vality.fraudbusters.constant.DgraphSchemaConstants;
 import dev.vality.fraudbusters.converter.PaymentToDgraphPaymentConverter;
 import dev.vality.fraudbusters.converter.PaymentToPaymentModelConverter;
@@ -17,13 +17,12 @@ import dev.vality.fraudbusters.domain.dgraph.common.*;
 import dev.vality.fraudbusters.listener.events.dgraph.*;
 import dev.vality.fraudbusters.repository.Repository;
 import dev.vality.fraudbusters.stream.impl.FullTemplateVisitorImpl;
+import dev.vality.kafka.common.retry.ConfigurableRetryPolicy;
 import io.dgraph.DgraphClient;
 import io.dgraph.DgraphGrpc;
 import io.dgraph.DgraphProto;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import io.grpc.Metadata;
-import io.grpc.stub.MetadataUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -70,24 +69,23 @@ public class DgraphConfig {
     }
 
     @Bean
-    public DgraphClient dgraphClient(@Value("${dgraph.host}") String host,
-                                     @Value("${dgraph.port}") int port,
-                                     @Value("${dgraph.withAuthHeader}") boolean withAuthHeader) {
+    public DgraphClient dgraphClient(DgraphProperties dgraphProperties) {
+        log.info("Connecting to the dgraph cluster");
+        String host = dgraphProperties.getHost();
+        int port = dgraphProperties.getPort();
         log.info("Create dgraph client (host: {}, port: {})", host, port);
-        DgraphClient dgraphClient = new DgraphClient(createStub(host, port, withAuthHeader));
-        log.info("Dgraph client was created (host: {}, port: {})", host, port);
-        dgraphClient.alter(
-                DgraphProto.Operation.newBuilder()
-                        .setDropAll(true)
-                        .setSchema(DgraphSchemaConstants.SCHEMA)
-                        .build()
-        );
-        // duplicate for syntax check
+        DgraphClient dgraphClient = new DgraphClient(createStub(host, port));
+        log.info("Dgraph version: {}", dgraphClient.checkVersion());
+        if (dgraphProperties.isAuth()) {
+            log.info("Connect to the Dgraph cluster with login and password...");
+            dgraphClient.login(dgraphProperties.getLogin(), dgraphProperties.getPassword());
+        }
         dgraphClient.alter(
                 DgraphProto.Operation.newBuilder()
                         .setSchema(DgraphSchemaConstants.SCHEMA)
                         .build()
         );
+        log.info("Altering of the schema was completed");
         return dgraphClient;
     }
 
@@ -145,20 +143,12 @@ public class DgraphConfig {
         return new DgraphWithdrawalEventListener(repository, converter);
     }
 
-    private DgraphGrpc.DgraphStub createStub(String host, int port, boolean withAuthHeader) {
+    private DgraphGrpc.DgraphStub createStub(String host, int port) {
         ManagedChannel channel = ManagedChannelBuilder
                 .forAddress(host, port)
                 .usePlaintext()
                 .build();
-        DgraphGrpc.DgraphStub stub = DgraphGrpc.newStub(channel);
-
-        if (withAuthHeader) {
-            Metadata metadata = new Metadata();
-            metadata.put(
-                    Metadata.Key.of("auth-token", Metadata.ASCII_STRING_MARSHALLER), "the-auth-token-value");
-            stub = MetadataUtils.attachHeaders(stub, metadata);
-        }
-        return stub;
+        return DgraphGrpc.newStub(channel);
     }
 
     private static final class RegisterJobFailListener extends RetryListenerSupport {
