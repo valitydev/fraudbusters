@@ -125,6 +125,8 @@ public abstract class DgraphAbstractIntegrationTest {
     private static GenericContainer dgraphServer;
     private static volatile boolean isDgraphStarted;
     private static String testHostname = "localhost";
+    private static final int RETRIES_COUNT = 10;
+    private static final long TIMEOUT = 5000L;
 
     @DynamicPropertySource
     static void connectionConfigs(DynamicPropertyRegistry registry) {
@@ -139,16 +141,27 @@ public abstract class DgraphAbstractIntegrationTest {
             cleanupBeforeTermination();
             isDgraphStarted = true;
         }
-        clearDb();
+
+        int count = 0;
+        while (!clearDb() && count < RETRIES_COUNT) {
+            count++;
+            Thread.sleep(TIMEOUT);
+        }
     }
 
-    private static void clearDb() {
-        DgraphClient dgraphClient = new DgraphClient(createStub(testHostname, 9080));
-        dgraphClient.alter(
-                DgraphProto.Operation.newBuilder()
-                        .setDropAll(true)
-                        .build()
-        );
+    private static boolean clearDb() {
+        try {
+            DgraphClient dgraphClient = new DgraphClient(createStub(testHostname, 9080));
+            dgraphClient.alter(
+                    DgraphProto.Operation.newBuilder()
+                            .setDropAll(true)
+                            .build()
+            );
+            return true;
+        } catch (RuntimeException ex) {
+            log.error("Received error while the service cleaned the database", ex);
+            return false;
+        }
     }
 
     private static DgraphGrpc.DgraphStub createStub(String host, int port) {
