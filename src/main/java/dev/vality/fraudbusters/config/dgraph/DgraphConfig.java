@@ -70,23 +70,12 @@ public class DgraphConfig {
 
     @Bean
     public DgraphClient dgraphClient(DgraphProperties dgraphProperties) {
-        log.info("Connecting to the dgraph cluster");
-        String host = dgraphProperties.getHost();
-        int port = dgraphProperties.getPort();
-        log.info("Create dgraph client (host: {}, port: {})", host, port);
-        DgraphClient dgraphClient = new DgraphClient(createStub(host, port));
-        log.info("Dgraph version: {}", dgraphClient.checkVersion());
-        if (dgraphProperties.isAuth()) {
-            log.info("Connect to the Dgraph cluster with login and password...");
-            dgraphClient.login(dgraphProperties.getLogin(), dgraphProperties.getPassword());
+        try {
+            return createDgraphClient(dgraphProperties);
+        } catch (Exception ex) {
+            log.error("Received an exception while the service was creating the dgraph client instance", ex);
+            throw ex;
         }
-        dgraphClient.alter(
-                DgraphProto.Operation.newBuilder()
-                        .setSchema(DgraphSchemaConstants.SCHEMA)
-                        .build()
-        );
-        log.info("Altering of the schema was completed");
-        return dgraphClient;
     }
 
     @Bean
@@ -141,6 +130,26 @@ public class DgraphConfig {
             Converter<Withdrawal, DgraphWithdrawal> converter
     ) {
         return new DgraphWithdrawalEventListener(repository, converter);
+    }
+
+    private DgraphClient createDgraphClient(DgraphProperties dgraphProperties) {
+        log.info("Connecting to the dgraph cluster");
+        String host = dgraphProperties.getHost();
+        int port = dgraphProperties.getPort();
+        log.info("Create dgraph client (host: {}, port: {})", host, port);
+        DgraphClient dgraphClient = new DgraphClient(createStub(host, port));
+        log.info("Dgraph version: {}", dgraphClient.checkVersion());
+        if (dgraphProperties.isAuth()) {
+            log.info("Connect to the Dgraph cluster with login and password...");
+            dgraphClient.login(dgraphProperties.getLogin(), dgraphProperties.getPassword());
+        }
+        dgraphClient.alter(
+                DgraphProto.Operation.newBuilder()
+                        .setSchema(DgraphSchemaConstants.SCHEMA)
+                        .build()
+        );
+        log.info("Altering of the schema was completed");
+        return dgraphClient;
     }
 
     private DgraphGrpc.DgraphStub createStub(String host, int port) {
