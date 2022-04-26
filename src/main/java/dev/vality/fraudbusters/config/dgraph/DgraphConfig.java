@@ -21,6 +21,7 @@ import dev.vality.kafka.common.retry.ConfigurableRetryPolicy;
 import io.dgraph.DgraphClient;
 import io.dgraph.DgraphGrpc;
 import io.dgraph.DgraphProto;
+import io.dgraph.TxnConflictException;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,8 @@ public class DgraphConfig {
 
     @Value("${dgraph.maxAttempts}")
     private int maxAttempts;
+
+    private static final String DEFAULT_DGRAPH_ERROR_PREFIX = "Register dgraph transaction failed event. ";
 
     @Bean
     public ObjectMapper dgraphObjectMapper() {
@@ -166,8 +169,12 @@ public class DgraphConfig {
         public <T, E extends Throwable> void onError(RetryContext context,
                                                      RetryCallback<T, E> callback,
                                                      Throwable throwable) {
-            log.warn("Register dgraph transaction failed event. Retry count: {}",
-                    context.getRetryCount(), context.getLastThrowable());
+            if (throwable instanceof TxnConflictException) {
+                log.info(DEFAULT_DGRAPH_ERROR_PREFIX + "Retry count: {}", context.getRetryCount());
+                log.debug(DEFAULT_DGRAPH_ERROR_PREFIX + "Stacktrace", context.getLastThrowable());
+            } else {
+                log.warn(DEFAULT_DGRAPH_ERROR_PREFIX + "Unexpected error", context.getLastThrowable());
+            }
         }
     }
 
