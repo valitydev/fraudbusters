@@ -35,7 +35,7 @@ public abstract class AbstractDgraphDao {
             log.debug("InsertJsonToDgraph received response (nqs: {}): {}", nqs, response);
             return true;
         } catch (RuntimeException ex) {
-            log.warn("Received a dgraph exception while the service add new data)", ex);
+            log.debug("Received a dgraph exception while the service add new data", ex);
             throw new DgraphException(String.format("Received exception from dgraph while the service " +
                     "was saving data (nqs: %s)", nqs), ex);
         }
