@@ -46,6 +46,9 @@ public class DgraphConfig {
     @Value("${dgraph.maxAttempts}")
     private int maxAttempts;
 
+    @Value("${dgraph.backoffPeriod}")
+    private long backoffPeriod;
+
     private static final String DEFAULT_DGRAPH_ERROR_PREFIX = "Register dgraph transaction failed event. ";
 
     @Bean
@@ -64,7 +67,7 @@ public class DgraphConfig {
                 new ConfigurableRetryPolicy(maxAttempts, Collections.singletonMap(RuntimeException.class, true))
         );
         FixedBackOffPolicy fixedBackOffPolicy = new FixedBackOffPolicy();
-        fixedBackOffPolicy.setBackOffPeriod(10L);
+        fixedBackOffPolicy.setBackOffPeriod(backoffPeriod);
         retryTemplate.setBackOffPolicy(fixedBackOffPolicy);
         retryTemplate.registerListener(new RegisterJobFailListener());
 
@@ -72,9 +75,9 @@ public class DgraphConfig {
     }
 
     @Bean
-    public DgraphClient dgraphClient(DgraphProperties dgraphProperties) {
+    public DgraphClient dgraphClient(DgraphProperties dgraphProperties, RetryTemplate dgraphRetryTemplate) {
         try {
-            return createDgraphClient(dgraphProperties);
+            return dgraphRetryTemplate.execute(context -> createDgraphClient(dgraphProperties));
         } catch (Exception ex) {
             log.error("Received an exception while the service was creating the dgraph client instance", ex);
             throw ex;

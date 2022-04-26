@@ -125,6 +125,7 @@ dgraph:
   login: "login"
   password: "password"
   maxAttempts: -1
+  backoffPeriod: 1000
   service:
     enabled: false
 
