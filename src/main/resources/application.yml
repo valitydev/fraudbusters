@@ -119,8 +119,8 @@ clickhouse.db:
   max-distributed-connections: 50
 
 dgraph:
-  host: localhost
-  port: 9080
+  targets:
+    - "localhost:9080"
   auth: false
   login: "login"
   password: "password"
