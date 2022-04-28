@@ -4,15 +4,18 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Data
 @Component
 @ConfigurationProperties(prefix = "dgraph")
 public class DgraphProperties {
 
-    private String host;
-    private int port;
+    private List<String> targets;
     private boolean auth;
     private String login;
     private String password;
+    private int maxAttempts;
+    private long backoffPeriod;
 
 }

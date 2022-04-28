@@ -25,7 +25,6 @@ import io.dgraph.TxnConflictException;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,15 +35,14 @@ import org.springframework.retry.backoff.FixedBackOffPolicy;
 import org.springframework.retry.listener.RetryListenerSupport;
 import org.springframework.retry.support.RetryTemplate;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Configuration
 @ConditionalOnProperty(value = "dgraph.service.enabled", havingValue = "true")
 public class DgraphConfig {
-
-    @Value("${dgraph.maxAttempts}")
-    private int maxAttempts;
 
     private static final String DEFAULT_DGRAPH_ERROR_PREFIX = "Register dgraph transaction failed event. ";
 
@@ -58,13 +56,16 @@ public class DgraphConfig {
     }
 
     @Bean
-    public RetryTemplate dgraphRetryTemplate() {
+    public RetryTemplate dgraphRetryTemplate(DgraphProperties dgraphProperties) {
         RetryTemplate retryTemplate = new RetryTemplate();
         retryTemplate.setRetryPolicy(
-                new ConfigurableRetryPolicy(maxAttempts, Collections.singletonMap(RuntimeException.class, true))
+                new ConfigurableRetryPolicy(
+                        dgraphProperties.getMaxAttempts(),
+                        Collections.singletonMap(RuntimeException.class, true)
+                )
         );
         FixedBackOffPolicy fixedBackOffPolicy = new FixedBackOffPolicy();
-        fixedBackOffPolicy.setBackOffPeriod(10L);
+        fixedBackOffPolicy.setBackOffPeriod(dgraphProperties.getBackoffPeriod());
         retryTemplate.setBackOffPolicy(fixedBackOffPolicy);
         retryTemplate.registerListener(new RegisterJobFailListener());
 
@@ -72,9 +73,9 @@ public class DgraphConfig {
     }
 
     @Bean
-    public DgraphClient dgraphClient(DgraphProperties dgraphProperties) {
+    public DgraphClient dgraphClient(DgraphProperties dgraphProperties, RetryTemplate dgraphRetryTemplate) {
         try {
-            return createDgraphClient(dgraphProperties);
+            return dgraphRetryTemplate.execute(context -> createDgraphClient(dgraphProperties));
         } catch (Exception ex) {
             log.error("Received an exception while the service was creating the dgraph client instance", ex);
             throw ex;
@@ -136,11 +137,9 @@ public class DgraphConfig {
     }
 
     private DgraphClient createDgraphClient(DgraphProperties dgraphProperties) {
-        log.info("Connecting to the dgraph cluster");
-        String host = dgraphProperties.getHost();
-        int port = dgraphProperties.getPort();
-        log.info("Create dgraph client (host: {}, port: {})", host, port);
-        DgraphClient dgraphClient = new DgraphClient(createStub(host, port));
+        log.info("Create dgraph client (targets: {})", dgraphProperties.getTargets());
+        DgraphClient dgraphClient = new DgraphClient(createStubs(dgraphProperties.getTargets()));
+
         log.info("Dgraph version: {}", dgraphClient.checkVersion());
         if (dgraphProperties.isAuth()) {
             log.info("Connect to the Dgraph cluster with login and password...");
@@ -155,9 +154,15 @@ public class DgraphConfig {
         return dgraphClient;
     }
 
-    private DgraphGrpc.DgraphStub createStub(String host, int port) {
+    private DgraphGrpc.DgraphStub[] createStubs(List<String> dgraphTargets) {
+        List<DgraphGrpc.DgraphStub> stubs = new ArrayList<>();
+        dgraphTargets.forEach(target -> stubs.add(createStub(target)));
+        return stubs.toArray(new DgraphGrpc.DgraphStub[dgraphTargets.size()]);
+    }
+
+    private DgraphGrpc.DgraphStub createStub(String target) {
         ManagedChannel channel = ManagedChannelBuilder
-                .forAddress(host, port)
+                .forTarget(target)
                 .usePlaintext()
                 .build();
         return DgraphGrpc.newStub(channel);
