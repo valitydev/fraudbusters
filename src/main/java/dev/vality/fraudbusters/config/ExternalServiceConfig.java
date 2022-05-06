@@ -15,8 +15,9 @@ import java.io.IOException;
 public class ExternalServiceConfig {
 
     @Bean
-    public ColumbusServiceSrv.Iface geoIpServiceSrv(@Value("${geo.ip.service.url}") Resource url,
-                                                   @Value("${geo.ip.service.timeout:5000}") Integer timeout) throws IOException {
+    public ColumbusServiceSrv.Iface geoIpServiceSrv(
+            @Value("${geo.ip.service.url}") Resource url,
+            @Value("${geo.ip.service.timeout:5000}") Integer timeout) throws IOException {
         return new THSpawnClientBuilder()
                 .withAddress(url.getURI())
                 .withNetworkTimeout(timeout)
@@ -24,8 +25,10 @@ public class ExternalServiceConfig {
     }
 
     @Bean
-    public WbListServiceSrv.Iface wbListServiceSrv(@Value("${wb.list.service.url}") Resource url,
-                                                   @Value("${wb.list.service.timeout:5000}") Integer timeout) throws IOException {
+    public WbListServiceSrv.Iface wbListServiceSrv(
+            @Value("${wb.list.service.url}") Resource url,
+            @Value("${wb.list.service.timeout:5000}") Integer timeout)
+            throws IOException {
         return new THSpawnClientBuilder()
                 .withAddress(url.getURI())
                 .withNetworkTimeout(timeout)
