@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.fraud.localstorage.aggregator;
 
-import dev.vality.fraudo.model.TimeWindow;
-import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
 import dev.vality.fraudbusters.exception.RuleFunctionException;
 import dev.vality.fraudbusters.fraud.AggregateGroupingFunction;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
@@ -11,6 +9,8 @@ import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse.CountAggregatorImpl;
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.util.TimestampUtil;
+import dev.vality.fraudo.model.TimeWindow;
+import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,13 +35,15 @@ public class LocalCountAggregatorDecorator implements CountPaymentAggregator<Pay
         Integer count = countAggregator.count(checkedField, paymentModel, timeWindow, list);
         FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
         Instant now = TimestampUtil.instantFromPaymentModel(paymentModel);
-        Instant instantFrom = Instant.ofEpochMilli(TimestampUtil.generateTimestampMinusMinutesMillis(
+        Instant instantFrom = Instant.ofEpochMilli(TimestampUtil.generateTimestampMinusTimeUnitsMillis(
                 now,
-                timeWindow.getStartWindowTime()
+                timeWindow.getStartWindowTime(),
+                timeWindow.getTimeUnit()
         ));
-        Instant instantTo = Instant.ofEpochMilli(TimestampUtil.generateTimestampMinusMinutesMillis(
+        Instant instantTo = Instant.ofEpochMilli(TimestampUtil.generateTimestampMinusTimeUnitsMillis(
                 now,
-                timeWindow.getEndWindowTime()
+                timeWindow.getEndWindowTime(),
+                timeWindow.getTimeUnit()
         ));
         Integer localCount = localStorageRepository.countOperationByField(checkedField.name(), resolve.getValue(),
                 instantFrom.getEpochSecond(),
@@ -77,13 +79,15 @@ public class LocalCountAggregatorDecorator implements CountPaymentAggregator<Pay
             Instant now = TimestampUtil.instantFromPaymentModel(paymentModel);
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
             List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
-            Instant instantFrom = Instant.ofEpochMilli(TimestampUtil.generateTimestampMinusMinutesMillis(
+            Instant instantFrom = Instant.ofEpochMilli(TimestampUtil.generateTimestampMinusTimeUnitsMillis(
                     now,
-                    timeWindow.getStartWindowTime()
+                    timeWindow.getStartWindowTime(),
+                    timeWindow.getTimeUnit()
             ));
-            Instant instantTo = Instant.ofEpochMilli(TimestampUtil.generateTimestampMinusMinutesMillis(
+            Instant instantTo = Instant.ofEpochMilli(TimestampUtil.generateTimestampMinusTimeUnitsMillis(
                     now,
-                    timeWindow.getEndWindowTime()
+                    timeWindow.getEndWindowTime(),
+                    timeWindow.getTimeUnit()
             ));
             Integer localCount = localStorageRepository.countOperationErrorWithGroupBy(
                     checkedField.name(),
@@ -139,8 +143,16 @@ public class LocalCountAggregatorDecorator implements CountPaymentAggregator<Pay
             Integer count = aggregateFunction.accept(
                     resolve.getName(),
                     resolve.getValue(),
-                    TimestampUtil.generateTimestampMinusMinutesMillis(now, timeWindow.getStartWindowTime()),
-                    TimestampUtil.generateTimestampMinusMinutesMillis(now, timeWindow.getEndWindowTime()),
+                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
+                            now,
+                            timeWindow.getStartWindowTime(),
+                            timeWindow.getTimeUnit()
+                    ),
+                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
+                            now,
+                            timeWindow.getEndWindowTime(),
+                            timeWindow.getTimeUnit()
+                    ),
                     eventFields
             );
             log.debug(

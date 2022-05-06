@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.fraud.payment.aggregator.dgraph;
 
-import dev.vality.fraudo.aggregator.UniqueValueAggregator;
-import dev.vality.fraudo.model.TimeWindow;
 import dev.vality.fraudbusters.constant.PaymentStatus;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.FieldModel;
@@ -10,6 +8,8 @@ import dev.vality.fraudbusters.fraud.payment.aggregator.dgraph.query.builder.Dgr
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.fraud.payment.resolver.DgraphEntityResolver;
 import dev.vality.fraudbusters.repository.DgraphAggregatesRepository;
+import dev.vality.fraudo.aggregator.UniqueValueAggregator;
+import dev.vality.fraudo.model.TimeWindow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
@@ -54,8 +54,8 @@ public class DgraphUniqueAggregatorImpl implements UniqueValueAggregator<Payment
                 dgraphEntityResolver.resolvePaymentCheckedField(onField),
                 dgraphEntityResolver.resolvePaymentCheckedFieldsToMap(filters),
                 paymentModel,
-                timestamp.minusMillis(timeWindow.getStartWindowTime()),
-                timestamp.minusMillis(timeWindow.getEndWindowTime()),
+                timestamp.minus(timeWindow.getStartWindowTime(), timeWindow.getTimeUnit()),
+                timestamp.minus(timeWindow.getEndWindowTime(), timeWindow.getTimeUnit()),
                 PaymentStatus.captured.name()
         );
         return dgraphAggregatesRepository.getCount(countQuery) + CURRENT_ONE;

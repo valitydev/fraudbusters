@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse;
 
-import dev.vality.fraudo.model.TimeWindow;
-import dev.vality.fraudo.payment.aggregator.SumPaymentAggregator;
 import dev.vality.fraudbusters.aspect.BasicMetric;
 import dev.vality.fraudbusters.exception.RuleFunctionException;
 import dev.vality.fraudbusters.fraud.AggregateGroupingFunction;
@@ -12,6 +10,8 @@ import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolv
 import dev.vality.fraudbusters.repository.AggregationRepository;
 import dev.vality.fraudbusters.repository.PaymentRepository;
 import dev.vality.fraudbusters.util.TimestampUtil;
+import dev.vality.fraudo.model.TimeWindow;
+import dev.vality.fraudo.payment.aggregator.SumPaymentAggregator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -66,8 +66,14 @@ public class SumAggregatorImpl implements SumPaymentAggregator<PaymentModel, Pay
             Long sum = paymentRepository.sumOperationErrorWithGroupBy(
                     resolve.getName(),
                     resolve.getValue(),
-                    TimestampUtil.generateTimestampMinusMinutesMillis(timestamp, timeWindow.getStartWindowTime()),
-                    TimestampUtil.generateTimestampMinusMinutesMillis(timestamp, timeWindow.getEndWindowTime()),
+                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
+                            timestamp,
+                            timeWindow.getStartWindowTime(),
+                            timeWindow.getTimeUnit()),
+                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
+                            timestamp,
+                            timeWindow.getEndWindowTime(),
+                            timeWindow.getTimeUnit()),
                     eventFields,
                     errorCode
             );
@@ -148,8 +154,14 @@ public class SumAggregatorImpl implements SumPaymentAggregator<PaymentModel, Pay
             Long sum = aggregateFunction.accept(
                     resolve.getName(),
                     resolve.getValue(),
-                    TimestampUtil.generateTimestampMinusMinutesMillis(timestamp, timeWindow.getStartWindowTime()),
-                    TimestampUtil.generateTimestampMinusMinutesMillis(timestamp, timeWindow.getEndWindowTime()),
+                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
+                            timestamp,
+                            timeWindow.getStartWindowTime(),
+                            timeWindow.getTimeUnit()),
+                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
+                            timestamp,
+                            timeWindow.getEndWindowTime(),
+                            timeWindow.getTimeUnit()),
                     eventFields
             );
             double resultSum =

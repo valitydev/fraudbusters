@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.fraud.payment.aggregator.dgraph;
 
-import dev.vality.fraudo.model.TimeWindow;
-import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
 import dev.vality.fraudbusters.aspect.BasicMetric;
 import dev.vality.fraudbusters.constant.ChargebackStatus;
 import dev.vality.fraudbusters.constant.PaymentStatus;
@@ -12,6 +10,8 @@ import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.aggregator.dgraph.query.builder.DgraphAggregationQueryBuilderService;
 import dev.vality.fraudbusters.fraud.payment.resolver.DgraphEntityResolver;
 import dev.vality.fraudbusters.repository.DgraphAggregatesRepository;
+import dev.vality.fraudo.model.TimeWindow;
+import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -99,8 +99,8 @@ public class DgraphCountAggregatorImpl implements CountPaymentAggregator<Payment
                 targetEntity,
                 dgraphEntityResolver.resolvePaymentCheckedFieldsToMap(filters),
                 paymentModel,
-                timestamp.minusMillis(timeWindow.getStartWindowTime()),
-                timestamp.minusMillis(timeWindow.getEndWindowTime()),
+                timestamp.minus(timeWindow.getStartWindowTime(), timeWindow.getTimeUnit()),
+                timestamp.minus(timeWindow.getEndWindowTime(), timeWindow.getTimeUnit()),
                 status
         );
         return dgraphAggregatesRepository.getCount(countQuery);
