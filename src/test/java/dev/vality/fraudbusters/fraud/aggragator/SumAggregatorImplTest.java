@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.fraud.aggragator;
 
-import dev.vality.fraudo.model.TimeWindow;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.FieldModel;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
@@ -8,11 +7,14 @@ import dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse.SumAggregator
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.repository.AggregationRepository;
 import dev.vality.fraudbusters.repository.PaymentRepository;
+import dev.vality.fraudo.model.TimeWindow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -55,7 +57,7 @@ public class SumAggregatorImplTest {
         Double some = sumAggregator.sum(
                 PaymentCheckedField.BIN,
                 paymentModel,
-                TimeWindow.builder().startWindowTime(1444L).build(),
+                TimeWindow.builder().startWindowTime(1444L).timeUnit(ChronoUnit.MINUTES).build(),
                 null
         );
 
@@ -66,7 +68,9 @@ public class SumAggregatorImplTest {
     public void sumTimeWindow() {
         PaymentModel paymentModel = new PaymentModel();
         paymentModel.setAmount(1L);
-        TimeWindow.TimeWindowBuilder timeWindowBuilder = TimeWindow.builder().startWindowTime(1444L)
+        TimeWindow.TimeWindowBuilder timeWindowBuilder = TimeWindow.builder()
+                .startWindowTime(1444L)
+                .timeUnit(ChronoUnit.MINUTES)
                 .endWindowTime(400L);
         when(paymentRepository.sumOperationByFieldWithGroupBy(any(), any(), any(), any(), any())).thenReturn(1050100L);
 
@@ -74,7 +78,9 @@ public class SumAggregatorImplTest {
 
         assertEquals(Double.valueOf(1050101), sum);
 
-        timeWindowBuilder = TimeWindow.builder().startWindowTime(1444L)
+        timeWindowBuilder = TimeWindow.builder()
+                .startWindowTime(1444L)
+                .timeUnit(ChronoUnit.MINUTES)
                 .endWindowTime(null);
         sum = sumAggregator.sum(PaymentCheckedField.BIN, paymentModel, timeWindowBuilder.build(), null);
 
@@ -85,7 +91,11 @@ public class SumAggregatorImplTest {
     public void sumSuccess() {
         when(paymentRepository.sumOperationSuccessWithGroupBy(any(), any(), any(), any(), any())).thenReturn(1050100L);
         Double some = sumAggregator.sumSuccess(PaymentCheckedField.BIN, new PaymentModel(),
-                TimeWindow.builder().startWindowTime(1444L).build(), null
+                TimeWindow.builder()
+                        .startWindowTime(1444L)
+                        .timeUnit(ChronoUnit.MINUTES)
+                        .build(),
+                null
         );
 
         assertEquals(Double.valueOf(1050100), some);
@@ -96,7 +106,12 @@ public class SumAggregatorImplTest {
         when(paymentRepository.sumOperationErrorWithGroupBy(any(), any(), any(), any(), any(), any()))
                 .thenReturn(1050100L);
         Double some = sumAggregator.sumError(PaymentCheckedField.BIN, new PaymentModel(),
-                TimeWindow.builder().startWindowTime(1444L).build(), null, null
+                TimeWindow.builder()
+                        .startWindowTime(1444L)
+                        .timeUnit(ChronoUnit.MINUTES)
+                        .build(),
+                null,
+                null
         );
 
         assertEquals(Double.valueOf(1050100), some);
