@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.fraud.localstorage.aggregator;
 
-import dev.vality.fraudo.model.TimeWindow;
-import dev.vality.fraudo.payment.aggregator.SumPaymentAggregator;
 import dev.vality.fraudbusters.exception.RuleFunctionException;
 import dev.vality.fraudbusters.fraud.AggregateGroupingFunction;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
@@ -11,6 +9,8 @@ import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse.SumAggregatorImpl;
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.util.TimestampUtil;
+import dev.vality.fraudo.model.TimeWindow;
+import dev.vality.fraudo.payment.aggregator.SumPaymentAggregator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -36,10 +36,16 @@ public class LocalSumAggregatorDecorator implements SumPaymentAggregator<Payment
         FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
         Instant now = TimestampUtil.instantFromPaymentModel(paymentModel);
         Instant instantFrom = Instant.ofEpochMilli(
-                TimestampUtil.generateTimestampMinusMinutesMillis(now, timeWindow.getStartWindowTime())
+                TimestampUtil.generateTimestampMinusTimeUnitsMillis(
+                        now,
+                        timeWindow.getStartWindowTime(),
+                        timeWindow.getTimeUnit())
         );
         Instant instantTo = Instant.ofEpochMilli(
-                TimestampUtil.generateTimestampMinusMinutesMillis(now, timeWindow.getEndWindowTime())
+                TimestampUtil.generateTimestampMinusTimeUnitsMillis(
+                        now,
+                        timeWindow.getEndWindowTime(),
+                        timeWindow.getTimeUnit())
         );
         List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
         Long localSum = localStorageRepository.sumOperationByFieldWithGroupBy(checkedField.name(), resolve.getValue(),
@@ -79,10 +85,16 @@ public class LocalSumAggregatorDecorator implements SumPaymentAggregator<Payment
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
             List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
             Instant instantFrom = Instant.ofEpochMilli(
-                    TimestampUtil.generateTimestampMinusMinutesMillis(now, timeWindow.getStartWindowTime())
+                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
+                            now,
+                            timeWindow.getStartWindowTime(),
+                            timeWindow.getTimeUnit())
             );
             Instant instantTo = Instant.ofEpochMilli(
-                    TimestampUtil.generateTimestampMinusMinutesMillis(now, timeWindow.getEndWindowTime())
+                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
+                            now,
+                            timeWindow.getEndWindowTime(),
+                            timeWindow.getTimeUnit())
             );
             Long localSum = localStorageRepository.sumOperationErrorWithGroupBy(
                     checkedField.name(),
@@ -149,8 +161,14 @@ public class LocalSumAggregatorDecorator implements SumPaymentAggregator<Payment
             Long sum = aggregateFunction.accept(
                     resolve.getName(),
                     resolve.getValue(),
-                    TimestampUtil.generateTimestampMinusMinutesMillis(now, timeWindow.getStartWindowTime()),
-                    TimestampUtil.generateTimestampMinusMinutesMillis(now, timeWindow.getEndWindowTime()),
+                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
+                            now,
+                            timeWindow.getStartWindowTime(),
+                            timeWindow.getTimeUnit()),
+                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
+                            now,
+                            timeWindow.getEndWindowTime(),
+                            timeWindow.getTimeUnit()),
                     eventFields
             );
             double resultSum = withCurrent

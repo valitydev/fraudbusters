@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.fraud.localstorage.aggregator;
 
-import dev.vality.fraudo.aggregator.UniqueValueAggregator;
-import dev.vality.fraudo.model.TimeWindow;
 import dev.vality.fraudbusters.exception.RuleFunctionException;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.localstorage.LocalResultStorageRepository;
@@ -10,6 +8,8 @@ import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse.UniqueValueAggregatorImpl;
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.util.TimestampUtil;
+import dev.vality.fraudo.aggregator.UniqueValueAggregator;
+import dev.vality.fraudo.model.TimeWindow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,8 +40,14 @@ public class LocalUniqueValueAggregatorDecorator implements UniqueValueAggregato
                     resolve.getName(),
                     resolve.getValue(),
                     databasePaymentFieldResolver.resolve(onField),
-                    TimestampUtil.generateTimestampMinusMinutesMillis(now, timeWindow.getStartWindowTime()),
-                    TimestampUtil.generateTimestampMinusMinutesMillis(now, timeWindow.getEndWindowTime()),
+                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
+                            now,
+                            timeWindow.getStartWindowTime(),
+                            timeWindow.getTimeUnit()),
+                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
+                            now,
+                            timeWindow.getEndWindowTime(),
+                            timeWindow.getTimeUnit()),
                     fieldModels
             );
             int result = localUniqCountOperation + uniq;

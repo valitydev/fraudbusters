@@ -1,7 +1,6 @@
 package dev.vality.fraudbusters.repository;
 
 import dev.vality.clickhouse.initializer.ChInitializer;
-import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.columbus.ColumbusServiceSrv;
 import dev.vality.fraudbusters.config.ClickhouseConfig;
 import dev.vality.fraudbusters.constant.EventField;
@@ -16,6 +15,7 @@ import dev.vality.fraudbusters.repository.clickhouse.impl.FraudResultRepository;
 import dev.vality.fraudbusters.repository.clickhouse.mapper.EventMapper;
 import dev.vality.fraudbusters.util.BeanUtil;
 import dev.vality.fraudbusters.util.TimestampUtil;
+import dev.vality.fraudo.constant.ResultStatus;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +37,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.sql.SQLException;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -123,7 +124,7 @@ public class FraudResultRepositoryTest {
     public void countOperationByEmailTest() throws SQLException {
         Instant now = Instant.now();
         Long to = TimestampUtil.generateTimestampNowMillis(now);
-        Long from = TimestampUtil.generateTimestampMinusMinutesMillis(now, 10L);
+        Long from = TimestampUtil.generateTimestampMinusTimeUnitsMillis(now, 10L, ChronoUnit.MINUTES);
         List<FraudResult> batch = createBatch();
         fraudResultRepository.insertBatch(fraudResultToEventConverter.convertBatch(batch));
 
@@ -147,7 +148,7 @@ public class FraudResultRepositoryTest {
 
         Instant now = Instant.now().plusSeconds(30L);
         Long to = TimestampUtil.generateTimestampNowMillis(now);
-        Long from = TimestampUtil.generateTimestampMinusMinutesMillis(now, 10L);
+        Long from = TimestampUtil.generateTimestampMinusTimeUnitsMillis(now, 10L, ChronoUnit.MINUTES);
 
         FieldModel email = databasePaymentFieldResolver.resolve(PaymentCheckedField.EMAIL, paymentModel);
         int count = fraudResultRepository.countOperationByFieldWithGroupBy(EventField.email.name(),
@@ -190,7 +191,7 @@ public class FraudResultRepositoryTest {
 
         Instant now = Instant.now();
         Long to = TimestampUtil.generateTimestampNowMillis(now);
-        Long from = TimestampUtil.generateTimestampMinusMinutesMillis(now, 10L);
+        Long from = TimestampUtil.generateTimestampMinusTimeUnitsMillis(now, 10L, ChronoUnit.MINUTES);
         Long sum = fraudResultRepository.sumOperationByFieldWithGroupBy(EventField.email.name(),
                 BeanUtil.EMAIL,
                 from,
@@ -224,7 +225,7 @@ public class FraudResultRepositoryTest {
 
         Instant now = Instant.now();
         Long to = TimestampUtil.generateTimestampNowMillis(now);
-        Long from = TimestampUtil.generateTimestampMinusMinutesMillis(now, 10L);
+        Long from = TimestampUtil.generateTimestampMinusTimeUnitsMillis(now, 10L, ChronoUnit.MINUTES);
         Integer sum = fraudResultRepository.uniqCountOperation(EventField.email.name(),
                 BeanUtil.EMAIL,
                 EventField.fingerprint.name(),
@@ -252,7 +253,7 @@ public class FraudResultRepositoryTest {
 
         Instant now = Instant.now();
         Long to = TimestampUtil.generateTimestampNowMillis(now);
-        Long from = TimestampUtil.generateTimestampMinusMinutesMillis(now, 10L);
+        Long from = TimestampUtil.generateTimestampMinusTimeUnitsMillis(now, 10L, ChronoUnit.MINUTES);
         Integer sum = fraudResultRepository.uniqCountOperationWithGroupBy(EventField.email.name(),
                 BeanUtil.EMAIL,
                 EventField.fingerprint.name(),
