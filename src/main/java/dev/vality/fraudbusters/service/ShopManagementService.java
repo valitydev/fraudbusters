@@ -1,6 +1,7 @@
 package dev.vality.fraudbusters.service;
 
 import dev.vality.fraudbusters.config.properties.DefaultTemplateProperties;
+import dev.vality.fraudbusters.repository.PaymentRepository;
 import dev.vality.fraudbusters.repository.clickhouse.impl.FraudResultRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,7 @@ import java.time.temporal.ChronoUnit;
 @RequiredArgsConstructor
 public class ShopManagementService {
 
-    private final FraudResultRepository repository;
+    private final PaymentRepository repository;
     private final DefaultTemplateProperties properties;
 
     public boolean isNewShop(String shopId) {

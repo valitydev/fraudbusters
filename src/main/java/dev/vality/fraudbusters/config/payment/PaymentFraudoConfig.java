@@ -50,13 +50,13 @@ public class PaymentFraudoConfig {
 
     @Bean
     public CountPaymentAggregator<PaymentModel, PaymentCheckedField> countAggregator(
-            PaymentRepository fraudResultRepository,
+            PaymentRepository paymentRepository,
             RefundRepository refundRepository,
             ChargebackRepository chargebackRepository,
             DatabasePaymentFieldResolver databasePaymentFieldResolver) {
         return new CountAggregatorImpl(
                 databasePaymentFieldResolver,
-                fraudResultRepository,
+                paymentRepository,
                 refundRepository,
                 chargebackRepository
         );
@@ -64,24 +64,23 @@ public class PaymentFraudoConfig {
 
     @Bean
     public SumPaymentAggregator<PaymentModel, PaymentCheckedField> sumAggregator(
-            PaymentRepository fraudResultRepository,
+            PaymentRepository paymentRepository,
             RefundRepository refundRepository,
             ChargebackRepository chargebackRepository,
             DatabasePaymentFieldResolver databasePaymentFieldResolver) {
         return new SumAggregatorImpl(
                 databasePaymentFieldResolver,
-                fraudResultRepository,
+                paymentRepository,
                 refundRepository,
                 chargebackRepository
         );
     }
 
-
     @Bean
     public UniqueValueAggregator<PaymentModel, PaymentCheckedField> uniqueValueAggregator(
-            PaymentRepository fraudResultRepository,
+            PaymentRepository paymentRepository,
             DatabasePaymentFieldResolver databasePaymentFieldResolver) {
-        return new UniqueValueAggregatorImpl(databasePaymentFieldResolver, fraudResultRepository);
+        return new UniqueValueAggregatorImpl(databasePaymentFieldResolver, paymentRepository);
     }
 
     @Bean
@@ -97,9 +96,9 @@ public class PaymentFraudoConfig {
     @Bean
     public InListFinder<PaymentModel, PaymentCheckedField> paymentInListFinder(
             WbListServiceSrv.Iface wbListServiceSrv,
-            PaymentRepository fraudResultRepository,
+            PaymentRepository paymentRepository,
             DatabasePaymentFieldResolver databasePaymentFieldResolver) {
-        return new PaymentInListFinderImpl(wbListServiceSrv, databasePaymentFieldResolver, fraudResultRepository);
+        return new PaymentInListFinderImpl(wbListServiceSrv, databasePaymentFieldResolver, paymentRepository);
     }
 
     @Bean
@@ -126,7 +125,6 @@ public class PaymentFraudoConfig {
         return new FraudVisitorFactoryImpl()
                 .createVisitor(new VisitorBundle<>(aggregatorBundle, resolverBundle, finderBundle));
     }
-
 
     @Bean
     public CountPaymentAggregator<PaymentModel, PaymentCheckedField> countResultAggregator(
