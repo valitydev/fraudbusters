@@ -13,6 +13,7 @@ import dev.vality.fraudbusters.repository.clickhouse.util.FilterUtil;
 import dev.vality.fraudbusters.service.dto.FilterDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
