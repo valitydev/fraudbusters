@@ -154,12 +154,10 @@ class HistoricalPaymentDataTest {
     }
 
     @Test
-    void getPaymentsByTimeSlotAndPageAndSearchByEnum() {
+    void getPaymentsByTimeSlotAndSearchByStatusEnum() {
         FilterDto filter = new FilterDto();
         filter.setTimeFrom("2020-05-01T18:04:53");
         filter.setTimeTo("2020-10-01T18:04:53");
-        filter.setSize(3L);
-        filter.setLastId("1DkrStTHbpg.1");
         SortDto sortDto = new SortDto();
         sortDto.setOrder(SortOrder.DESC);
         filter.setSort(sortDto);
