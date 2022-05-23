@@ -7,9 +7,10 @@ import dev.vality.damsel.fraudbusters.SortOrder;
 import dev.vality.fraudbusters.constant.PaymentField;
 import dev.vality.fraudbusters.factory.TestObjectsFactory;
 import dev.vality.fraudbusters.service.dto.FilterDto;
+import dev.vality.fraudbusters.service.dto.SearchFieldDto;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,7 +29,7 @@ class FilterConverterTest {
 
         FilterDto dto = filterConverter.convert(filter, page, sort);
 
-        assertTrue(dto.getSearchPatterns().isEmpty());
+        assertTrue(dto.getSearchFields().isEmpty());
         assertEquals(10L, dto.getSize());
         assertNull(dto.getLastId());
         assertNull(dto.getSort().getOrder());
@@ -47,18 +48,51 @@ class FilterConverterTest {
         assertEquals(page.getContinuationId(), dto.getLastId());
         assertEquals(filter.getInterval().getLowerBound().getBoundTime(), dto.getTimeFrom());
         assertEquals(filter.getInterval().getUpperBound().getBoundTime(), dto.getTimeTo());
-        Map<PaymentField, String> searchPatterns = dto.getSearchPatterns();
-        assertEquals(filter.getCardToken(), searchPatterns.get(PaymentField.CARD_TOKEN));
-        assertEquals(filter.getEmail(), searchPatterns.get(PaymentField.EMAIL));
-        assertEquals(filter.getFingerprint(), searchPatterns.get(PaymentField.FINGERPRINT));
-        assertEquals(filter.getPartyId(), searchPatterns.get(PaymentField.PARTY_ID));
-        assertEquals(filter.getShopId(), searchPatterns.get(PaymentField.SHOP_ID));
-        assertEquals(filter.getStatus(), searchPatterns.get(PaymentField.STATUS));
-        assertEquals(filter.getProviderCountry(), searchPatterns.get(PaymentField.BANK_COUNTRY));
-        assertEquals(filter.getTerminal(), searchPatterns.get(PaymentField.TERMINAL));
-        assertEquals(filter.getPaymentId(), searchPatterns.get(PaymentField.ID));
-        assertEquals(filter.getInvoiceId(), searchPatterns.get(PaymentField.INVOICE_ID));
-        assertEquals(filter.getMaskedPan(), searchPatterns.get(PaymentField.MASKED_PAN));
+        Set<SearchFieldDto> searchFields = dto.getSearchFields();
+        assertTrue(searchFields.stream()
+                .filter(searchFieldDto -> searchFieldDto.getField().equals(PaymentField.CARD_TOKEN))
+                .map(SearchFieldDto::getValue)
+                .anyMatch(value -> filter.getCardToken().equals(value)));
+        assertTrue(searchFields.stream()
+                .filter(searchFieldDto -> searchFieldDto.getField().equals(PaymentField.EMAIL))
+                .map(SearchFieldDto::getValue)
+                .anyMatch(value -> filter.getEmail().equals(value)));
+        assertTrue(searchFields.stream()
+                .filter(searchFieldDto -> searchFieldDto.getField().equals(PaymentField.FINGERPRINT))
+                .map(SearchFieldDto::getValue)
+                .anyMatch(value -> filter.getFingerprint().equals(value)));
+        assertTrue(searchFields.stream()
+                .filter(searchFieldDto -> searchFieldDto.getField().equals(PaymentField.PARTY_ID))
+                .map(SearchFieldDto::getValue)
+                .anyMatch(value -> filter.getPartyId().equals(value)));
+        assertTrue(searchFields.stream()
+                .filter(searchFieldDto -> searchFieldDto.getField().equals(PaymentField.SHOP_ID))
+                .map(SearchFieldDto::getValue)
+                .anyMatch(value -> filter.getShopId().equals(value)));
+        assertTrue(searchFields.stream()
+                .filter(searchFieldDto -> searchFieldDto.getField().equals(PaymentField.STATUS))
+                .map(SearchFieldDto::getValue)
+                .anyMatch(value -> filter.getStatus().equals(value)));
+        assertTrue(searchFields.stream()
+                .filter(searchFieldDto -> searchFieldDto.getField().equals(PaymentField.BANK_COUNTRY))
+                .map(SearchFieldDto::getValue)
+                .anyMatch(value -> filter.getProviderCountry().equals(value)));
+        assertTrue(searchFields.stream()
+                .filter(searchFieldDto -> searchFieldDto.getField().equals(PaymentField.TERMINAL))
+                .map(SearchFieldDto::getValue)
+                .anyMatch(value -> filter.getTerminal().equals(value)));
+        assertTrue(searchFields.stream()
+                .filter(searchFieldDto -> searchFieldDto.getField().equals(PaymentField.ID))
+                .map(SearchFieldDto::getValue)
+                .anyMatch(value -> filter.getPaymentId().equals(value)));
+        assertTrue(searchFields.stream()
+                .filter(searchFieldDto -> searchFieldDto.getField().equals(PaymentField.INVOICE_ID))
+                .map(SearchFieldDto::getValue)
+                .anyMatch(value -> filter.getInvoiceId().equals(value)));
+        assertTrue(searchFields.stream()
+                .filter(searchFieldDto -> searchFieldDto.getField().equals(PaymentField.MASKED_PAN))
+                .map(SearchFieldDto::getValue)
+                .anyMatch(value -> filter.getMaskedPan().equals(value)));
         assertEquals(sort.getField(), dto.getSort().getField());
         assertEquals(sort.getOrder(), SortOrder.valueOf(dto.getSort().getOrder().name()));
     }

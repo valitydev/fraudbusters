@@ -5,23 +5,24 @@ import dev.vality.damsel.fraudbusters.Page;
 import dev.vality.damsel.fraudbusters.Sort;
 import dev.vality.fraudbusters.constant.PaymentField;
 import dev.vality.fraudbusters.constant.SortOrder;
+import dev.vality.fraudbusters.service.dto.FieldType;
 import dev.vality.fraudbusters.service.dto.FilterDto;
+import dev.vality.fraudbusters.service.dto.SearchFieldDto;
 import dev.vality.fraudbusters.service.dto.SortDto;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Component
 public class FilterConverter {
 
     public FilterDto convert(Filter filter, Page page, Sort sort) {
         FilterDto filterDto = new FilterDto();
-        Map<PaymentField, String> searchPatterns = assembleSearchPatterns(filter);
-        filterDto.setSearchPatterns(searchPatterns);
+        Set<SearchFieldDto> searchFields = assembleSearchFields(filter);
+        filterDto.setSearchFields(searchFields);
         filterDto.setLastId(page.getContinuationId());
         if (page.getSize() > 0) {
             filterDto.setSize(page.getSize());
@@ -39,43 +40,55 @@ public class FilterConverter {
         return filterDto;
     }
 
-    @NotNull
-    private Map<PaymentField, String> assembleSearchPatterns(Filter filter) {
-        Map<PaymentField, String> searchPatterns = new HashMap<>();
+    private Set<SearchFieldDto> assembleSearchFields(Filter filter) {
+        Set<SearchFieldDto> searchFields = new HashSet<>();
         if (filter.isSetCardToken() && StringUtils.hasLength(filter.getCardToken())) {
-            searchPatterns.put(PaymentField.CARD_TOKEN, filter.getCardToken());
+            addSearchField(searchFields, PaymentField.CARD_TOKEN, FieldType.STRING, filter.getCardToken());
         }
         if (filter.isSetEmail() && StringUtils.hasLength(filter.getEmail())) {
-            searchPatterns.put(PaymentField.EMAIL, filter.getEmail());
+            addSearchField(searchFields, PaymentField.EMAIL, FieldType.STRING, filter.getEmail());
         }
         if (filter.isSetStatus() && StringUtils.hasLength(filter.getStatus())) {
-            searchPatterns.put(PaymentField.STATUS, filter.getStatus());
+            addSearchField(searchFields, PaymentField.STATUS, FieldType.ENUM, filter.getStatus());
         }
         if (filter.isSetShopId() && StringUtils.hasLength(filter.getShopId())) {
-            searchPatterns.put(PaymentField.SHOP_ID, filter.getShopId());
+            addSearchField(searchFields, PaymentField.SHOP_ID, FieldType.STRING, filter.getShopId());
         }
         if (filter.isSetPartyId() && StringUtils.hasLength(filter.getPartyId())) {
-            searchPatterns.put(PaymentField.PARTY_ID, filter.getPartyId());
+            addSearchField(searchFields, PaymentField.PARTY_ID, FieldType.STRING, filter.getPartyId());
         }
         if (filter.isSetProviderCountry() && StringUtils.hasLength(filter.getProviderCountry())) {
-            searchPatterns.put(PaymentField.BANK_COUNTRY, filter.getProviderCountry());
+            addSearchField(searchFields, PaymentField.BANK_COUNTRY, FieldType.STRING, filter.getProviderCountry());
         }
         if (filter.isSetFingerprint() && StringUtils.hasLength(filter.getFingerprint())) {
-            searchPatterns.put(PaymentField.FINGERPRINT, filter.getFingerprint());
+            addSearchField(searchFields, PaymentField.FINGERPRINT, FieldType.STRING, filter.getFingerprint());
         }
         if (filter.isSetTerminal() && StringUtils.hasLength(filter.getTerminal())) {
-            searchPatterns.put(PaymentField.TERMINAL, filter.getTerminal());
+            addSearchField(searchFields, PaymentField.TERMINAL, FieldType.STRING, filter.getTerminal());
         }
         if (filter.isSetPaymentId() && StringUtils.hasLength(filter.getPaymentId())) {
-            searchPatterns.put(PaymentField.ID, filter.getPaymentId());
+            addSearchField(searchFields, PaymentField.ID, FieldType.STRING, filter.getPaymentId());
         }
         if (filter.isSetMaskedPan() && StringUtils.hasLength(filter.getMaskedPan())) {
-            searchPatterns.put(PaymentField.MASKED_PAN, filter.getMaskedPan());
+            addSearchField(searchFields, PaymentField.MASKED_PAN, FieldType.STRING, filter.getMaskedPan());
         }
         if (filter.isSetInvoiceId() && StringUtils.hasLength(filter.getInvoiceId())) {
-            searchPatterns.put(PaymentField.INVOICE_ID, filter.getInvoiceId());
+            addSearchField(searchFields, PaymentField.INVOICE_ID, FieldType.STRING, filter.getInvoiceId());
         }
-        return searchPatterns;
+        return searchFields;
+    }
+
+    private void addSearchField(Set<SearchFieldDto> searchFields,
+                                PaymentField cardToken,
+                                FieldType string,
+                                String filter) {
+        searchFields.add(
+                SearchFieldDto.builder()
+                        .field(cardToken)
+                        .type(string)
+                        .value(filter)
+                        .build()
+        );
     }
 
 }

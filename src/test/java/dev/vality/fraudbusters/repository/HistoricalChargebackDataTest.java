@@ -8,7 +8,9 @@ import dev.vality.fraudbusters.constant.SortOrder;
 import dev.vality.fraudbusters.repository.clickhouse.impl.AggregationStatusGeneralRepositoryImpl;
 import dev.vality.fraudbusters.repository.clickhouse.impl.ChargebackRepository;
 import dev.vality.fraudbusters.repository.clickhouse.mapper.ChargebackMapper;
+import dev.vality.fraudbusters.service.dto.FieldType;
 import dev.vality.fraudbusters.service.dto.FilterDto;
+import dev.vality.fraudbusters.service.dto.SearchFieldDto;
 import dev.vality.fraudbusters.service.dto.SortDto;
 import dev.vality.fraudbusters.util.PaymentTypeByContextResolver;
 import lombok.SneakyThrows;
@@ -26,9 +28,9 @@ import org.testcontainers.containers.ClickHouseContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -70,10 +72,18 @@ class HistoricalChargebackDataTest {
         FilterDto filter = new FilterDto();
         filter.setTimeFrom("2020-05-01T18:04:53");
         filter.setTimeTo("2020-10-01T18:04:53");
-        Map<PaymentField, String> patterns = new HashMap<>();
-        patterns.put(PaymentField.PARTY_ID, "partyId_2");
-        patterns.put(PaymentField.SHOP_ID, "2035728");
-        filter.setSearchPatterns(patterns);
+        Set<SearchFieldDto> searchFields = new HashSet<>();
+        searchFields.add(SearchFieldDto.builder()
+                .field(PaymentField.PARTY_ID)
+                .type(FieldType.STRING)
+                .value("partyId_2")
+                .build());
+        searchFields.add(SearchFieldDto.builder()
+                .field(PaymentField.SHOP_ID)
+                .type(FieldType.STRING)
+                .value("2035728")
+                .build());
+        filter.setSearchFields(searchFields);
         SortDto sortDto = new SortDto();
         sortDto.setOrder(SortOrder.DESC);
         filter.setSort(sortDto);
@@ -128,9 +138,13 @@ class HistoricalChargebackDataTest {
         SortDto sortDto = new SortDto();
         sortDto.setOrder(SortOrder.DESC);
         filter.setSort(sortDto);
-        Map<PaymentField, String> patterns = new HashMap<>();
-        patterns.put(PaymentField.PARTY_ID, "partyId_2");
-        filter.setSearchPatterns(patterns);
+        Set<SearchFieldDto> searchFields = new HashSet<>();
+        searchFields.add(SearchFieldDto.builder()
+                .field(PaymentField.PARTY_ID)
+                .type(FieldType.STRING)
+                .value("partyId_2")
+                .build());
+        filter.setSearchFields(searchFields);
 
         List<Chargeback> chargebacks = chargebackRepository.getByFilter(filter);
 
