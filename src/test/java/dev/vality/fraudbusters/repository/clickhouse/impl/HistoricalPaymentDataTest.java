@@ -162,7 +162,7 @@ class HistoricalPaymentDataTest {
         sortDto.setOrder(SortOrder.DESC);
         filter.setSort(sortDto);
         Set<SearchFieldDto> searchFields = new HashSet<>();
-        String filterStatus = "failed";
+        String filterStatus = "captured";
         searchFields.add(SearchFieldDto.builder()
                 .field(PaymentField.STATUS)
                 .type(FieldType.ENUM)
@@ -173,8 +173,9 @@ class HistoricalPaymentDataTest {
         List<CheckedPayment> payments = paymentRepository.getByFilter(filter);
 
         assertFalse(payments.isEmpty());
-        assertEquals(1, payments.size());
+        assertEquals(2, payments.size());
         assertEquals(filterStatus, payments.get(0).getPaymentStatus());
+        assertEquals(filterStatus, payments.get(1).getPaymentStatus());
     }
 
 

@@ -39,7 +39,7 @@ public class FilterUtil {
                 filters.append(String.format(pageFilter, ">"));
             }
         }
-        String sorting = String.format("ORDER BY (eventTime, id) %s ", filter.getSort().getOrder().name());
+        String sorting = String.format(" ORDER BY (eventTime, id) %s ", filter.getSort().getOrder().name());
         String limit = " LIMIT :size ";
         return filters.append(sorting).append(limit).toString();
     }
