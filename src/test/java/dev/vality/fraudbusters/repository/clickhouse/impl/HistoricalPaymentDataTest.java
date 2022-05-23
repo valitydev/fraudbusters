@@ -7,7 +7,9 @@ import dev.vality.fraudbusters.constant.SortOrder;
 import dev.vality.fraudbusters.domain.CheckedPayment;
 import dev.vality.fraudbusters.repository.Repository;
 import dev.vality.fraudbusters.repository.clickhouse.mapper.CheckedPaymentMapper;
+import dev.vality.fraudbusters.service.dto.FieldType;
 import dev.vality.fraudbusters.service.dto.FilterDto;
+import dev.vality.fraudbusters.service.dto.SearchFieldDto;
 import dev.vality.fraudbusters.service.dto.SortDto;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -25,9 +27,9 @@ import org.testcontainers.containers.ClickHouseContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -70,10 +72,18 @@ class HistoricalPaymentDataTest {
         FilterDto filter = new FilterDto();
         filter.setTimeFrom("2020-05-01T18:04:53");
         filter.setTimeTo("2020-10-01T18:04:53");
-        Map<PaymentField, String> patterns = new HashMap<>();
-        patterns.put(PaymentField.PARTY_ID, "partyId_2");
-        patterns.put(PaymentField.SHOP_ID, "2035728");
-        filter.setSearchPatterns(patterns);
+        Set<SearchFieldDto> searchFields = new HashSet<>();
+        searchFields.add(SearchFieldDto.builder()
+                .field(PaymentField.PARTY_ID)
+                .type(FieldType.STRING)
+                .value("partyId_2")
+                .build());
+        searchFields.add(SearchFieldDto.builder()
+                .field(PaymentField.SHOP_ID)
+                .type(FieldType.STRING)
+                .value("2035728")
+                .build());
+        filter.setSearchFields(searchFields);
         SortDto sortDto = new SortDto();
         sortDto.setOrder(SortOrder.DESC);
         filter.setSort(sortDto);
@@ -128,15 +138,44 @@ class HistoricalPaymentDataTest {
         SortDto sortDto = new SortDto();
         sortDto.setOrder(SortOrder.DESC);
         filter.setSort(sortDto);
-        Map<PaymentField, String> patterns = new HashMap<>();
-        patterns.put(PaymentField.PARTY_ID, "partyId_2");
-        filter.setSearchPatterns(patterns);
+        Set<SearchFieldDto> searchFields = new HashSet<>();
+        searchFields.add(SearchFieldDto.builder()
+                .field(PaymentField.PARTY_ID)
+                .type(FieldType.STRING)
+                .value("partyId_2")
+                .build());
+        filter.setSearchFields(searchFields);
 
         List<CheckedPayment> payments = paymentRepository.getByFilter(filter);
 
         assertFalse(payments.isEmpty());
         assertEquals(1, payments.size());
         assertEquals("partyId_2", payments.get(0).getPartyId());
+    }
+
+    @Test
+    void getPaymentsByTimeSlotAndSearchByStatusEnum() {
+        FilterDto filter = new FilterDto();
+        filter.setTimeFrom("2020-05-01T18:04:53");
+        filter.setTimeTo("2020-10-01T18:04:53");
+        SortDto sortDto = new SortDto();
+        sortDto.setOrder(SortOrder.DESC);
+        filter.setSort(sortDto);
+        Set<SearchFieldDto> searchFields = new HashSet<>();
+        String filterStatus = "captured";
+        searchFields.add(SearchFieldDto.builder()
+                .field(PaymentField.STATUS)
+                .type(FieldType.ENUM)
+                .value(filterStatus)
+                .build());
+        filter.setSearchFields(searchFields);
+
+        List<CheckedPayment> payments = paymentRepository.getByFilter(filter);
+
+        assertFalse(payments.isEmpty());
+        assertEquals(2, payments.size());
+        assertEquals(filterStatus, payments.get(0).getPaymentStatus());
+        assertEquals(filterStatus, payments.get(1).getPaymentStatus());
     }
 
 

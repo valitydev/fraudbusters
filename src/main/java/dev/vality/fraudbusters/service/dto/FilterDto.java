@@ -1,9 +1,8 @@
 package dev.vality.fraudbusters.service.dto;
 
-import dev.vality.fraudbusters.constant.PaymentField;
 import lombok.Data;
 
-import java.util.Map;
+import java.util.Set;
 
 @Data
 public class FilterDto {
@@ -14,7 +13,7 @@ public class FilterDto {
     private Long size = DEFAULT_PAGE_SIZE;
     private String timeFrom;
     private String timeTo;
-    private Map<PaymentField, String> searchPatterns;
+    private Set<SearchFieldDto> searchFields;
     private SortDto sort;
 
 }
