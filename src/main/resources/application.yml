@@ -128,6 +128,10 @@ dgraph:
   backoffPeriod: 1000
   service:
     enabled: false
+  trustCertCollectionFile: "ca.crt"
+  keyCertChainFile: "degraph.crt"
+  keyFile: "dgraphuser.p12"
+  keyPassword: "pswd"
 
 geo.ip.service.url: "localhost:29092/v1/columbus"
 

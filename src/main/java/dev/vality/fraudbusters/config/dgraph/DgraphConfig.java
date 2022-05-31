@@ -14,6 +14,7 @@ import dev.vality.fraudbusters.constant.DgraphSchemaConstants;
 import dev.vality.fraudbusters.converter.PaymentToDgraphPaymentConverter;
 import dev.vality.fraudbusters.converter.PaymentToPaymentModelConverter;
 import dev.vality.fraudbusters.domain.dgraph.common.*;
+import dev.vality.fraudbusters.exception.DgraphException;
 import dev.vality.fraudbusters.listener.events.dgraph.*;
 import dev.vality.fraudbusters.repository.Repository;
 import dev.vality.fraudbusters.stream.impl.FullTemplateVisitorImpl;
@@ -22,8 +23,9 @@ import io.dgraph.DgraphClient;
 import io.dgraph.DgraphGrpc;
 import io.dgraph.DgraphProto;
 import io.dgraph.TxnConflictException;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
+import io.grpc.netty.GrpcSslContexts;
+import io.grpc.netty.NettyChannelBuilder;
+import io.netty.handler.ssl.SslContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +37,8 @@ import org.springframework.retry.backoff.FixedBackOffPolicy;
 import org.springframework.retry.listener.RetryListenerSupport;
 import org.springframework.retry.support.RetryTemplate;
 
+import javax.net.ssl.SSLException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,6 +49,7 @@ import java.util.List;
 public class DgraphConfig {
 
     private static final String DEFAULT_DGRAPH_ERROR_PREFIX = "Register dgraph transaction failed event. ";
+    private static final String PKCS_12 = "PKCS12";
 
     @Bean
     public ObjectMapper dgraphObjectMapper() {
@@ -78,7 +83,7 @@ public class DgraphConfig {
             return dgraphRetryTemplate.execute(context -> createDgraphClient(dgraphProperties));
         } catch (Exception ex) {
             log.error("Received an exception while the service was creating the dgraph client instance", ex);
-            throw ex;
+            throw new DgraphException(ex);
         }
     }
 
@@ -136,15 +141,11 @@ public class DgraphConfig {
         return new DgraphWithdrawalEventListener(repository, converter);
     }
 
-    private DgraphClient createDgraphClient(DgraphProperties dgraphProperties) {
+    private DgraphClient createDgraphClient(DgraphProperties dgraphProperties) throws SSLException {
         log.info("Create dgraph client (targets: {})", dgraphProperties.getTargets());
-        DgraphClient dgraphClient = new DgraphClient(createStubs(dgraphProperties.getTargets()));
+        DgraphClient dgraphClient = new DgraphClient(createStubs(dgraphProperties.getTargets(), dgraphProperties));
 
         log.info("Dgraph version: {}", dgraphClient.checkVersion());
-        if (dgraphProperties.isAuth()) {
-            log.info("Connect to the Dgraph cluster with login and password...");
-            dgraphClient.login(dgraphProperties.getLogin(), dgraphProperties.getPassword());
-        }
         dgraphClient.alter(
                 DgraphProto.Operation.newBuilder()
                         .setSchema(DgraphSchemaConstants.SCHEMA)
@@ -154,18 +155,32 @@ public class DgraphConfig {
         return dgraphClient;
     }
 
-    private DgraphGrpc.DgraphStub[] createStubs(List<String> dgraphTargets) {
+    private DgraphGrpc.DgraphStub[] createStubs(List<String> dgraphTargets,
+                                                DgraphProperties dgraphProperties) throws SSLException {
         List<DgraphGrpc.DgraphStub> stubs = new ArrayList<>();
-        dgraphTargets.forEach(target -> stubs.add(createStub(target)));
+        for (String target : dgraphTargets) {
+            stubs.add(createStub(target, dgraphProperties));
+        }
         return stubs.toArray(new DgraphGrpc.DgraphStub[dgraphTargets.size()]);
     }
 
-    private DgraphGrpc.DgraphStub createStub(String target) {
-        ManagedChannel channel = ManagedChannelBuilder
-                .forTarget(target)
-                .usePlaintext()
-                .build();
-        return DgraphGrpc.newStub(channel);
+    private DgraphGrpc.DgraphStub createStub(String target, DgraphProperties dgraphProperties) throws SSLException {
+        NettyChannelBuilder channelBuilder = NettyChannelBuilder.forTarget(target);
+        channelBuilder.usePlaintext();
+        if (dgraphProperties.isAuth()) {
+            log.info("Connect to the Dgraph cluster with TLS config...");
+            SslContext sslContext = GrpcSslContexts.forClient()
+                    .trustManager(new File(dgraphProperties.getTrustCertCollectionFile()))
+                    .keyManager(
+                            new File(dgraphProperties.getKeyCertChainFile()),
+                            new File(dgraphProperties.getKeyFile(), dgraphProperties.getKeyPassword())
+                    )
+                    .keyStoreType(PKCS_12)
+                    .build();
+            channelBuilder.sslContext(sslContext);
+        }
+
+        return DgraphGrpc.newStub(channelBuilder.build());
     }
 
     private static final class RegisterJobFailListener extends RetryListenerSupport {
@@ -174,11 +189,14 @@ public class DgraphConfig {
         public <T, E extends Throwable> void onError(RetryContext context,
                                                      RetryCallback<T, E> callback,
                                                      Throwable throwable) {
-            if (throwable instanceof TxnConflictException) {
+            if (throwable instanceof TxnConflictException
+                    || context.getLastThrowable() instanceof TxnConflictException
+                    || context.getLastThrowable().getCause() instanceof TxnConflictException) {
                 log.info(DEFAULT_DGRAPH_ERROR_PREFIX + "Retry count: {}", context.getRetryCount());
                 log.debug(DEFAULT_DGRAPH_ERROR_PREFIX + "Stacktrace", context.getLastThrowable());
             } else {
-                log.warn(DEFAULT_DGRAPH_ERROR_PREFIX + "Unexpected error", context.getLastThrowable());
+                log.warn(DEFAULT_DGRAPH_ERROR_PREFIX + "Unexpected error (exeption type: {})",
+                        throwable.getClass().getName(), context.getLastThrowable());
             }
         }
     }

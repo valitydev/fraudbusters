@@ -63,7 +63,7 @@ public class AggregatorKafkaConfig {
     public ConcurrentKafkaListenerContainerFactory<String, Withdrawal> kafkaDgraphWithdrawalResultListenerContainerFactory() {
         return listenersConfigurationService.createDgraphFactory(
                 new WithdrawalDeserializer(),
-                "dgraph-payments",
+                "dgraph-withdrawals",
                 fetchMinBytes
         );
     }
