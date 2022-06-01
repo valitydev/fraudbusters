@@ -44,6 +44,7 @@ public class DgraphPaymentEventListener {
                 .orElseThrow(() -> new NotFoundException("First payment in a batch was not found!"));
         log.info("DgraphPaymentEventListener listen result size: {} partition: {} offset: {}",
                 records.size(), firstRecord.partition(), firstRecord.offset());
+        log.info("DgraphPaymentEventListener. The first payment in the batch has ID '{}'", firstRecord.value().getId());
         log.debug("DgraphPaymentEventListener listen result payments: {}", records);
         for (ConsumerRecord<String, Payment> record : records) {
             Payment payment = record.value();

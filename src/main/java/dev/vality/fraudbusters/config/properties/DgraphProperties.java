@@ -17,5 +17,8 @@ public class DgraphProperties {
     private String password;
     private int maxAttempts;
     private long backoffPeriod;
-
+    private String trustCertCollectionFile;
+    private String keyCertChainFile;
+    private String keyFile;
+    private String keyPassword;
 }
