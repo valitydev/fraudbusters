@@ -33,7 +33,8 @@ class TimeBoundaryServiceImplTest {
 
         var timeBound = timeBoundaryService.getBoundary(now, timeWindow);
 
-        assertEquals(now.minus(startValue, ChronoUnit.MINUTES).truncatedTo(ChronoUnit.SECONDS), timeBound.getLeft().truncatedTo(ChronoUnit.SECONDS));
+        assertEquals(now.minus(startValue, ChronoUnit.MINUTES).truncatedTo(ChronoUnit.SECONDS),
+                timeBound.getLeft().truncatedTo(ChronoUnit.SECONDS));
         assertEquals(now.truncatedTo(ChronoUnit.SECONDS), timeBound.getRight().truncatedTo(ChronoUnit.SECONDS));
     }
 
@@ -50,8 +51,10 @@ class TimeBoundaryServiceImplTest {
 
         var timeBound = timeBoundaryService.getBoundary(now, timeWindow);
 
-        assertEquals(now.minus(startValue, ChronoUnit.DAYS).truncatedTo(ChronoUnit.SECONDS), timeBound.getLeft().truncatedTo(ChronoUnit.SECONDS));
-        assertEquals(now.minus(endValue, ChronoUnit.DAYS).truncatedTo(ChronoUnit.SECONDS), timeBound.getRight().truncatedTo(ChronoUnit.SECONDS));
+        assertEquals(now.minus(startValue, ChronoUnit.DAYS).truncatedTo(ChronoUnit.SECONDS),
+                timeBound.getLeft().truncatedTo(ChronoUnit.SECONDS));
+        assertEquals(now.minus(endValue, ChronoUnit.DAYS).truncatedTo(ChronoUnit.SECONDS),
+                timeBound.getRight().truncatedTo(ChronoUnit.SECONDS));
     }
 
     @Test
@@ -67,8 +70,10 @@ class TimeBoundaryServiceImplTest {
 
         var timeBound = timeBoundaryService.getBoundary(now, timeWindow);
 
-        assertEquals(now.minus(startValue, ChronoUnit.HOURS).truncatedTo(ChronoUnit.SECONDS), timeBound.getLeft().truncatedTo(ChronoUnit.SECONDS));
-        assertEquals(now.minus(endValue, ChronoUnit.HOURS).truncatedTo(ChronoUnit.SECONDS), timeBound.getRight().truncatedTo(ChronoUnit.SECONDS));
+        assertEquals(now.minus(startValue, ChronoUnit.HOURS).truncatedTo(ChronoUnit.SECONDS),
+                timeBound.getLeft().truncatedTo(ChronoUnit.SECONDS));
+        assertEquals(now.minus(endValue, ChronoUnit.HOURS).truncatedTo(ChronoUnit.SECONDS),
+                timeBound.getRight().truncatedTo(ChronoUnit.SECONDS));
     }
 
 }
