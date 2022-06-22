@@ -9,16 +9,18 @@ import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.repository.AggregationRepository;
 import dev.vality.fraudbusters.repository.PaymentRepository;
+import dev.vality.fraudbusters.service.TimeBoundaryService;
+import dev.vality.fraudbusters.service.dto.TimeBoundDto;
 import dev.vality.fraudbusters.util.TimestampUtil;
 import dev.vality.fraudo.model.TimeWindow;
 import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.util.StringUtils;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,6 +32,7 @@ public class CountAggregatorImpl implements CountPaymentAggregator<PaymentModel,
     private final PaymentRepository paymentRepository;
     private final AggregationRepository refundRepository;
     private final AggregationRepository chargebackRepository;
+    private final TimeBoundaryService timeBoundaryService;
 
     @Override
     @BasicMetric("count")
@@ -69,25 +72,18 @@ public class CountAggregatorImpl implements CountPaymentAggregator<PaymentModel,
             PaymentCheckedField checkedField, PaymentModel paymentModel, TimeWindow timeWindow,
             String errorCode, List<PaymentCheckedField> list) {
         try {
-            Instant timestamp = paymentModel.getTimestamp() != null
-                    ? Instant.ofEpochMilli(paymentModel.getTimestamp())
-                    : Instant.now();
+            Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
+            TimeBoundDto timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
             List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
-            if (StringUtils.isEmpty(resolve.getValue())) {
+            if (Objects.isNull(resolve.getValue())) {
                 return CURRENT_ONE;
             }
             Integer count = paymentRepository.countOperationErrorWithGroupBy(
                     resolve.getName(),
                     resolve.getValue(),
-                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
-                            timestamp,
-                            timeWindow.getStartWindowTime(),
-                            timeWindow.getTimeUnit()),
-                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
-                            timestamp,
-                            timeWindow.getEndWindowTime(),
-                            timeWindow.getTimeUnit()),
+                    timeBound.getLeft().toEpochMilli(),
+                    timeBound.getRight().toEpochMilli(),
                     eventFields,
                     errorCode
             );
@@ -158,30 +154,20 @@ public class CountAggregatorImpl implements CountPaymentAggregator<PaymentModel,
             AggregateGroupingFunction<String, Object, Long, Long, List<FieldModel>, Integer> aggregateFunction,
             boolean withCurrent) {
         try {
-            Instant timestamp = paymentModel.getTimestamp() != null
-                    ? Instant.ofEpochMilli(paymentModel.getTimestamp())
-                    : Instant.now();
+            Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
+            TimeBoundDto timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
             List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
-
-            if (StringUtils.isEmpty(resolve.getValue())) {
+            if (Objects.isNull(resolve.getValue())) {
                 return withCurrent ? CURRENT_ONE : 0;
             }
-
             Integer count = aggregateFunction.accept(
                     resolve.getName(),
                     resolve.getValue(),
-                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
-                            timestamp,
-                            timeWindow.getStartWindowTime(),
-                            timeWindow.getTimeUnit()),
-                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
-                            timestamp,
-                            timeWindow.getEndWindowTime(),
-                            timeWindow.getTimeUnit()),
+                    timeBound.getLeft().toEpochMilli(),
+                    timeBound.getRight().toEpochMilli(),
                     eventFields
             );
-
             log.debug(
                     "CountAggregatorImpl field: {} value: {}  count: {}",
                     resolve.getName(),

@@ -7,6 +7,8 @@ import dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse.SumAggregator
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.repository.AggregationRepository;
 import dev.vality.fraudbusters.repository.PaymentRepository;
+import dev.vality.fraudbusters.service.TimeBoundaryService;
+import dev.vality.fraudbusters.service.TimeBoundaryServiceImpl;
 import dev.vality.fraudo.model.TimeWindow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,8 @@ public class SumAggregatorImplTest {
     @Mock
     private DatabasePaymentFieldResolver databasePaymentFieldResolver;
 
+    private final TimeBoundaryService timeBoundaryService = new TimeBoundaryServiceImpl();
+
     private final FieldModel modelMock = new FieldModel("name", "value");
 
     @BeforeEach
@@ -43,7 +47,8 @@ public class SumAggregatorImplTest {
                 databasePaymentFieldResolver,
                 paymentRepository,
                 analyticsRefundRepository,
-                analyticsChargebackRepository
+                analyticsChargebackRepository,
+                timeBoundaryService
         );
     }
 

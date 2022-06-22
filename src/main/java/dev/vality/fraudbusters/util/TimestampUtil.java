@@ -11,7 +11,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoUnit.HOURS;
@@ -40,10 +39,6 @@ public class TimestampUtil {
 
     public static Long generateTimestampNowMillis(Instant now) {
         return now.toEpochMilli();
-    }
-
-    public static Long generateTimestampMinusTimeUnitsMillis(Instant now, Long value, ChronoUnit timeUnit) {
-        return value != null ? now.minus(value, timeUnit).toEpochMilli() : now.toEpochMilli();
     }
 
     @NonNull

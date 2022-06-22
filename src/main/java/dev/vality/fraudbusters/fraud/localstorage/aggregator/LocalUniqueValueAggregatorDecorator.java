@@ -7,6 +7,8 @@ import dev.vality.fraudbusters.fraud.model.FieldModel;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse.UniqueValueAggregatorImpl;
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
+import dev.vality.fraudbusters.service.TimeBoundaryService;
+import dev.vality.fraudbusters.service.dto.TimeBoundDto;
 import dev.vality.fraudbusters.util.TimestampUtil;
 import dev.vality.fraudo.aggregator.UniqueValueAggregator;
 import dev.vality.fraudo.model.TimeWindow;
@@ -23,6 +25,7 @@ public class LocalUniqueValueAggregatorDecorator implements UniqueValueAggregato
     private final UniqueValueAggregatorImpl uniqueValueAggregator;
     private final DatabasePaymentFieldResolver databasePaymentFieldResolver;
     private final LocalResultStorageRepository localStorageRepository;
+    private final TimeBoundaryService timeBoundaryService;
 
     @Override
     public Integer countUniqueValue(
@@ -33,21 +36,16 @@ public class LocalUniqueValueAggregatorDecorator implements UniqueValueAggregato
             List<PaymentCheckedField> list) {
         try {
             Integer uniq = uniqueValueAggregator.countUniqueValue(countField, paymentModel, onField, timeWindow, list);
-            Instant now = TimestampUtil.instantFromPaymentModel(paymentModel);
+            Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
+            TimeBoundDto timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(countField, paymentModel);
             List<FieldModel> fieldModels = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
             Integer localUniqCountOperation = localStorageRepository.uniqCountOperationWithGroupBy(
                     resolve.getName(),
                     resolve.getValue(),
                     databasePaymentFieldResolver.resolve(onField),
-                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
-                            now,
-                            timeWindow.getStartWindowTime(),
-                            timeWindow.getTimeUnit()),
-                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
-                            now,
-                            timeWindow.getEndWindowTime(),
-                            timeWindow.getTimeUnit()),
+                    timeBound.getLeft().toEpochMilli(),
+                    timeBound.getRight().toEpochMilli(),
                     fieldModels
             );
             int result = localUniqCountOperation + uniq;
