@@ -8,20 +8,21 @@ import dev.vality.fraudo.model.TimeWindow;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import static dev.vality.fraudo.constant.TimeUnit.MINUTES;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DgraphTestAggregationUtils {
 
     public static TimeWindow createTestTimeWindow() {
         return TimeWindow.builder()
-                .startWindowTime(600_000L)
-                .endWindowTime(0L)
-                .timeUnit(ChronoUnit.MINUTES)
+                .start(600_000)
+                .end(0)
+                .timeUnit(MINUTES)
                 .build();
     }
 

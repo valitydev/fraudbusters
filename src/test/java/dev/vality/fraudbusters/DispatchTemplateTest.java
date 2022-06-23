@@ -78,7 +78,7 @@ class DispatchTemplateTest extends JUnit5IntegrationTest {
         //check that global reference created
         Unreliables.retryUntilTrue(TIMEOUT, TimeUnit.SECONDS, () -> {
             String result = referencePoolImpl.get(TemplateLevel.GLOBAL.name());
-            if (StringUtils.isEmpty(result)) {
+            if (!StringUtils.hasLength(result)) {
                 return false;
             }
             assertEquals(id, result);
