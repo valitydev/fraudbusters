@@ -1,6 +1,7 @@
 package dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse;
 
 import dev.vality.fraudbusters.aspect.BasicMetric;
+import dev.vality.fraudbusters.domain.TimeBound;
 import dev.vality.fraudbusters.exception.RuleFunctionException;
 import dev.vality.fraudbusters.fraud.AggregateGroupingFunction;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
@@ -10,7 +11,6 @@ import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolv
 import dev.vality.fraudbusters.repository.AggregationRepository;
 import dev.vality.fraudbusters.repository.PaymentRepository;
 import dev.vality.fraudbusters.service.TimeBoundaryService;
-import dev.vality.fraudbusters.service.dto.TimeBoundDto;
 import dev.vality.fraudbusters.util.TimestampUtil;
 import dev.vality.fraudo.model.TimeWindow;
 import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
@@ -73,7 +73,7 @@ public class CountAggregatorImpl implements CountPaymentAggregator<PaymentModel,
             String errorCode, List<PaymentCheckedField> list) {
         try {
             Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
-            TimeBoundDto timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
+            TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
             List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
             if (Objects.isNull(resolve.getValue())) {
@@ -155,7 +155,7 @@ public class CountAggregatorImpl implements CountPaymentAggregator<PaymentModel,
             boolean withCurrent) {
         try {
             Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
-            TimeBoundDto timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
+            TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
             List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
             if (Objects.isNull(resolve.getValue())) {

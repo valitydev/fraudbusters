@@ -1,6 +1,7 @@
 package dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse;
 
 import dev.vality.fraudbusters.aspect.BasicMetric;
+import dev.vality.fraudbusters.domain.TimeBound;
 import dev.vality.fraudbusters.exception.RuleFunctionException;
 import dev.vality.fraudbusters.fraud.AggregateGroupingFunction;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
@@ -10,7 +11,6 @@ import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolv
 import dev.vality.fraudbusters.repository.AggregationRepository;
 import dev.vality.fraudbusters.repository.PaymentRepository;
 import dev.vality.fraudbusters.service.TimeBoundaryService;
-import dev.vality.fraudbusters.service.dto.TimeBoundDto;
 import dev.vality.fraudbusters.util.TimestampUtil;
 import dev.vality.fraudo.model.TimeWindow;
 import dev.vality.fraudo.payment.aggregator.SumPaymentAggregator;
@@ -59,7 +59,7 @@ public class SumAggregatorImpl implements SumPaymentAggregator<PaymentModel, Pay
             List<PaymentCheckedField> list) {
         try {
             Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
-            TimeBoundDto timeBoundDto = timeBoundaryService.getBoundary(timestamp, timeWindow);
+            TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
             if (Objects.isNull(resolve.getValue())) {
                 return Double.valueOf(checkedLong(paymentModel.getAmount()));
@@ -68,8 +68,8 @@ public class SumAggregatorImpl implements SumPaymentAggregator<PaymentModel, Pay
             Long sum = paymentRepository.sumOperationErrorWithGroupBy(
                     resolve.getName(),
                     resolve.getValue(),
-                    timeBoundDto.getLeft().toEpochMilli(),
-                    timeBoundDto.getRight().toEpochMilli(),
+                    timeBound.getLeft().toEpochMilli(),
+                    timeBound.getRight().toEpochMilli(),
                     eventFields,
                     errorCode
             );
@@ -140,7 +140,7 @@ public class SumAggregatorImpl implements SumPaymentAggregator<PaymentModel, Pay
             boolean withCurrent) {
         try {
             Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
-            TimeBoundDto timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
+            TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
             if (Objects.isNull(resolve.getValue())) {
                 return Double.valueOf(checkedLong(paymentModel.getAmount()));

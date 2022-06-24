@@ -1,6 +1,7 @@
 package dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse;
 
 import dev.vality.fraudbusters.aspect.BasicMetric;
+import dev.vality.fraudbusters.domain.TimeBound;
 import dev.vality.fraudbusters.exception.RuleFunctionException;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.FieldModel;
@@ -8,7 +9,6 @@ import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.repository.PaymentRepository;
 import dev.vality.fraudbusters.service.TimeBoundaryService;
-import dev.vality.fraudbusters.service.dto.TimeBoundDto;
 import dev.vality.fraudbusters.util.TimestampUtil;
 import dev.vality.fraudo.aggregator.UniqueValueAggregator;
 import dev.vality.fraudo.model.TimeWindow;
@@ -39,7 +39,7 @@ public class UniqueValueAggregatorImpl implements UniqueValueAggregator<PaymentM
             List<PaymentCheckedField> list) {
         try {
             Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
-            TimeBoundDto timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
+            TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(countField, paymentModel);
             if (Objects.isNull(resolve.getValue())) {
                 return CURRENT_ONE;

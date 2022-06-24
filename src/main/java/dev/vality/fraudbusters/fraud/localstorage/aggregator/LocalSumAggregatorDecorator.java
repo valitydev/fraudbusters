@@ -1,5 +1,6 @@
 package dev.vality.fraudbusters.fraud.localstorage.aggregator;
 
+import dev.vality.fraudbusters.domain.TimeBound;
 import dev.vality.fraudbusters.exception.RuleFunctionException;
 import dev.vality.fraudbusters.fraud.AggregateGroupingFunction;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
@@ -9,7 +10,6 @@ import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse.SumAggregatorImpl;
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.service.TimeBoundaryService;
-import dev.vality.fraudbusters.service.dto.TimeBoundDto;
 import dev.vality.fraudbusters.util.TimestampUtil;
 import dev.vality.fraudo.model.TimeWindow;
 import dev.vality.fraudo.payment.aggregator.SumPaymentAggregator;
@@ -38,7 +38,7 @@ public class LocalSumAggregatorDecorator implements SumPaymentAggregator<Payment
         Double sum = sumAggregatorImpl.sum(checkedField, paymentModel, timeWindow, list);
         FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
         Instant now = TimestampUtil.instantFromPaymentModel(paymentModel);
-        TimeBoundDto timeBound = timeBoundaryService.getBoundary(now, timeWindow);
+        TimeBound timeBound = timeBoundaryService.getBoundary(now, timeWindow);
         List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
         Long localSum = localStorageRepository.sumOperationByFieldWithGroupBy(
                 checkedField.name(),
@@ -77,7 +77,7 @@ public class LocalSumAggregatorDecorator implements SumPaymentAggregator<Payment
         try {
             Double sumError = sumAggregatorImpl.sumError(checkedField, paymentModel, timeWindow, errorCode, list);
             Instant now = TimestampUtil.instantFromPaymentModel(paymentModel);
-            TimeBoundDto timeBound = timeBoundaryService.getBoundary(now, timeWindow);
+            TimeBound timeBound = timeBoundaryService.getBoundary(now, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
             List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
             Long localSum = localStorageRepository.sumOperationErrorWithGroupBy(
@@ -140,7 +140,7 @@ public class LocalSumAggregatorDecorator implements SumPaymentAggregator<Payment
             boolean withCurrent) {
         try {
             Instant now = TimestampUtil.instantFromPaymentModel(paymentModel);
-            TimeBoundDto timeBound = timeBoundaryService.getBoundary(now, timeWindow);
+            TimeBound timeBound = timeBoundaryService.getBoundary(now, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
             List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
             Long sum = aggregateFunction.accept(

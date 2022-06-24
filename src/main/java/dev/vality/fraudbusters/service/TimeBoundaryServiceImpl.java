@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.service;
 
-import dev.vality.fraudbusters.service.dto.TimeBoundDto;
+import dev.vality.fraudbusters.domain.TimeBound;
 import dev.vality.fraudo.model.TimeWindow;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +16,14 @@ import static dev.vality.fraudo.constant.TimeUnit.*;
 public class TimeBoundaryServiceImpl implements TimeBoundaryService {
 
     @Override
-    public TimeBoundDto getBoundary(Instant target, TimeWindow timeWindow) {
+    public TimeBound getBoundary(Instant target, TimeWindow timeWindow) {
         ChronoUnit chronoUnit = resolveTimeUnit(timeWindow.getTimeUnit());
         if (CALENDAR_MONTHS.equals(timeWindow.getTimeUnit())) {
             return buildCalendarMonthsTimeBound(target, timeWindow, chronoUnit);
         }
         Instant left = target.minus(timeWindow.getStart(), chronoUnit);
         Instant right = target.minus(timeWindow.getEnd(), chronoUnit);
-        return TimeBoundDto.builder()
+        return TimeBound.builder()
                 .left(left)
                 .right(right)
                 .build();
@@ -37,7 +37,7 @@ public class TimeBoundaryServiceImpl implements TimeBoundaryService {
         };
     }
 
-    private TimeBoundDto buildCalendarMonthsTimeBound(Instant target, TimeWindow timeWindow, ChronoUnit chronoUnit) {
+    private TimeBound buildCalendarMonthsTimeBound(Instant target, TimeWindow timeWindow, ChronoUnit chronoUnit) {
         LocalDate targetDate = LocalDate.ofInstant(target, ZoneId.systemDefault());
         int start = calculateStart(timeWindow.getStart(), targetDate);
         int end = calculateEnd(timeWindow.getEnd(), targetDate);
@@ -48,7 +48,7 @@ public class TimeBoundaryServiceImpl implements TimeBoundaryService {
                 .truncatedTo(ChronoUnit.DAYS);
         Instant right = target
                 .minus(end, chronoUnit);
-        return TimeBoundDto.builder()
+        return TimeBound.builder()
                 .left(left)
                 .right(right)
                 .build();

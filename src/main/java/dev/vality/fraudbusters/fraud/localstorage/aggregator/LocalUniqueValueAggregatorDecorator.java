@@ -1,5 +1,6 @@
 package dev.vality.fraudbusters.fraud.localstorage.aggregator;
 
+import dev.vality.fraudbusters.domain.TimeBound;
 import dev.vality.fraudbusters.exception.RuleFunctionException;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.localstorage.LocalResultStorageRepository;
@@ -8,7 +9,6 @@ import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse.UniqueValueAggregatorImpl;
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.service.TimeBoundaryService;
-import dev.vality.fraudbusters.service.dto.TimeBoundDto;
 import dev.vality.fraudbusters.util.TimestampUtil;
 import dev.vality.fraudo.aggregator.UniqueValueAggregator;
 import dev.vality.fraudo.model.TimeWindow;
@@ -37,7 +37,7 @@ public class LocalUniqueValueAggregatorDecorator implements UniqueValueAggregato
         try {
             Integer uniq = uniqueValueAggregator.countUniqueValue(countField, paymentModel, onField, timeWindow, list);
             Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
-            TimeBoundDto timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
+            TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(countField, paymentModel);
             List<FieldModel> fieldModels = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
             Integer localUniqCountOperation = localStorageRepository.uniqCountOperationWithGroupBy(

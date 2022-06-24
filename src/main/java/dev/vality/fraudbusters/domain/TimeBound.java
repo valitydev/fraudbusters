@@ -1,4 +1,4 @@
-package dev.vality.fraudbusters.service.dto;
+package dev.vality.fraudbusters.domain;
 
 import lombok.Builder;
 import lombok.Data;
@@ -7,7 +7,7 @@ import java.time.Instant;
 
 @Data
 @Builder
-public class TimeBoundDto {
+public class TimeBound {
 
     private Instant left;
     private Instant right;

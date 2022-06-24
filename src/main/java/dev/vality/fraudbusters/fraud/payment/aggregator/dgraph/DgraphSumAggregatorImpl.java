@@ -4,6 +4,7 @@ import dev.vality.fraudbusters.aspect.BasicMetric;
 import dev.vality.fraudbusters.constant.ChargebackStatus;
 import dev.vality.fraudbusters.constant.PaymentStatus;
 import dev.vality.fraudbusters.constant.RefundStatus;
+import dev.vality.fraudbusters.domain.TimeBound;
 import dev.vality.fraudbusters.fraud.constant.DgraphEntity;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
@@ -11,7 +12,6 @@ import dev.vality.fraudbusters.fraud.payment.aggregator.dgraph.query.builder.Dgr
 import dev.vality.fraudbusters.fraud.payment.resolver.DgraphEntityResolver;
 import dev.vality.fraudbusters.repository.DgraphAggregatesRepository;
 import dev.vality.fraudbusters.service.TimeBoundaryService;
-import dev.vality.fraudbusters.service.dto.TimeBoundDto;
 import dev.vality.fraudo.model.TimeWindow;
 import dev.vality.fraudo.payment.aggregator.SumPaymentAggregator;
 import lombok.RequiredArgsConstructor;
@@ -85,7 +85,7 @@ public class DgraphSumAggregatorImpl implements SumPaymentAggregator<PaymentMode
                           DgraphEntity targetEntity,
                           String status) {
         Instant timestamp = getTimestamp(paymentModel);
-        TimeBoundDto timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
+        TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
         List<PaymentCheckedField> filters = createFiltersList(checkedField, fields);
         String countQuery = dgraphSumQueryBuilderService.getQuery(
                 dgraphEntityResolver.resolvePaymentCheckedField(checkedField),

@@ -1,5 +1,6 @@
 package dev.vality.fraudbusters.fraud.localstorage.aggregator;
 
+import dev.vality.fraudbusters.domain.TimeBound;
 import dev.vality.fraudbusters.exception.RuleFunctionException;
 import dev.vality.fraudbusters.fraud.AggregateGroupingFunction;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
@@ -9,7 +10,6 @@ import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse.CountAggregatorImpl;
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.service.TimeBoundaryService;
-import dev.vality.fraudbusters.service.dto.TimeBoundDto;
 import dev.vality.fraudbusters.util.TimestampUtil;
 import dev.vality.fraudo.model.TimeWindow;
 import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
@@ -38,7 +38,7 @@ public class LocalCountAggregatorDecorator implements CountPaymentAggregator<Pay
         Integer count = countAggregator.count(checkedField, paymentModel, timeWindow, list);
         FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
         Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
-        TimeBoundDto timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
+        TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
         Integer localCount = localStorageRepository.countOperationByField(
                 checkedField.name(),
                 resolve.getValue(),
@@ -73,7 +73,7 @@ public class LocalCountAggregatorDecorator implements CountPaymentAggregator<Pay
         try {
             Integer countError = countAggregator.countError(checkedField, paymentModel, timeWindow, errorCode, list);
             Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
-            TimeBoundDto timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
+            TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
             List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
             Integer localCount = localStorageRepository.countOperationErrorWithGroupBy(
@@ -125,7 +125,7 @@ public class LocalCountAggregatorDecorator implements CountPaymentAggregator<Pay
             AggregateGroupingFunction<String, Object, Long, Long, List<FieldModel>, Integer> aggregateFunction) {
         try {
             Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
-            TimeBoundDto timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
+            TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
             List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
             Integer count = aggregateFunction.accept(

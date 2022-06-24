@@ -1,6 +1,7 @@
 package dev.vality.fraudbusters.fraud.payment.aggregator.dgraph;
 
 import dev.vality.fraudbusters.constant.PaymentStatus;
+import dev.vality.fraudbusters.domain.TimeBound;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.FieldModel;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
@@ -9,7 +10,6 @@ import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolv
 import dev.vality.fraudbusters.fraud.payment.resolver.DgraphEntityResolver;
 import dev.vality.fraudbusters.repository.DgraphAggregatesRepository;
 import dev.vality.fraudbusters.service.TimeBoundaryService;
-import dev.vality.fraudbusters.service.dto.TimeBoundDto;
 import dev.vality.fraudo.aggregator.UniqueValueAggregator;
 import dev.vality.fraudo.model.TimeWindow;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +50,7 @@ public class DgraphUniqueAggregatorImpl implements UniqueValueAggregator<Payment
         }
 
         Instant timestamp = getTimestamp(paymentModel);
-        TimeBoundDto timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
+        TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
         List<PaymentCheckedField> filters = createFiltersList(countField, fields);
         String countQuery = dgraphUniqueQueryBuilderService.getQuery(
                 dgraphEntityResolver.resolvePaymentCheckedField(countField),
