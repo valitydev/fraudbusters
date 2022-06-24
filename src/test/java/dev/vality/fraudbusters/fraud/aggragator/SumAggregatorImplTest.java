@@ -7,6 +7,8 @@ import dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse.SumAggregator
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.repository.AggregationRepository;
 import dev.vality.fraudbusters.repository.PaymentRepository;
+import dev.vality.fraudbusters.service.TimeBoundaryService;
+import dev.vality.fraudbusters.service.TimeBoundaryServiceImpl;
 import dev.vality.fraudo.model.TimeWindow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,8 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.temporal.ChronoUnit;
-
+import static dev.vality.fraudo.constant.TimeUnit.MINUTES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -33,6 +34,8 @@ public class SumAggregatorImplTest {
     @Mock
     private DatabasePaymentFieldResolver databasePaymentFieldResolver;
 
+    private final TimeBoundaryService timeBoundaryService = new TimeBoundaryServiceImpl();
+
     private final FieldModel modelMock = new FieldModel("name", "value");
 
     @BeforeEach
@@ -43,7 +46,8 @@ public class SumAggregatorImplTest {
                 databasePaymentFieldResolver,
                 paymentRepository,
                 analyticsRefundRepository,
-                analyticsChargebackRepository
+                analyticsChargebackRepository,
+                timeBoundaryService
         );
     }
 
@@ -57,7 +61,7 @@ public class SumAggregatorImplTest {
         Double some = sumAggregator.sum(
                 PaymentCheckedField.BIN,
                 paymentModel,
-                TimeWindow.builder().startWindowTime(1444L).timeUnit(ChronoUnit.MINUTES).build(),
+                TimeWindow.builder().start(1444).timeUnit(MINUTES).build(),
                 null
         );
 
@@ -69,9 +73,9 @@ public class SumAggregatorImplTest {
         PaymentModel paymentModel = new PaymentModel();
         paymentModel.setAmount(1L);
         TimeWindow.TimeWindowBuilder timeWindowBuilder = TimeWindow.builder()
-                .startWindowTime(1444L)
-                .timeUnit(ChronoUnit.MINUTES)
-                .endWindowTime(400L);
+                .start(1444)
+                .timeUnit(MINUTES)
+                .end(400);
         when(paymentRepository.sumOperationByFieldWithGroupBy(any(), any(), any(), any(), any())).thenReturn(1050100L);
 
         Double sum = sumAggregator.sum(PaymentCheckedField.BIN, paymentModel, timeWindowBuilder.build(), null);
@@ -79,9 +83,8 @@ public class SumAggregatorImplTest {
         assertEquals(Double.valueOf(1050101), sum);
 
         timeWindowBuilder = TimeWindow.builder()
-                .startWindowTime(1444L)
-                .timeUnit(ChronoUnit.MINUTES)
-                .endWindowTime(null);
+                .start(1444)
+                .timeUnit(MINUTES);
         sum = sumAggregator.sum(PaymentCheckedField.BIN, paymentModel, timeWindowBuilder.build(), null);
 
         assertEquals(Double.valueOf(1050101), sum);
@@ -92,8 +95,8 @@ public class SumAggregatorImplTest {
         when(paymentRepository.sumOperationSuccessWithGroupBy(any(), any(), any(), any(), any())).thenReturn(1050100L);
         Double some = sumAggregator.sumSuccess(PaymentCheckedField.BIN, new PaymentModel(),
                 TimeWindow.builder()
-                        .startWindowTime(1444L)
-                        .timeUnit(ChronoUnit.MINUTES)
+                        .start(1444)
+                        .timeUnit(MINUTES)
                         .build(),
                 null
         );
@@ -107,8 +110,8 @@ public class SumAggregatorImplTest {
                 .thenReturn(1050100L);
         Double some = sumAggregator.sumError(PaymentCheckedField.BIN, new PaymentModel(),
                 TimeWindow.builder()
-                        .startWindowTime(1444L)
-                        .timeUnit(ChronoUnit.MINUTES)
+                        .start(1444)
+                        .timeUnit(MINUTES)
                         .build(),
                 null,
                 null

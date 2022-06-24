@@ -14,7 +14,6 @@ import dev.vality.fraudbusters.repository.clickhouse.impl.AggregationGeneralRepo
 import dev.vality.fraudbusters.repository.clickhouse.impl.FraudResultRepository;
 import dev.vality.fraudbusters.repository.clickhouse.mapper.EventMapper;
 import dev.vality.fraudbusters.util.BeanUtil;
-import dev.vality.fraudbusters.util.TimestampUtil;
 import dev.vality.fraudo.constant.ResultStatus;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -123,8 +122,8 @@ public class FraudResultRepositoryTest {
     @Test
     public void countOperationByEmailTest() throws SQLException {
         Instant now = Instant.now();
-        Long to = TimestampUtil.generateTimestampNowMillis(now);
-        Long from = TimestampUtil.generateTimestampMinusTimeUnitsMillis(now, 10L, ChronoUnit.MINUTES);
+        Long to = now.toEpochMilli();
+        Long from = now.minus(10L, ChronoUnit.MINUTES).toEpochMilli();
         List<FraudResult> batch = createBatch();
         fraudResultRepository.insertBatch(fraudResultToEventConverter.convertBatch(batch));
 
@@ -138,17 +137,17 @@ public class FraudResultRepositoryTest {
         paymentModel.setPartyId("test");
         fraudResultRepository.insertBatch(fraudResultToEventConverter
                 .convertBatch(List.of(
-                        createFraudResult(ResultStatus.ACCEPT, BeanUtil.createPaymentModel()),
-                        createFraudResult(ResultStatus.DECLINE, BeanUtil.createFraudModelSecond()),
-                        createFraudResult(ResultStatus.ACCEPT, paymentModel),
-                        createFraudResult(ResultStatus.DECLINE, paymentModel)
+                                createFraudResult(ResultStatus.ACCEPT, BeanUtil.createPaymentModel()),
+                                createFraudResult(ResultStatus.DECLINE, BeanUtil.createFraudModelSecond()),
+                                createFraudResult(ResultStatus.ACCEPT, paymentModel),
+                                createFraudResult(ResultStatus.DECLINE, paymentModel)
                         )
                 )
         );
 
         Instant now = Instant.now().plusSeconds(30L);
-        Long to = TimestampUtil.generateTimestampNowMillis(now);
-        Long from = TimestampUtil.generateTimestampMinusTimeUnitsMillis(now, 10L, ChronoUnit.MINUTES);
+        Long to = now.toEpochMilli();
+        Long from = now.minus(10L, ChronoUnit.MINUTES).toEpochMilli();
 
         FieldModel email = databasePaymentFieldResolver.resolve(PaymentCheckedField.EMAIL, paymentModel);
         int count = fraudResultRepository.countOperationByFieldWithGroupBy(EventField.email.name(),
@@ -190,8 +189,8 @@ public class FraudResultRepositoryTest {
         fraudResultRepository.insertBatch(fraudResultToEventConverter.convertBatch(createBatch()));
 
         Instant now = Instant.now();
-        Long to = TimestampUtil.generateTimestampNowMillis(now);
-        Long from = TimestampUtil.generateTimestampMinusTimeUnitsMillis(now, 10L, ChronoUnit.MINUTES);
+        Long to = now.toEpochMilli();
+        Long from = now.minus(10L, ChronoUnit.MINUTES).toEpochMilli();
         Long sum = fraudResultRepository.sumOperationByFieldWithGroupBy(EventField.email.name(),
                 BeanUtil.EMAIL,
                 from,
@@ -215,17 +214,17 @@ public class FraudResultRepositoryTest {
         paymentModel.setFingerprint("test");
         fraudResultRepository.insertBatch(fraudResultToEventConverter
                 .convertBatch(List.of(
-                        createFraudResult(ResultStatus.ACCEPT, BeanUtil.createPaymentModel()),
-                        createFraudResult(ResultStatus.DECLINE, BeanUtil.createFraudModelSecond()),
-                        createFraudResult(ResultStatus.DECLINE, BeanUtil.createPaymentModel()),
-                        createFraudResult(ResultStatus.DECLINE, paymentModel)
+                                createFraudResult(ResultStatus.ACCEPT, BeanUtil.createPaymentModel()),
+                                createFraudResult(ResultStatus.DECLINE, BeanUtil.createFraudModelSecond()),
+                                createFraudResult(ResultStatus.DECLINE, BeanUtil.createPaymentModel()),
+                                createFraudResult(ResultStatus.DECLINE, paymentModel)
                         )
                 )
         );
 
         Instant now = Instant.now();
-        Long to = TimestampUtil.generateTimestampNowMillis(now);
-        Long from = TimestampUtil.generateTimestampMinusTimeUnitsMillis(now, 10L, ChronoUnit.MINUTES);
+        Long to = now.toEpochMilli();
+        Long from = now.minus(10L, ChronoUnit.MINUTES).toEpochMilli();
         Integer sum = fraudResultRepository.uniqCountOperation(EventField.email.name(),
                 BeanUtil.EMAIL,
                 EventField.fingerprint.name(),
@@ -243,17 +242,17 @@ public class FraudResultRepositoryTest {
 
         fraudResultRepository.insertBatch(fraudResultToEventConverter
                 .convertBatch(List.of(
-                        createFraudResult(ResultStatus.ACCEPT, BeanUtil.createPaymentModel()),
-                        createFraudResult(ResultStatus.DECLINE, BeanUtil.createFraudModelSecond()),
-                        createFraudResult(ResultStatus.DECLINE, BeanUtil.createPaymentModel()),
-                        createFraudResult(ResultStatus.DECLINE, paymentModel)
+                                createFraudResult(ResultStatus.ACCEPT, BeanUtil.createPaymentModel()),
+                                createFraudResult(ResultStatus.DECLINE, BeanUtil.createFraudModelSecond()),
+                                createFraudResult(ResultStatus.DECLINE, BeanUtil.createPaymentModel()),
+                                createFraudResult(ResultStatus.DECLINE, paymentModel)
                         )
                 )
         );
 
         Instant now = Instant.now();
-        Long to = TimestampUtil.generateTimestampNowMillis(now);
-        Long from = TimestampUtil.generateTimestampMinusTimeUnitsMillis(now, 10L, ChronoUnit.MINUTES);
+        Long to = now.toEpochMilli();
+        Long from = now.minus(10L, ChronoUnit.MINUTES).toEpochMilli();
         Integer sum = fraudResultRepository.uniqCountOperationWithGroupBy(EventField.email.name(),
                 BeanUtil.EMAIL,
                 EventField.fingerprint.name(),

@@ -4,12 +4,14 @@ import dev.vality.fraudbusters.aspect.BasicMetric;
 import dev.vality.fraudbusters.constant.ChargebackStatus;
 import dev.vality.fraudbusters.constant.PaymentStatus;
 import dev.vality.fraudbusters.constant.RefundStatus;
+import dev.vality.fraudbusters.domain.TimeBound;
 import dev.vality.fraudbusters.fraud.constant.DgraphEntity;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.aggregator.dgraph.query.builder.DgraphAggregationQueryBuilderService;
 import dev.vality.fraudbusters.fraud.payment.resolver.DgraphEntityResolver;
 import dev.vality.fraudbusters.repository.DgraphAggregatesRepository;
+import dev.vality.fraudbusters.service.TimeBoundaryService;
 import dev.vality.fraudo.model.TimeWindow;
 import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class DgraphCountAggregatorImpl implements CountPaymentAggregator<Payment
     private final DgraphAggregationQueryBuilderService dgraphCountQueryBuilderService;
     private final DgraphEntityResolver dgraphEntityResolver;
     private final DgraphAggregatesRepository dgraphAggregatesRepository;
+    private final TimeBoundaryService timeBoundaryService;
 
     @Override
     @BasicMetric("count")
@@ -92,15 +95,15 @@ public class DgraphCountAggregatorImpl implements CountPaymentAggregator<Payment
                              DgraphEntity targetEntity,
                              String status) {
         Instant timestamp = getTimestamp(paymentModel);
+        TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
         List<PaymentCheckedField> filters = createFiltersList(checkedField, fields);
-
         String countQuery = dgraphCountQueryBuilderService.getQuery(
                 dgraphEntityResolver.resolvePaymentCheckedField(checkedField),
                 targetEntity,
                 dgraphEntityResolver.resolvePaymentCheckedFieldsToMap(filters),
                 paymentModel,
-                timestamp.minus(timeWindow.getStartWindowTime(), timeWindow.getTimeUnit()),
-                timestamp.minus(timeWindow.getEndWindowTime(), timeWindow.getTimeUnit()),
+                timeBound.getLeft(),
+                timeBound.getRight(),
                 status
         );
         return dgraphAggregatesRepository.getCount(countQuery);

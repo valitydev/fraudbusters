@@ -1,22 +1,5 @@
 package dev.vality.fraudbusters.config.payment;
 
-import dev.vality.fraudo.aggregator.UniqueValueAggregator;
-import dev.vality.fraudo.bundle.AggregatorBundle;
-import dev.vality.fraudo.bundle.FinderBundle;
-import dev.vality.fraudo.bundle.ResolverBundle;
-import dev.vality.fraudo.bundle.VisitorBundle;
-import dev.vality.fraudo.finder.InListFinder;
-import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
-import dev.vality.fraudo.payment.aggregator.SumPaymentAggregator;
-import dev.vality.fraudo.payment.factory.FraudVisitorFactoryImpl;
-import dev.vality.fraudo.payment.factory.FullVisitorFactoryImpl;
-import dev.vality.fraudo.payment.resolver.CustomerTypeResolver;
-import dev.vality.fraudo.payment.resolver.PaymentGroupResolver;
-import dev.vality.fraudo.payment.resolver.PaymentTimeWindowResolver;
-import dev.vality.fraudo.payment.resolver.PaymentTypeResolver;
-import dev.vality.fraudo.payment.visitor.impl.FirstFindVisitorImpl;
-import dev.vality.fraudo.resolver.CountryResolver;
-import dev.vality.fraudo.resolver.FieldResolver;
 import dev.vality.damsel.wb_list.WbListServiceSrv;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.localstorage.LocalResultStorageRepository;
@@ -41,6 +24,24 @@ import dev.vality.fraudbusters.repository.DgraphAggregatesRepository;
 import dev.vality.fraudbusters.repository.PaymentRepository;
 import dev.vality.fraudbusters.repository.clickhouse.impl.ChargebackRepository;
 import dev.vality.fraudbusters.repository.clickhouse.impl.RefundRepository;
+import dev.vality.fraudbusters.service.TimeBoundaryService;
+import dev.vality.fraudo.aggregator.UniqueValueAggregator;
+import dev.vality.fraudo.bundle.AggregatorBundle;
+import dev.vality.fraudo.bundle.FinderBundle;
+import dev.vality.fraudo.bundle.ResolverBundle;
+import dev.vality.fraudo.bundle.VisitorBundle;
+import dev.vality.fraudo.finder.InListFinder;
+import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
+import dev.vality.fraudo.payment.aggregator.SumPaymentAggregator;
+import dev.vality.fraudo.payment.factory.FraudVisitorFactoryImpl;
+import dev.vality.fraudo.payment.factory.FullVisitorFactoryImpl;
+import dev.vality.fraudo.payment.resolver.CustomerTypeResolver;
+import dev.vality.fraudo.payment.resolver.PaymentGroupResolver;
+import dev.vality.fraudo.payment.resolver.PaymentTimeWindowResolver;
+import dev.vality.fraudo.payment.resolver.PaymentTypeResolver;
+import dev.vality.fraudo.payment.visitor.impl.FirstFindVisitorImpl;
+import dev.vality.fraudo.resolver.CountryResolver;
+import dev.vality.fraudo.resolver.FieldResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -53,12 +54,14 @@ public class PaymentFraudoConfig {
             PaymentRepository paymentRepository,
             RefundRepository refundRepository,
             ChargebackRepository chargebackRepository,
-            DatabasePaymentFieldResolver databasePaymentFieldResolver) {
+            DatabasePaymentFieldResolver databasePaymentFieldResolver,
+            TimeBoundaryService timeBoundaryService) {
         return new CountAggregatorImpl(
                 databasePaymentFieldResolver,
                 paymentRepository,
                 refundRepository,
-                chargebackRepository
+                chargebackRepository,
+                timeBoundaryService
         );
     }
 
@@ -67,20 +70,23 @@ public class PaymentFraudoConfig {
             PaymentRepository paymentRepository,
             RefundRepository refundRepository,
             ChargebackRepository chargebackRepository,
-            DatabasePaymentFieldResolver databasePaymentFieldResolver) {
+            DatabasePaymentFieldResolver databasePaymentFieldResolver,
+            TimeBoundaryService timeBoundaryService) {
         return new SumAggregatorImpl(
                 databasePaymentFieldResolver,
                 paymentRepository,
                 refundRepository,
-                chargebackRepository
+                chargebackRepository,
+                timeBoundaryService
         );
     }
 
     @Bean
     public UniqueValueAggregator<PaymentModel, PaymentCheckedField> uniqueValueAggregator(
             PaymentRepository paymentRepository,
-            DatabasePaymentFieldResolver databasePaymentFieldResolver) {
-        return new UniqueValueAggregatorImpl(databasePaymentFieldResolver, paymentRepository);
+            DatabasePaymentFieldResolver databasePaymentFieldResolver,
+            TimeBoundaryService timeBoundaryService) {
+        return new UniqueValueAggregatorImpl(databasePaymentFieldResolver, paymentRepository, timeBoundaryService);
     }
 
     @Bean
@@ -132,18 +138,21 @@ public class PaymentFraudoConfig {
             PaymentRepository paymentRepositoryImpl,
             RefundRepository refundRepository,
             ChargebackRepository chargebackRepository,
-            DatabasePaymentFieldResolver databasePaymentFieldResolver) {
+            DatabasePaymentFieldResolver databasePaymentFieldResolver,
+            TimeBoundaryService timeBoundaryService) {
 
         CountAggregatorImpl countAggregatorDecorator = new CountAggregatorImpl(
                 databasePaymentFieldResolver,
                 paymentRepositoryImpl,
                 refundRepository,
-                chargebackRepository
+                chargebackRepository,
+                timeBoundaryService
         );
         return new LocalCountAggregatorDecorator(
                 countAggregatorDecorator,
                 databasePaymentFieldResolver,
-                localResultStorageRepository
+                localResultStorageRepository,
+                timeBoundaryService
         );
     }
 
@@ -153,18 +162,21 @@ public class PaymentFraudoConfig {
             PaymentRepository paymentRepositoryImpl,
             RefundRepository refundRepository,
             ChargebackRepository chargebackRepository,
-            DatabasePaymentFieldResolver databasePaymentFieldResolver) {
+            DatabasePaymentFieldResolver databasePaymentFieldResolver,
+            TimeBoundaryService timeBoundaryService) {
 
         SumAggregatorImpl sumAggregator = new SumAggregatorImpl(
                 databasePaymentFieldResolver,
                 paymentRepositoryImpl,
                 refundRepository,
-                chargebackRepository
+                chargebackRepository,
+                timeBoundaryService
         );
         return new LocalSumAggregatorDecorator(
                 sumAggregator,
                 databasePaymentFieldResolver,
-                localResultStorageRepository
+                localResultStorageRepository,
+                timeBoundaryService
         );
     }
 
@@ -172,14 +184,16 @@ public class PaymentFraudoConfig {
     public UniqueValueAggregator<PaymentModel, PaymentCheckedField> uniqueValueResultAggregator(
             LocalResultStorageRepository localResultStorageRepository,
             PaymentRepository fraudResultRepository,
-            DatabasePaymentFieldResolver databasePaymentFieldResolver) {
+            DatabasePaymentFieldResolver databasePaymentFieldResolver,
+            TimeBoundaryService timeBoundaryService) {
         UniqueValueAggregatorImpl uniqueValueAggregator =
-                new UniqueValueAggregatorImpl(databasePaymentFieldResolver, fraudResultRepository);
+                new UniqueValueAggregatorImpl(databasePaymentFieldResolver, fraudResultRepository, timeBoundaryService);
 
         return new LocalUniqueValueAggregatorDecorator(
                 uniqueValueAggregator,
                 databasePaymentFieldResolver,
-                localResultStorageRepository
+                localResultStorageRepository,
+                timeBoundaryService
         );
     }
 
@@ -214,12 +228,14 @@ public class PaymentFraudoConfig {
             DgraphAggregationQueryBuilderService dgraphUniqueQueryBuilderService,
             DgraphEntityResolver dgraphEntityResolver,
             DgraphAggregatesRepository dgraphAggregatesRepository,
-            DatabasePaymentFieldResolver databasePaymentFieldResolver) {
+            DatabasePaymentFieldResolver databasePaymentFieldResolver,
+            TimeBoundaryService timeBoundaryService) {
         return new DgraphUniqueAggregatorImpl(
                 dgraphUniqueQueryBuilderService,
                 dgraphEntityResolver,
                 dgraphAggregatesRepository,
-                databasePaymentFieldResolver
+                databasePaymentFieldResolver,
+                timeBoundaryService
         );
     }
 
@@ -228,12 +244,14 @@ public class PaymentFraudoConfig {
     public CountPaymentAggregator<PaymentModel, PaymentCheckedField> dgraphCountAggregator(
             DgraphAggregationQueryBuilderService dgraphCountQueryBuilderService,
             DgraphEntityResolver dgraphEntityResolver,
-            DgraphAggregatesRepository dgraphAggregatesRepository
+            DgraphAggregatesRepository dgraphAggregatesRepository,
+            TimeBoundaryService timeBoundaryService
     ) {
         return new DgraphCountAggregatorImpl(
                 dgraphCountQueryBuilderService,
                 dgraphEntityResolver,
-                dgraphAggregatesRepository
+                dgraphAggregatesRepository,
+                timeBoundaryService
         );
     }
 
@@ -242,12 +260,14 @@ public class PaymentFraudoConfig {
     public SumPaymentAggregator<PaymentModel, PaymentCheckedField> dgraphSumAggregator(
             DgraphAggregationQueryBuilderService dgraphSumQueryBuilderService,
             DgraphEntityResolver dgraphEntityResolver,
-            DgraphAggregatesRepository dgraphAggregatesRepository
+            DgraphAggregatesRepository dgraphAggregatesRepository,
+            TimeBoundaryService timeBoundaryService
     ) {
         return new DgraphSumAggregatorImpl(
                 dgraphSumQueryBuilderService,
                 dgraphEntityResolver,
-                dgraphAggregatesRepository
+                dgraphAggregatesRepository,
+                timeBoundaryService
         );
     }
 

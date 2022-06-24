@@ -1,21 +1,23 @@
 package dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse;
 
 import dev.vality.fraudbusters.aspect.BasicMetric;
+import dev.vality.fraudbusters.domain.TimeBound;
 import dev.vality.fraudbusters.exception.RuleFunctionException;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.FieldModel;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.repository.PaymentRepository;
+import dev.vality.fraudbusters.service.TimeBoundaryService;
 import dev.vality.fraudbusters.util.TimestampUtil;
 import dev.vality.fraudo.aggregator.UniqueValueAggregator;
 import dev.vality.fraudo.model.TimeWindow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StringUtils;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ public class UniqueValueAggregatorImpl implements UniqueValueAggregator<PaymentM
 
     private final DatabasePaymentFieldResolver databasePaymentFieldResolver;
     private final PaymentRepository paymentRepository;
+    private final TimeBoundaryService timeBoundaryService;
 
     @Override
     @BasicMetric("countUniqueValueWindowed")
@@ -35,11 +38,10 @@ public class UniqueValueAggregatorImpl implements UniqueValueAggregator<PaymentM
             TimeWindow timeWindow,
             List<PaymentCheckedField> list) {
         try {
-            Instant timestamp = paymentModel.getTimestamp() != null
-                    ? Instant.ofEpochMilli(paymentModel.getTimestamp())
-                    : Instant.now();
+            Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
+            TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(countField, paymentModel);
-            if (StringUtils.isEmpty(resolve.getValue())) {
+            if (Objects.isNull(resolve.getValue())) {
                 return CURRENT_ONE;
             }
             List<FieldModel> fieldModels = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
@@ -47,14 +49,8 @@ public class UniqueValueAggregatorImpl implements UniqueValueAggregator<PaymentM
                     resolve.getName(),
                     resolve.getValue(),
                     databasePaymentFieldResolver.resolve(onField),
-                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
-                            timestamp,
-                            timeWindow.getStartWindowTime(),
-                            timeWindow.getTimeUnit()),
-                    TimestampUtil.generateTimestampMinusTimeUnitsMillis(
-                            timestamp,
-                            timeWindow.getEndWindowTime(),
-                            timeWindow.getTimeUnit()),
+                    timeBound.getLeft().toEpochMilli(),
+                    timeBound.getRight().toEpochMilli(),
                     fieldModels
             );
             return uniqCountOperation + CURRENT_ONE;
