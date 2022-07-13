@@ -38,7 +38,7 @@ public class ListenersConfigurationService {
     private String maxPollRecords;
     @Value("${kafka.max.retry.attempts}")
     private int maxRetryAttempts;
-    @Value("${kafka.backoff.interval}")
+    @Value("${spring.kafka.properties.backoff.interval}")
     private int backoffInterval;
     @Value("${kafka.listen.result.concurrency}")
     private int listenResultConcurrency;
