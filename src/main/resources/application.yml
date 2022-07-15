@@ -34,14 +34,6 @@ spring:
       reconnect.backoff.ms: 1500
       reconnect.backoff.max.ms: 3000
       retry.backoff.ms: 1000
-    consumer:
-      auto-offset-reset: earliest
-      enable-auto-commit: true
-    streams:
-      state-dir: tmp/state-store/
-      properties:
-        commit.interval.ms: 10000
-        cache.max.bytes.buffering: 0
     ssl:
       keystore-location: src/main/resources/cert/kenny-k.struzhkin.p12
       keystore-password: kenny

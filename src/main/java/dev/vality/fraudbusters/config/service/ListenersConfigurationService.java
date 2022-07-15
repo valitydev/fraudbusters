@@ -31,6 +31,8 @@ public class ListenersConfigurationService {
     public static final long THROTTLING_TIMEOUT = 500L;
     public static final int MAX_WAIT_FETCH_MS = 7000;
 
+    private static final String EARLIEST = "earliest";
+
     private final ConsumerGroupIdService consumerGroupIdService;
     private final KafkaProperties kafkaProperties;
 
@@ -44,6 +46,14 @@ public class ListenersConfigurationService {
     private int listenResultConcurrency;
     @Value("${kafka.dgraph.topics.payment.concurrency}")
     private int dgraphPaymentConcurrency;
+
+    public Map<String, Object> createDefaultProperties(String groupId) {
+        final Map<String, Object> props = kafkaProperties.buildConsumerProperties();
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, EARLIEST);
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
+        return props;
+    }
 
     public ConcurrentKafkaListenerContainerFactory<String, Command> createDefaultFactory(
             ConsumerFactory<String, Command> stringCommandConsumerFactory) {
@@ -83,8 +93,7 @@ public class ListenersConfigurationService {
             Deserializer<T> deserializer,
             String groupId) {
         String consumerGroup = consumerGroupIdService.generateGroupId(groupId);
-        final Map<String, Object> props = kafkaProperties.buildConsumerProperties();
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
+        final Map<String, Object> props = createDefaultProperties(consumerGroup);
         return createFactoryWithProps(deserializer, props);
     }
 
@@ -93,8 +102,7 @@ public class ListenersConfigurationService {
             String groupId,
             Integer fetchMinBytes) {
         String consumerGroup = consumerGroupIdService.generateGroupId(groupId);
-        final Map<String, Object> props = kafkaProperties.buildConsumerProperties();
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
+        final Map<String, Object> props = createDefaultProperties(consumerGroup);
         props.put(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, fetchMinBytes);
         props.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, MAX_WAIT_FETCH_MS);
         return createFactoryWithProps(deserializer, props);
@@ -105,8 +113,7 @@ public class ListenersConfigurationService {
             String groupId,
             Integer fetchMinBytes) {
         String consumerGroup = consumerGroupIdService.generateGroupId(groupId);
-        final Map<String, Object> props = kafkaProperties.buildConsumerProperties();
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
+        final Map<String, Object> props = createDefaultProperties(consumerGroup);
         props.put(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, fetchMinBytes);
         props.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, MAX_WAIT_FETCH_MS);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
@@ -135,8 +142,7 @@ public class ListenersConfigurationService {
 
     public ConsumerFactory<String, Command> createDefaultConsumerFactory(String groupListReferenceGroupId) {
         String value = consumerGroupIdService.generateRandomGroupId(groupListReferenceGroupId);
-        final Map<String, Object> props = kafkaProperties.buildConsumerProperties();
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, value);
+        final Map<String, Object> props = createDefaultProperties(value);
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new CommandDeserializer());
     }
 
