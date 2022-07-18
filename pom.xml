@@ -211,6 +211,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>software.amazon.msk</groupId>
+            <artifactId>aws-msk-iam-auth</artifactId>
+            <version>1.1.4</version>
+        </dependency>
 
         <!-- Test libs -->
         <dependency>
