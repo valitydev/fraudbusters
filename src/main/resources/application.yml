@@ -28,7 +28,7 @@ management:
         include: health,info,prometheus
 spring:
   kafka:
-    bootstrap.servers: "localhost:29092"
+    bootstrap-servers: "localhost:29092"
     properties:
       backoff.interval: 1000
       reconnect.backoff.ms: 1500
