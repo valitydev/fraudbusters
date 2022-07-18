@@ -130,7 +130,7 @@ public abstract class DgraphAbstractIntegrationTest {
 
     @DynamicPropertySource
     static void connectionConfigs(DynamicPropertyRegistry registry) {
-        registry.add("kafka.bootstrap.servers", KafkaContainerExtension.KAFKA::getBootstrapServers);
+        registry.add("spring.kafka.bootstrap-servers", KafkaContainerExtension.KAFKA::getBootstrapServers);
         registry.add("dgraph.targets.[0]", () -> testHostname + ":9080");
     }
 
