@@ -2,15 +2,14 @@ package dev.vality.fraudbusters.config.service;
 
 import dev.vality.kafka.common.exception.handler.SeekToCurrentWithSleepBatchErrorHandler;
 import dev.vality.damsel.fraudbusters.Command;
-import dev.vality.fraudbusters.config.properties.KafkaSslProperties;
 import dev.vality.fraudbusters.serde.CommandDeserializer;
 import dev.vality.fraudbusters.service.ConsumerGroupIdService;
-import dev.vality.fraudbusters.util.SslKafkaUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
@@ -23,7 +22,6 @@ import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -36,37 +34,24 @@ public class ListenersConfigurationService {
     private static final String EARLIEST = "earliest";
 
     private final ConsumerGroupIdService consumerGroupIdService;
-    private final KafkaSslProperties kafkaSslProperties;
+    private final KafkaProperties kafkaProperties;
 
     @Value("${kafka.max.poll.records}")
     private String maxPollRecords;
     @Value("${kafka.max.retry.attempts}")
     private int maxRetryAttempts;
-    @Value("${kafka.backoff.interval}")
+    @Value("${spring.kafka.properties.backoff.interval}")
     private int backoffInterval;
-    @Value("${kafka.bootstrap.servers}")
-    private String bootstrapServers;
     @Value("${kafka.listen.result.concurrency}")
     private int listenResultConcurrency;
     @Value("${kafka.dgraph.topics.payment.concurrency}")
     private int dgraphPaymentConcurrency;
-    @Value("${kafka.reconnect-backoff-ms}")
-    private int reconnectBackoffMs;
-    @Value("${kafka.reconnect-backoff-max-ms}")
-    private int reconnectBackoffMaxMs;
-    @Value("${kafka.retry-backoff-ms}")
-    private int retryBackoffMs;
 
-    public Map<String, Object> createDefaultProperties(String value) {
-        final Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, value);
+    public Map<String, Object> createDefaultProperties(String groupId) {
+        final Map<String, Object> props = kafkaProperties.buildConsumerProperties();
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, EARLIEST);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
-        props.put(ConsumerConfig.RECONNECT_BACKOFF_MS_CONFIG, reconnectBackoffMs);
-        props.put(ConsumerConfig.RECONNECT_BACKOFF_MAX_MS_CONFIG, reconnectBackoffMaxMs);
-        props.put(ConsumerConfig.RETRY_BACKOFF_MS_CONFIG, retryBackoffMs);
-        props.putAll(SslKafkaUtils.sslConfigure(kafkaSslProperties));
         return props;
     }
 

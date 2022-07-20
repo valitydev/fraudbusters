@@ -72,9 +72,9 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         properties = {
                 "kafka.listen.result.concurrency=1",
                 "dgraph.service.enabled=true",
-                "kafka.reconnect-backoff-ms=100",
-                "kafka.reconnect-backoff-max-ms=100",
-                "kafka.retry-backoff-ms=100",
+                "spring.kafka.properties.reconnect.backoff.ms=100",
+                "spring.kafka.properties.reconnect.backoff.max.ms=100",
+                "spring.kafka.properties.retry.backoff.ms=100",
                 "kafka.dgraph.topics.payment.enabled=true",
                 "kafka.dgraph.topics.refund.enabled=true",
                 "kafka.dgraph.topics.fraud_payment.enabled=true",
@@ -130,7 +130,7 @@ public abstract class DgraphAbstractIntegrationTest {
 
     @DynamicPropertySource
     static void connectionConfigs(DynamicPropertyRegistry registry) {
-        registry.add("kafka.bootstrap.servers", KafkaContainerExtension.KAFKA::getBootstrapServers);
+        registry.add("spring.kafka.bootstrap-servers", KafkaContainerExtension.KAFKA::getBootstrapServers);
         registry.add("dgraph.targets.[0]", () -> testHostname + ":9080");
     }
 

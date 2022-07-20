@@ -82,7 +82,7 @@ public class JUnit5IntegrationTest {
 
     @DynamicPropertySource
     static void connectionConfigs(DynamicPropertyRegistry registry) {
-        registry.add("kafka.bootstrap.servers", KafkaContainerExtension.KAFKA::getBootstrapServers);
+        registry.add("spring.kafka.bootstrap-servers", KafkaContainerExtension.KAFKA::getBootstrapServers);
         registry.add("clickhouse.db.url=", ClickHouseContainerExtension.CLICKHOUSE_CONTAINER::getJdbcUrl);
         registry.add("clickhouse.db.user=", ClickHouseContainerExtension.CLICKHOUSE_CONTAINER::getUsername);
         registry.add("clickhouse.db.password=", ClickHouseContainerExtension.CLICKHOUSE_CONTAINER::getPassword);

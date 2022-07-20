@@ -27,6 +27,19 @@ management:
       exposure:
         include: health,info,prometheus
 spring:
+  kafka:
+    bootstrap-servers: "localhost:29092"
+    properties:
+      backoff.interval: 1000
+      reconnect.backoff.ms: 1500
+      reconnect.backoff.max.ms: 3000
+      retry.backoff.ms: 1000
+    ssl:
+      keystore-location: src/main/resources/cert/kenny-k.struzhkin.p12
+      keystore-password: kenny
+      key-password: kenny
+      trust-store-password: kenny12
+      trust-store-location: src/main/resources/cert/truststore.p12
   application:
     name: '@name@'
   output:
@@ -38,11 +51,6 @@ spring:
       spec: maximumSize=500,expireAfterAccess=100s
 
 kafka:
-  bootstrap.servers: "localhost:29092"
-  backoff.interval: 1000
-  reconnect-backoff-ms: 1500
-  reconnect-backoff-max-ms: 3000
-  retry-backoff-ms: 1000
   historical.listener:
     enable: false
   reply:
@@ -97,15 +105,6 @@ kafka:
         name: withdrawal
         concurrency: 1
         enabled: false
-  ssl:
-    enable: false
-    keystore-location: src/main/resources/cert/kenny-k.struzhkin.p12
-    keystore-password: kenny
-    key-password: kenny
-    server-password: kenny12
-    server-keystore-location: src/main/resources/cert/truststore.p12
-  state:
-    dir: tmp/state-store/
   aggr.payment.min.bytes: 50000
 
 clickhouse.db:
