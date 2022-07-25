@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 
@@ -27,8 +28,8 @@ class TimeBoundaryServiceImplTest {
         var timeBound = timeBoundaryService.getBoundary(now, timeWindow);
 
         assertEquals(now.minus(startValue, ChronoUnit.MINUTES).truncatedTo(ChronoUnit.SECONDS),
-                timeBound.getLeft().truncatedTo(ChronoUnit.SECONDS));
-        assertEquals(now.truncatedTo(ChronoUnit.SECONDS), timeBound.getRight().truncatedTo(ChronoUnit.SECONDS));
+                timeBound.getLeft());
+        assertEquals(now.truncatedTo(ChronoUnit.SECONDS), timeBound.getRight());
     }
 
     @Test
@@ -45,9 +46,9 @@ class TimeBoundaryServiceImplTest {
         var timeBound = timeBoundaryService.getBoundary(now, timeWindow);
 
         assertEquals(now.minus(startValue, ChronoUnit.DAYS).truncatedTo(ChronoUnit.SECONDS),
-                timeBound.getLeft().truncatedTo(ChronoUnit.SECONDS));
+                timeBound.getLeft());
         assertEquals(now.minus(endValue, ChronoUnit.DAYS).truncatedTo(ChronoUnit.SECONDS),
-                timeBound.getRight().truncatedTo(ChronoUnit.SECONDS));
+                timeBound.getRight());
     }
 
     @Test
@@ -64,9 +65,9 @@ class TimeBoundaryServiceImplTest {
         var timeBound = timeBoundaryService.getBoundary(now, timeWindow);
 
         assertEquals(now.minus(startValue, ChronoUnit.HOURS).truncatedTo(ChronoUnit.SECONDS),
-                timeBound.getLeft().truncatedTo(ChronoUnit.SECONDS));
+                timeBound.getLeft());
         assertEquals(now.minus(endValue, ChronoUnit.HOURS).truncatedTo(ChronoUnit.SECONDS),
-                timeBound.getRight().truncatedTo(ChronoUnit.SECONDS));
+                timeBound.getRight());
     }
 
     @Test
@@ -126,6 +127,78 @@ class TimeBoundaryServiceImplTest {
                 timeBound.getLeft());
         assertEquals(now.minus(endForTwoCalMonths, ChronoUnit.DAYS).truncatedTo(ChronoUnit.SECONDS),
                 timeBound.getRight().truncatedTo(ChronoUnit.SECONDS));
+    }
+
+    @Test
+    void withOneCalDaysTimeUnitTest() {
+        Instant now = Instant.now();
+        int startValue = 1;
+        TimeWindow timeWindow = TimeWindow.builder()
+                .timeUnit(CALENDAR_DAYS)
+                .start(startValue)
+                .build();
+
+        var timeBound = timeBoundaryService.getBoundary(now, timeWindow);
+
+        LocalDateTime dateTimeNow = LocalDateTime.ofInstant(now, ZoneOffset.UTC);
+        assertEquals(now.truncatedTo(ChronoUnit.DAYS),
+                timeBound.getLeft());
+        Instant expectedRight = dateTimeNow
+                .withHour(23)
+                .withMinute(59)
+                .withSecond(59)
+                .truncatedTo(ChronoUnit.SECONDS)
+                .toInstant(ZoneOffset.UTC);
+        assertEquals(expectedRight, timeBound.getRight());
+    }
+
+    @Test
+    void withThreeCalDaysTimeUnitTest() {
+        Instant now = Instant.now();
+        int startValue = 3;
+        TimeWindow timeWindow = TimeWindow.builder()
+                .timeUnit(CALENDAR_DAYS)
+                .start(startValue)
+                .build();
+
+        var timeBound = timeBoundaryService.getBoundary(now, timeWindow);
+
+        LocalDateTime dateTimeNow = LocalDateTime.ofInstant(now, ZoneOffset.UTC);
+        assertEquals(now.minus(startValue - 1, ChronoUnit.DAYS).truncatedTo(ChronoUnit.DAYS),
+                timeBound.getLeft());
+        Instant expectedRight = dateTimeNow
+                .withHour(23)
+                .withMinute(59)
+                .withSecond(59)
+                .truncatedTo(ChronoUnit.SECONDS)
+                .toInstant(ZoneOffset.UTC);
+        assertEquals(expectedRight, timeBound.getRight());
+    }
+
+    @Test
+    void withCalDaysTimeUnitAndWithEndTimeTest() {
+        Instant now = Instant.now();
+        int startValue = 6;
+        int endValue = 2;
+        TimeWindow timeWindow = TimeWindow.builder()
+                .timeUnit(CALENDAR_DAYS)
+                .start(startValue)
+                .end(endValue)
+                .build();
+
+        var timeBound = timeBoundaryService.getBoundary(now, timeWindow);
+
+        LocalDateTime dateTimeNow = LocalDateTime.ofInstant(now, ZoneOffset.UTC);
+        assertEquals(now.minus(startValue - 1, ChronoUnit.DAYS).truncatedTo(ChronoUnit.DAYS),
+                timeBound.getLeft());
+        Instant expectedRight = dateTimeNow
+                .minus(endValue - 1, ChronoUnit.DAYS)
+                .withHour(23)
+                .withMinute(59)
+                .withSecond(59)
+                .truncatedTo(ChronoUnit.SECONDS)
+                .toInstant(ZoneOffset.UTC);
+        assertEquals(expectedRight, timeBound.getRight());
     }
 
 }

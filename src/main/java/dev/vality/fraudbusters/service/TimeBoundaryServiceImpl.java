@@ -18,21 +18,17 @@ public class TimeBoundaryServiceImpl implements TimeBoundaryService {
     @Override
     public TimeBound getBoundary(Instant target, TimeWindow timeWindow) {
         ChronoUnit chronoUnit = resolveTimeUnit(timeWindow.getTimeUnit());
-        if (CALENDAR_MONTHS.equals(timeWindow.getTimeUnit())) {
-            return buildCalendarMonthsTimeBound(target, timeWindow, chronoUnit);
-        }
-        Instant left = target.minus(timeWindow.getStart(), chronoUnit);
-        Instant right = target.minus(timeWindow.getEnd(), chronoUnit);
-        return TimeBound.builder()
-                .left(left)
-                .right(right)
-                .build();
+        return switch (timeWindow.getTimeUnit()) {
+            case CALENDAR_MONTHS -> buildCalendarMonthsTimeBound(target, timeWindow, chronoUnit);
+            case CALENDAR_DAYS -> buildCalendarDaysTimeBound(target, timeWindow, chronoUnit);
+            default -> buildDefaultBound(target, timeWindow, chronoUnit);
+        };
     }
 
     private ChronoUnit resolveTimeUnit(String timeUnit) {
         return switch (timeUnit) {
             case MINUTES -> ChronoUnit.MINUTES;
-            case DAYS, CALENDAR_MONTHS -> ChronoUnit.DAYS;
+            case DAYS, CALENDAR_MONTHS, CALENDAR_DAYS -> ChronoUnit.DAYS;
             default -> ChronoUnit.HOURS;
         };
     }
@@ -68,6 +64,33 @@ public class TimeBoundaryServiceImpl implements TimeBoundaryService {
             endInDays += targetDate.minusMonths(i).lengthOfMonth();
         }
         return endInDays;
+    }
+
+    private TimeBound buildCalendarDaysTimeBound(Instant target, TimeWindow timeWindow, ChronoUnit chronoUnit) {
+        Instant left = target
+                .minus(timeWindow.getStart() - 1L, chronoUnit)
+                .truncatedTo(chronoUnit);
+        Instant right = target
+                .minus(timeWindow.getEnd() > 0 ? timeWindow.getEnd() - 1 : 0, chronoUnit)
+                .atZone(ZoneOffset.UTC)
+                .withHour(23)
+                .withMinute(59)
+                .withSecond(59)
+                .truncatedTo(ChronoUnit.SECONDS)
+                .toInstant();
+        return TimeBound.builder()
+                .left(left)
+                .right(right)
+                .build();
+    }
+
+    private TimeBound buildDefaultBound(Instant target, TimeWindow timeWindow, ChronoUnit chronoUnit) {
+        Instant left = target.minus(timeWindow.getStart(), chronoUnit).truncatedTo(ChronoUnit.SECONDS);
+        Instant right = target.minus(timeWindow.getEnd(), chronoUnit).truncatedTo(ChronoUnit.SECONDS);
+        return TimeBound.builder()
+                .left(left)
+                .right(right)
+                .build();
     }
 
 }
