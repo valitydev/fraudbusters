@@ -26,6 +26,7 @@ public abstract class AbstractDgraphAggregationQueryBuilderService {
     private final DgraphEntityResolver dgraphEntityResolver;
     private final DgraphQueryConditionResolver dgraphQueryConditionResolver;
 
+    public static final String EMPTY = "";
     private static final String FILTER_PATTERN = "@filter(%s)";
     private static final String FACET_PATTERN = "@facets(%s)";
     private static final String CONDITION_AND = " and ";
@@ -61,7 +62,7 @@ public abstract class AbstractDgraphAggregationQueryBuilderService {
             return DgraphAggregationQueryModel.builder()
                     .rootType(rootEntity.getTypeName())
                     .rootFilter(ObjectUtils.isEmpty(rootCondition)
-                            ? "" : String.format(FILTER_PATTERN, rootCondition))
+                            ? EMPTY : String.format(FILTER_PATTERN, rootCondition))
                     .targetType(targetType.getFieldName())
                     .targetFaset(String.format(FACET_PATTERN, targetFacetCondition))
                     .targetFilter(createTargetFilterCondition(targetType, dgraphEntityMap, paymentModel))
@@ -107,7 +108,7 @@ public abstract class AbstractDgraphAggregationQueryBuilderService {
                                        PaymentModel paymentModel) {
         Set<PaymentCheckedField> paymentCheckedFields = dgraphEntityMap.get(rootDgraphEntity);
         return CollectionUtils.isEmpty(paymentCheckedFields)
-                ? "" : createConditionLine(paymentCheckedFields, paymentModel);
+                ? EMPTY : createConditionLine(paymentCheckedFields, paymentModel);
     }
 
     private String createTargetFilterCondition(DgraphTargetAggregationType type,
@@ -115,11 +116,11 @@ public abstract class AbstractDgraphAggregationQueryBuilderService {
                                                PaymentModel paymentModel) {
         DgraphEntity dgraphEntity = dgraphEntityResolver.resolveDgraphEntityByTargetAggregationType(type);
         if (CollectionUtils.isEmpty(dgraphEntityMap) || !dgraphEntityMap.containsKey(dgraphEntity)) {
-            return "";
+            return EMPTY;
         }
 
         String targetCondition = createConditionLine(dgraphEntityMap.get(dgraphEntity), paymentModel);
-        return ObjectUtils.isEmpty(targetCondition) ? "" : String.format(FILTER_PATTERN, targetCondition);
+        return ObjectUtils.isEmpty(targetCondition) ? EMPTY : String.format(FILTER_PATTERN, targetCondition);
     }
 
     private String createTargetFacetCondition(Instant fromTime, Instant toTime, String status) {
