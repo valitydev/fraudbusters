@@ -82,11 +82,6 @@
 
         <!-- logback -->
         <dependency>
-            <groupId>net.logstash.logback</groupId>
-            <artifactId>logstash-logback-encoder</artifactId>
-            <version>5.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
@@ -100,10 +95,6 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dev.vality.logback</groupId>
-            <artifactId>nop-rolling</artifactId>
         </dependency>
 
         <dependency>
@@ -156,6 +147,10 @@
             <artifactId>columbus-proto</artifactId>
             <version>${columbus-proto.version}</version>
         </dependency>
+        <dependency>
+            <groupId>dev.vality</groupId>
+            <artifactId>shared-resources</artifactId>
+        </dependency>
 
         <!--Thrirdparty libs-->
         <dependency>
@@ -172,14 +167,6 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>30.0-jre</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.janino</groupId>
-            <artifactId>janino</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.janino</groupId>
-            <artifactId>commons-compiler</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.kafka</groupId>

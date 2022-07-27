@@ -3,10 +3,10 @@ package dev.vality.fraudbusters.service;
 import dev.vality.fraudbusters.exception.ReadDataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.logstash.logback.encoder.org.apache.commons.lang.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.io.*;
 import java.util.Arrays;
@@ -46,7 +46,7 @@ public class FileCardTokenManagementService {
 
     public void deleteOldFiles() {
         final File[] files = readAllFiles();
-        if (!ArrayUtils.isEmpty(files)) {
+        if (!ObjectUtils.isEmpty(files)) {
             for (File file : files) {
                 if (file.delete()) {
                     log.info("deleteFile success: {}", file.getPath());
@@ -64,7 +64,7 @@ public class FileCardTokenManagementService {
 
     public List<String> readCardTokensFromFile(String currentScheduleTime) {
         final File[] files = readAllFiles();
-        if (!ArrayUtils.isEmpty(files)) {
+        if (!ObjectUtils.isEmpty(files)) {
             for (File file : files) {
                 if (currentScheduleTime.equals(file.getName())) {
                     try (BufferedReader br = new BufferedReader(new FileReader(file.getPath()))) {
@@ -81,7 +81,7 @@ public class FileCardTokenManagementService {
 
     public boolean isFileExist(String currentScheduleTime) {
         final File[] files = readAllFiles();
-        return !ArrayUtils.isEmpty(files) && Arrays.stream(files)
+        return !ObjectUtils.isEmpty(files) && Arrays.stream(files)
                 .anyMatch(file -> currentScheduleTime.equals(file.getName()));
     }
 }
