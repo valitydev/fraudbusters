@@ -26,7 +26,7 @@ public abstract class AbstractDgraphAggregationQueryBuilderService {
     private final DgraphEntityResolver dgraphEntityResolver;
     private final DgraphQueryConditionResolver dgraphQueryConditionResolver;
 
-    public static final String EMPTY = "";
+    private static final String EMPTY = "";
     private static final String FILTER_PATTERN = "@filter(%s)";
     private static final String FACET_PATTERN = "@facets(%s)";
     private static final String CONDITION_AND = " and ";
