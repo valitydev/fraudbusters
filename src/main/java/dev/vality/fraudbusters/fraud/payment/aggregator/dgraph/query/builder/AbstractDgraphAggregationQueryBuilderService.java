@@ -9,8 +9,8 @@ import dev.vality.fraudbusters.fraud.payment.resolver.DgraphEntityResolver;
 import dev.vality.fraudbusters.fraud.payment.resolver.DgraphQueryConditionResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.time.Instant;
 import java.util.Map;
@@ -26,6 +26,7 @@ public abstract class AbstractDgraphAggregationQueryBuilderService {
     private final DgraphEntityResolver dgraphEntityResolver;
     private final DgraphQueryConditionResolver dgraphQueryConditionResolver;
 
+    private static final String EMPTY = "";
     private static final String FILTER_PATTERN = "@filter(%s)";
     private static final String FACET_PATTERN = "@facets(%s)";
     private static final String CONDITION_AND = " and ";
@@ -49,7 +50,7 @@ public abstract class AbstractDgraphAggregationQueryBuilderService {
         String targetFacetCondition = createTargetFacetCondition(startWindowTime, endWindowTime, status);
 
         if (dgraphEntityResolver.resolveDgraphEntityByTargetAggregationType(targetType) == rootEntity) {
-            String extendedRootCondition = Strings.isEmpty(rootCondition)
+            String extendedRootCondition = ObjectUtils.isEmpty(rootCondition)
                     ? targetFacetCondition : String.format(EXTENDED_CONDITION_AND, targetFacetCondition, rootCondition);
             return DgraphAggregationQueryModel.builder()
                     .rootType(rootEntity.getTypeName())
@@ -60,8 +61,8 @@ public abstract class AbstractDgraphAggregationQueryBuilderService {
         } else {
             return DgraphAggregationQueryModel.builder()
                     .rootType(rootEntity.getTypeName())
-                    .rootFilter(Strings.isEmpty(rootCondition)
-                            ? Strings.EMPTY : String.format(FILTER_PATTERN, rootCondition))
+                    .rootFilter(ObjectUtils.isEmpty(rootCondition)
+                            ? EMPTY : String.format(FILTER_PATTERN, rootCondition))
                     .targetType(targetType.getFieldName())
                     .targetFaset(String.format(FACET_PATTERN, targetFacetCondition))
                     .targetFilter(createTargetFilterCondition(targetType, dgraphEntityMap, paymentModel))
@@ -107,7 +108,7 @@ public abstract class AbstractDgraphAggregationQueryBuilderService {
                                        PaymentModel paymentModel) {
         Set<PaymentCheckedField> paymentCheckedFields = dgraphEntityMap.get(rootDgraphEntity);
         return CollectionUtils.isEmpty(paymentCheckedFields)
-                ? Strings.EMPTY : createConditionLine(paymentCheckedFields, paymentModel);
+                ? EMPTY : createConditionLine(paymentCheckedFields, paymentModel);
     }
 
     private String createTargetFilterCondition(DgraphTargetAggregationType type,
@@ -115,17 +116,17 @@ public abstract class AbstractDgraphAggregationQueryBuilderService {
                                                PaymentModel paymentModel) {
         DgraphEntity dgraphEntity = dgraphEntityResolver.resolveDgraphEntityByTargetAggregationType(type);
         if (CollectionUtils.isEmpty(dgraphEntityMap) || !dgraphEntityMap.containsKey(dgraphEntity)) {
-            return Strings.EMPTY;
+            return EMPTY;
         }
 
         String targetCondition = createConditionLine(dgraphEntityMap.get(dgraphEntity), paymentModel);
-        return Strings.isEmpty(targetCondition) ? Strings.EMPTY : String.format(FILTER_PATTERN, targetCondition);
+        return ObjectUtils.isEmpty(targetCondition) ? EMPTY : String.format(FILTER_PATTERN, targetCondition);
     }
 
     private String createTargetFacetCondition(Instant fromTime, Instant toTime, String status) {
         StringBuilder basicFacet = new StringBuilder();
         basicFacet.append(String.format(TARGET_FACET_CONDITION, fromTime, toTime));
-        if (Strings.isNotEmpty(status)) {
+        if (!ObjectUtils.isEmpty(status)) {
             basicFacet.append(String.format(TARGET_FACET_STATUS_CONDITION, status));
         }
         return basicFacet.toString();
