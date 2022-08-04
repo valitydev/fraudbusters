@@ -1,9 +1,9 @@
-server.port: '@server.port@'
+server.port: @server.port@
 management:
   security:
     enabled: false
   server:
-    port: '@management.port@'
+    port: @management.port@
   metrics:
     export:
       resolveCountry: true
