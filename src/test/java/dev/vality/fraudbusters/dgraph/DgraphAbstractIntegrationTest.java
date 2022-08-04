@@ -15,7 +15,6 @@ import dev.vality.fraudbusters.listener.events.clickhouse.FraudPaymentListener;
 import dev.vality.fraudbusters.listener.events.clickhouse.RefundEventListener;
 import dev.vality.fraudbusters.listener.events.clickhouse.WithdrawalEventListener;
 import dev.vality.fraudbusters.repository.clickhouse.impl.PaymentRepositoryImpl;
-import dev.vality.fraudbusters.service.CardPoolManagementService;
 import dev.vality.fraudbusters.service.ShopManagementService;
 import dev.vality.fraudbusters.util.KeyGenerator;
 import dev.vality.kafka.common.serialization.ThriftSerializer;
@@ -103,9 +102,6 @@ public abstract class DgraphAbstractIntegrationTest {
 
     @MockBean
     private ShopManagementService shopManagementService;
-
-    @MockBean
-    private CardPoolManagementService cardPoolManagementService;
 
     @MockBean
     private PaymentRepositoryImpl paymentRepository;

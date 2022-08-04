@@ -6,6 +6,6 @@
     <root level="ERROR">
         <appender-ref ref="CONSOLE"/>
     </root>
-    <logger name="dev.vality" level="ERROR"/>
+    <logger name="dev.vality" level="DEBUG"/>
 
 </configuration>

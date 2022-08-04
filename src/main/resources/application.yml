@@ -1,9 +1,9 @@
-server.port: '@server.port@'
+server.port: @server.port@
 management:
   security:
     enabled: false
   server:
-    port: '@management.port@'
+    port: @management.port@
   metrics:
     export:
       resolveCountry: true
@@ -148,15 +148,3 @@ result.full.check:
   enabled: true
 
 time.pool.cleanup.gap: 60
-
-card-token-pool:
-  maxAttempts: 5
-  retryDelayMs: 500
-  filePath: tokens
-  scheduleRateMs: 600000
-
-load.isTrusted.enabled: false
-
-trusted.providers:
-  list: 108,114,118,119,121,125,126,128,130,134,135,136,132,137,143,139,144,149
-  interval-time-year: 1.5
