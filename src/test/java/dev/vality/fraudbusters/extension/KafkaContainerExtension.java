@@ -1,6 +1,7 @@
 package dev.vality.fraudbusters.extension;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.KafkaContainer;
@@ -8,7 +9,7 @@ import org.testcontainers.utility.DockerImageName;
 
 
 @Slf4j
-public class KafkaContainerExtension implements BeforeAllCallback {
+public class KafkaContainerExtension implements BeforeAllCallback, AfterAllCallback {
 
     public static KafkaContainer KAFKA;
 
@@ -22,6 +23,11 @@ public class KafkaContainerExtension implements BeforeAllCallback {
                 .withTag(CONFLUENT_PLATFORM_VERSION))
                 .withEmbeddedZookeeper();
         KAFKA.start();
+    }
+
+    @Override
+    public void afterAll(ExtensionContext extensionContext) {
+        KAFKA.stop();
     }
 
 }
