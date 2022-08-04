@@ -91,30 +91,6 @@ public abstract class DgraphAbstractIntegrationTest {
     @Autowired
     protected DgraphClient dgraphClient;
 
-    @MockBean
-    private WbListServiceSrv.Iface wbListServiceSrv;
-
-    @MockBean
-    private TrustedTokensSrv.Iface trustedTokensSrv;
-
-    @MockBean
-    private ShopManagementService shopManagementService;
-
-    @MockBean
-    private PaymentRepositoryImpl paymentRepository;
-
-    @MockBean
-    private FraudPaymentListener fraudPaymentListener;
-
-    @MockBean
-    private RefundEventListener refundEventListener;
-
-    @MockBean
-    private ChargebackEventListener chargebackEventListener;
-
-    @MockBean
-    private WithdrawalEventListener withdrawalEventListener;
-
     private static GenericContainer dgraphServer;
     private static volatile boolean isDgraphStarted;
     private static String testHostname = "localhost";
