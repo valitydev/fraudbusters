@@ -119,9 +119,6 @@ class EndToEndIntegrationTest extends JUnit5IntegrationTest {
     @LocalServerPort
     int serverPort;
 
-    @MockBean
-    ColumbusServiceSrv.Iface geoIpServiceSrv;
-
     @BeforeEach
     public void init() throws ExecutionException, InterruptedException, TException {
         produceTemplate(GLOBAL_REF, TEMPLATE, kafkaTopics.getFullTemplate());
