@@ -1,5 +1,6 @@
 package dev.vality.fraudbusters;
 
+import dev.vality.columbus.ColumbusServiceSrv;
 import dev.vality.damsel.domain.RiskScore;
 import dev.vality.damsel.fraudbusters.*;
 import dev.vality.damsel.proxy_inspector.Context;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
@@ -116,6 +118,9 @@ class EndToEndIntegrationTest extends JUnit5IntegrationTest {
     private HistoricalPool<String> timeGroupReferencePoolImpl;
     @LocalServerPort
     int serverPort;
+
+    @MockBean
+    ColumbusServiceSrv.Iface geoIpServiceSrv;
 
     @BeforeEach
     public void init() throws ExecutionException, InterruptedException, TException {

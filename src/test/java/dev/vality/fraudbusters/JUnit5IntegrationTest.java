@@ -67,8 +67,6 @@ public class JUnit5IntegrationTest {
     @Autowired
     protected KafkaTopics kafkaTopics;
     @MockBean
-    ColumbusServiceSrv.Iface geoIpServiceSrv;
-    @MockBean
     WbListServiceSrv.Iface wbListServiceSrv;
     @MockBean
     TrustedTokensSrv.Iface trustedTokensSrv;

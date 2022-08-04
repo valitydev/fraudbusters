@@ -1,6 +1,7 @@
 package dev.vality.fraudbusters.extension;
 
 import dev.vality.clickhouse.initializer.ChInitializer;
+import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.ClickHouseContainer;
@@ -8,7 +9,7 @@ import org.testcontainers.containers.ClickHouseContainer;
 import java.sql.SQLException;
 import java.util.List;
 
-public class ClickHouseContainerExtension implements BeforeAllCallback {
+public class ClickHouseContainerExtension implements BeforeAllCallback, AfterAllCallback {
 
     private static final String VERSION = "yandex/clickhouse-server:19.17";
 
@@ -30,11 +31,8 @@ public class ClickHouseContainerExtension implements BeforeAllCallback {
         ));
     }
 
-    public static void executeScripts(List<String> scriptFilePaths) {
-        try {
-            ChInitializer.initAllScripts(CLICKHOUSE_CONTAINER, scriptFilePaths);
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
+    @Override
+    public void afterAll(ExtensionContext extensionContext) {
+        CLICKHOUSE_CONTAINER.stop();
     }
 }
