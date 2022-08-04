@@ -70,7 +70,5 @@ class DispatchTemplateTest {
         testThriftKafkaProducer.send(kafkaTopics.getReference(), command);
 
         verify(referencePoolImpl, timeout(TIMEOUT).times(1)).add(anyString(), anyString());
-
-
     }
 }

@@ -54,9 +54,7 @@ import static org.mockito.Mockito.when;
                 "kafka.topic.reference",
                 "kafka.topic.event.sink.payment"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ContextConfiguration(
-        classes = {KafkaProducerConfig.class}
-)
+@ContextConfiguration(classes = {KafkaProducerConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ClickhouseTestcontainer(migrations = {
         "sql/db_init.sql",

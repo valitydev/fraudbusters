@@ -19,5 +19,4 @@ public class MockExternalServiceConfig {
     @MockBean
     ShopManagementService shopManagementService;
 
-
 }

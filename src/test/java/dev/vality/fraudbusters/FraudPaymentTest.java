@@ -2,16 +2,22 @@ package dev.vality.fraudbusters;
 
 import dev.vality.damsel.fraudbusters.PaymentServiceSrv;
 import dev.vality.damsel.fraudbusters.PaymentStatus;
+import dev.vality.fraudbusters.config.MockExternalServiceConfig;
+import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
 import dev.vality.fraudbusters.repository.FraudPaymentRepositoryTest;
 import dev.vality.fraudbusters.util.BeanUtil;
+import dev.vality.testcontainers.annotations.KafkaSpringBootTest;
+import dev.vality.testcontainers.annotations.kafka.KafkaTestcontainer;
 import dev.vality.woody.thrift.impl.http.THClientBuilder;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -25,14 +31,18 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @Slf4j
 @ActiveProfiles("full-prod")
+@KafkaSpringBootTest
+@KafkaTestcontainer(properties = {"kafka.listen.result.concurrency=1"},
+        topicsKeys = {"kafka.topic.event.sink.payment", "kafka.topic.fraud.payment"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@SpringBootTest(webEnvironment = RANDOM_PORT,
-        classes = FraudBustersApplication.class,
-        properties = {"kafka.listen.result.concurrency=1"})
-class FraudPaymentTest extends JUnit5IntegrationTest {
+@ExtendWith({ClickHouseContainerExtension.class})
+@SpringBootTest(webEnvironment = RANDOM_PORT)
+@Import(MockExternalServiceConfig.class)
+class FraudPaymentTest {
 
     public static final String ID_PAYMENT = "inv";
     public static final String EMAIL = "kek@kek.ru";
+    public static final int TIMEOUT = 5000;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
