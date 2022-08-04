@@ -149,10 +149,8 @@ class LoadDataIntegrationTest {
         Command crateCommandConcreteReference = TestObjectsFactory.crateCommandReference(localId);
         testThriftKafkaProducer.send(kafkaTopics.getFullReference(), crateCommandConcreteReference);
 
-        await().until(() ->
-                timeTemplateTimePoolImpl.size() == 3);
-        await().until(() ->
-                timeReferencePoolImpl.size() == 2);
+        await().until(() -> timeTemplateTimePoolImpl.size() == 3);
+        await().until(() -> timeReferencePoolImpl.size() == 2);
 
         payment.setId(PAYMENT_2);
         payment.setEventTime(String.valueOf(LocalDateTime.now()));
@@ -166,8 +164,8 @@ class LoadDataIntegrationTest {
         ));
 //        Thread.sleep(TIMEOUT);
 
-        await().until(() ->
-                jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_CHARGEBACK.getTable()).size() == 2);
+        await().until(() -> jdbcTemplate.queryForList("SELECT * from " +
+                EventSource.FRAUD_EVENTS_CHARGEBACK.getTable()).size() == 2);
 
 //        List<Map<String, Object>> maps =
 //                jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_CHARGEBACK.getTable());
@@ -180,8 +178,8 @@ class LoadDataIntegrationTest {
         ));
 //        Thread.sleep(TIMEOUT);
 
-        await().until(() ->
-                jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_REFUND.getTable()).size() == 2);
+        await().until(() -> jdbcTemplate.queryForList("SELECT * from " +
+                EventSource.FRAUD_EVENTS_REFUND.getTable()).size() == 2);
 //        maps = jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_REFUND.getTable());
 //        assertEquals(2, maps.size());
 
@@ -194,8 +192,8 @@ class LoadDataIntegrationTest {
 
 //        Thread.sleep(TIMEOUT);
 
-        await().until(() ->
-                jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_WITHDRAWAL.getTable()).size() == 3);
+        await().until(() -> jdbcTemplate.queryForList("SELECT * from " +
+                EventSource.FRAUD_EVENTS_WITHDRAWAL.getTable()).size() == 3);
 //        maps = jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_WITHDRAWAL.getTable());
 //        assertEquals(3, maps.size());
     }
@@ -211,8 +209,8 @@ class LoadDataIntegrationTest {
                 )
         );
 
-        await().until(() ->
-                jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_PAYMENT.getTable()).size() == 5);
+        await().until(() -> jdbcTemplate.queryForList("SELECT * from " +
+                EventSource.FRAUD_EVENTS_PAYMENT.getTable()).size() == 5);
 
 //        List<Map<String, Object>> maps =
 //                jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_PAYMENT.getTable());
