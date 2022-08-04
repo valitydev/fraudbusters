@@ -3,11 +3,13 @@ package dev.vality.fraudbusters.dgraph.insert;
 import dev.vality.damsel.fraudbusters.FraudPayment;
 import dev.vality.fraudbusters.dgraph.DgraphAbstractIntegrationTest;
 import dev.vality.fraudbusters.factory.TestDgraphObjectFactory;
+import dev.vality.fraudbusters.listener.events.clickhouse.FraudPaymentListener;
 import dev.vality.fraudbusters.serde.FraudPaymentDeserializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -22,6 +24,9 @@ public class DgraphFraudPaymentProcessingTest extends DgraphAbstractIntegrationT
 
     private static final String KAFKA_PAYMENT_TOPIC = "fraud_payment";
     private static final DateTimeFormatter FORMATTER =  DateTimeFormatter.ofPattern("yyyy-MM-dd[ HH:mm:ss]");
+
+    @MockBean
+    private FraudPaymentListener fraudPaymentListener;
 
     @Test
     public void processPaymentFromKafkaTest() throws Exception {

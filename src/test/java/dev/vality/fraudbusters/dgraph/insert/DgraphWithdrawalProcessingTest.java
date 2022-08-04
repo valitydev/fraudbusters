@@ -4,11 +4,13 @@ import dev.vality.damsel.fraudbusters.Resource;
 import dev.vality.damsel.fraudbusters.Withdrawal;
 import dev.vality.fraudbusters.dgraph.DgraphAbstractIntegrationTest;
 import dev.vality.fraudbusters.factory.TestDgraphObjectFactory;
+import dev.vality.fraudbusters.listener.events.clickhouse.WithdrawalEventListener;
 import dev.vality.fraudbusters.serde.WithdrawalDeserializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
@@ -20,6 +22,9 @@ import java.util.concurrent.ExecutionException;
 public class DgraphWithdrawalProcessingTest extends DgraphAbstractIntegrationTest {
 
     private static final String KAFKA_WITHDRAWAL_TOPIC = "withdrawal";
+
+    @MockBean
+    private WithdrawalEventListener withdrawalEventListener;
 
     @Test
     public void processRefundFromKafkaTest() throws Exception {
