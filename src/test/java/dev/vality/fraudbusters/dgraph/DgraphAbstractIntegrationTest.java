@@ -92,9 +92,6 @@ public abstract class DgraphAbstractIntegrationTest {
     protected DgraphClient dgraphClient;
 
     @MockBean
-    private ColumbusServiceSrv.Iface geoIpServiceSrv;
-
-    @MockBean
     private WbListServiceSrv.Iface wbListServiceSrv;
 
     @MockBean
