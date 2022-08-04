@@ -1,45 +1,74 @@
 package dev.vality.fraudbusters;
 
-import dev.vality.fraudo.constant.ResultStatus;
-import dev.vality.damsel.fraudbusters.Payment;
-import dev.vality.damsel.fraudbusters.PaymentServiceSrv;
-import dev.vality.damsel.fraudbusters.PaymentStatus;
-import dev.vality.damsel.fraudbusters.WithdrawalStatus;
+import dev.vality.columbus.ColumbusServiceSrv;
+import dev.vality.damsel.fraudbusters.*;
+import dev.vality.fraudbusters.config.MockExternalServiceConfig;
+import dev.vality.fraudbusters.config.properties.KafkaTopics;
 import dev.vality.fraudbusters.constant.EventSource;
+import dev.vality.fraudbusters.factory.TestObjectsFactory;
+import dev.vality.fraudbusters.pool.HistoricalPool;
 import dev.vality.fraudbusters.util.BeanUtil;
+import dev.vality.fraudo.constant.ResultStatus;
+import dev.vality.testcontainers.annotations.clickhouse.ClickhouseTestcontainer;
+import dev.vality.testcontainers.annotations.kafka.KafkaTestcontainer;
+import dev.vality.testcontainers.annotations.kafka.config.KafkaProducer;
+import dev.vality.testcontainers.annotations.kafka.config.KafkaProducerConfig;
 import dev.vality.woody.thrift.impl.http.THClientBuilder;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 import static dev.vality.fraudbusters.util.BeanUtil.createChargeback;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.mockito.Mockito.when;
 
 @Slf4j
 @ActiveProfiles("full-prod")
+@KafkaTestcontainer(
+        properties = {
+                "kafka.listen.result.concurrency=1",
+                "kafka.historical.listener.enable=true",
+                "kafka.aggr.payment.min.bytes=1"},
+        topicsKeys = {
+                "kafka.topic.template",
+                "kafka.topic.reference",
+                "kafka.topic.event.sink.payment"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@SpringBootTest(webEnvironment = RANDOM_PORT, classes = FraudBustersApplication.class,
-        properties = {"kafka.listen.result.concurrency=1", "kafka.historical.listener.enable=true",
-                "kafka.aggr.payment.min.bytes=1"})
-class LoadDataIntegrationTest extends JUnit5IntegrationTest {
+@ContextConfiguration(
+        classes = {KafkaProducerConfig.class}
+)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ClickhouseTestcontainer(migrations = {
+        "sql/db_init.sql",
+        "sql/V3__create_fraud_payments.sql",
+        "sql/V4__create_payment.sql",
+        "sql/V5__add_fields.sql",
+        "sql/V6__add_result_fields_payment.sql",
+        "sql/V7__add_fields.sql",
+        "sql/V8__create_withdrawal.sql",
+        "sql/V9__add_phone_category_card.sql"})
+@Import(MockExternalServiceConfig.class)
+class LoadDataIntegrationTest {
 
     public static final String PAYMENT_1 = "payment_1";
     public static final String PAYMENT_2 = "payment_2";
@@ -55,27 +84,45 @@ class LoadDataIntegrationTest extends JUnit5IntegrationTest {
     private static final String TEMPLATE_CONCRETE =
             "rule:TEMPLATE_CONCRETE: count(\"card_token\", 10) > 0  -> accept;";
     private final String globalRef = UUID.randomUUID().toString();
+    private static final long TIMEOUT = 1000L;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+    @Autowired
+    private KafkaTopics kafkaTopics;
+    @Autowired
+    private KafkaProducer<TBase<?, ?>> testThriftKafkaProducer;
+    @Autowired
+    private ColumbusServiceSrv.Iface geoIpServiceSrv;
+    @Autowired
+    private HistoricalPool<ParserRuleContext> timeTemplateTimePoolImpl;
+    @Autowired
+    @Qualifier("timeReferencePoolImpl")
+    private HistoricalPool<String> timeReferencePoolImpl;
 
     @LocalServerPort
     int serverPort;
 
-    @BeforeEach
-    public void init() throws ExecutionException, InterruptedException, TException {
-        produceTemplate(globalRef, TEMPLATE, kafkaTopics.getFullTemplate());
-        produceReference(true, null, null, globalRef);
-        waitingTopic(kafkaTopics.getFullTemplate());
-        Mockito.when(geoIpServiceSrv.getLocationIsoCode(any())).thenReturn("RUS");
-    }
-
     @Test
     @SneakyThrows
-    public void testLoadData() {
+    void testLoadData() {
+        when(geoIpServiceSrv.getLocationIsoCode(any())).thenReturn("RUS");
+        Command crateCommandTemplate = TestObjectsFactory.crateCommandTemplate(globalRef, TEMPLATE);
+        testThriftKafkaProducer.send(kafkaTopics.getFullTemplate(), crateCommandTemplate);
+        Command crateCommandReference = TestObjectsFactory.crateCommandReference(globalRef);
+        testThriftKafkaProducer.send(kafkaTopics.getFullReference(), crateCommandReference);
+
+        await().until(() ->
+                timeTemplateTimePoolImpl.size() == 1);
+        await().until(() ->
+                timeReferencePoolImpl.size() == 1);
+
         final String oldTime = String.valueOf(LocalDateTime.now());
-        produceTemplate(globalRef, TEMPLATE_2, kafkaTopics.getFullTemplate());
-        Thread.sleep(TIMEOUT);
+        Command crateCommandTemplate2 = TestObjectsFactory.crateCommandTemplate(globalRef, TEMPLATE_2);
+        testThriftKafkaProducer.send(kafkaTopics.getFullTemplate(), crateCommandTemplate2);
+
+        await().until(() ->
+                timeTemplateTimePoolImpl.size() == 2);
 
         THClientBuilder clientBuilder = new THClientBuilder()
                 .withAddress(new URI(String.format("http://localhost:%s/fraud_payment_validator/v1/", serverPort)))
@@ -97,9 +144,15 @@ class LoadDataIntegrationTest extends JUnit5IntegrationTest {
         checkPayment(PAYMENT_0, ResultStatus.THREE_DS, 1);
 
         String localId = UUID.randomUUID().toString();
-        produceTemplate(localId, TEMPLATE_CONCRETE, kafkaTopics.getFullTemplate());
-        produceReference(true, null, null, localId);
-        Thread.sleep(TIMEOUT);
+        Command crateCommandConcreteTemplate = TestObjectsFactory.crateCommandTemplate(localId, TEMPLATE_CONCRETE);
+        testThriftKafkaProducer.send(kafkaTopics.getFullTemplate(), crateCommandConcreteTemplate);
+        Command crateCommandConcreteReference = TestObjectsFactory.crateCommandReference(localId);
+        testThriftKafkaProducer.send(kafkaTopics.getFullReference(), crateCommandConcreteReference);
+
+        await().until(() ->
+                timeTemplateTimePoolImpl.size() == 3);
+        await().until(() ->
+                timeReferencePoolImpl.size() == 2);
 
         payment.setId(PAYMENT_2);
         payment.setEventTime(String.valueOf(LocalDateTime.now()));
@@ -111,21 +164,26 @@ class LoadDataIntegrationTest extends JUnit5IntegrationTest {
                 createChargeback(dev.vality.damsel.fraudbusters.ChargebackStatus.accepted),
                 createChargeback(dev.vality.damsel.fraudbusters.ChargebackStatus.cancelled)
         ));
-        Thread.sleep(TIMEOUT);
+//        Thread.sleep(TIMEOUT);
 
-        List<Map<String, Object>> maps =
-                jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_CHARGEBACK.getTable());
-        assertEquals(2, maps.size());
+        await().until(() ->
+                jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_CHARGEBACK.getTable()).size() == 2);
+
+//        List<Map<String, Object>> maps =
+//                jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_CHARGEBACK.getTable());
+//        assertEquals(2, maps.size());
 
         //Refund
         client.insertRefunds(List.of(
                 BeanUtil.createRefund(dev.vality.damsel.fraudbusters.RefundStatus.succeeded),
                 BeanUtil.createRefund(dev.vality.damsel.fraudbusters.RefundStatus.failed)
         ));
-        Thread.sleep(TIMEOUT);
+//        Thread.sleep(TIMEOUT);
 
-        maps = jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_REFUND.getTable());
-        assertEquals(2, maps.size());
+        await().until(() ->
+                jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_REFUND.getTable()).size() == 2);
+//        maps = jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_REFUND.getTable());
+//        assertEquals(2, maps.size());
 
         //Withdrawal
         client.insertWithdrawals(List.of(
@@ -134,10 +192,12 @@ class LoadDataIntegrationTest extends JUnit5IntegrationTest {
                 createChargeback(WithdrawalStatus.succeeded)
         ));
 
-        Thread.sleep(TIMEOUT);
+//        Thread.sleep(TIMEOUT);
 
-        maps = jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_WITHDRAWAL.getTable());
-        assertEquals(3, maps.size());
+        await().until(() ->
+                jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_WITHDRAWAL.getTable()).size() == 3);
+//        maps = jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_WITHDRAWAL.getTable());
+//        assertEquals(3, maps.size());
     }
 
     private void checkInsertingBatch(PaymentServiceSrv.Iface client) throws TException, InterruptedException {
@@ -150,11 +210,15 @@ class LoadDataIntegrationTest extends JUnit5IntegrationTest {
                         BeanUtil.createPayment(PaymentStatus.processed)
                 )
         );
-        List<Map<String, Object>> maps =
-                jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_PAYMENT.getTable());
-        assertEquals(5, maps.size());
-        assertEquals("email", maps.get(0).get("email"));
-        Thread.sleep(TIMEOUT);
+
+        await().until(() ->
+                jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_PAYMENT.getTable()).size() == 5);
+
+//        List<Map<String, Object>> maps =
+//                jdbcTemplate.queryForList("SELECT * from " + EventSource.FRAUD_EVENTS_PAYMENT.getTable());
+//        assertEquals(5, maps.size());
+//        assertEquals("email", maps.get(0).get("email"));
+//        Thread.sleep(TIMEOUT);
     }
 
     private void insertWithTimeout(PaymentServiceSrv.Iface client, Payment payment)

@@ -1,9 +1,5 @@
 package dev.vality.fraudbusters.factory;
 
-import dev.vality.fraudo.constant.ResultStatus;
-import dev.vality.fraudo.model.ResultModel;
-import dev.vality.fraudo.model.RuleResult;
-import dev.vality.fraudo.model.TrustCondition;
 import dev.vality.damsel.base.TimestampInterval;
 import dev.vality.damsel.base.TimestampIntervalBound;
 import dev.vality.damsel.domain.*;
@@ -18,6 +14,10 @@ import dev.vality.fraudbusters.domain.*;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.service.dto.CascadingTemplateDto;
 import dev.vality.fraudbusters.util.BeanUtil;
+import dev.vality.fraudo.constant.ResultStatus;
+import dev.vality.fraudo.model.ResultModel;
+import dev.vality.fraudo.model.RuleResult;
+import dev.vality.fraudo.model.TrustCondition;
 import dev.vality.trusted.tokens.Condition;
 import dev.vality.trusted.tokens.*;
 
@@ -495,6 +495,28 @@ public abstract class TestObjectsFactory {
                 .setWithdrawalsConditions(new WithdrawalsConditions()
                         .setConditions(List.of(createCondition(positiveInt()), createCondition()))
                 );
+    }
+
+    public static Command crateCommandTemplate(String id, String templateString) {
+        Command command = new Command();
+        Template template = new Template();
+        template.setId(id);
+        template.setTemplate(templateString.getBytes());
+        command.setCommandBody(CommandBody.template(template));
+        command.setCommandType(dev.vality.damsel.fraudbusters.CommandType.CREATE);
+        command.setCommandTime(LocalDateTime.now().toString());
+        return command;
+    }
+
+    public static Command crateCommandReference(String id) {
+        Command command = new Command();
+        TemplateReference value = new TemplateReference();
+        value.setIsGlobal(true);
+        value.setTemplateId(id);
+        command.setCommandBody(CommandBody.reference(value));
+        command.setCommandType(dev.vality.damsel.fraudbusters.CommandType.CREATE);
+        command.setCommandTime(LocalDateTime.now().toString());
+        return command;
     }
 
     public static int positiveInt() {
