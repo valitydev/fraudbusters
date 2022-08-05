@@ -15,6 +15,7 @@ import dev.vality.fraudbusters.service.dto.SearchFieldDto;
 import dev.vality.fraudbusters.service.dto.SortDto;
 import dev.vality.fraudbusters.util.PaymentTypeByContextResolver;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,13 @@ class HistoricalFraudResultDataTest {
 
     @Autowired
     private Repository<Event> fraudResultRepository;
+
+    @BeforeAll
+    static void setUp() throws Exception {
+        ChInitializer.initAllScripts(ClickHouseContainerExtension.CLICKHOUSE_CONTAINER, List.of(
+                "sql/data/insert_history_fraud_results.sql"
+        ));
+    }
 
     @Test
     void getFraudResultsByTimeSlot() {
@@ -150,7 +158,6 @@ class HistoricalFraudResultDataTest {
         assertEquals("partyId_2", fraudResults.get(0).getPartyId());
         assertEquals("partyId_2", fraudResults.get(1).getPartyId());
     }
-
 
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @SneakyThrows

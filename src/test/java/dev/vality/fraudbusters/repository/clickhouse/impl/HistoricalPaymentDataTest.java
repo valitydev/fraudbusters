@@ -13,14 +13,12 @@ import dev.vality.fraudbusters.service.dto.FieldType;
 import dev.vality.fraudbusters.service.dto.FilterDto;
 import dev.vality.fraudbusters.service.dto.SearchFieldDto;
 import dev.vality.fraudbusters.service.dto.SortDto;
-import lombok.SneakyThrows;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -42,12 +40,18 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
         ClickhouseProperties.class,
         TestClickhouseConfig.class,
         CheckedPaymentMapper.class,
-        PaymentRepositoryImpl.class},
-        initializers = HistoricalPaymentDataTest.Initializer.class)
+        PaymentRepositoryImpl.class})
 class HistoricalPaymentDataTest {
 
     @Autowired
     private Repository<CheckedPayment> paymentRepository;
+
+    @BeforeAll
+    static void setUp() throws Exception {
+        ChInitializer.initAllScripts(ClickHouseContainerExtension.CLICKHOUSE_CONTAINER, List.of(
+                "sql/data/insert_history_payments.sql"
+        ));
+    }
 
     @Test
     void getPaymentsByTimeSlot() {
@@ -175,14 +179,4 @@ class HistoricalPaymentDataTest {
         assertEquals(filterStatus, payments.get(1).getPaymentStatus());
     }
 
-
-    public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        @SneakyThrows
-        @Override
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            ChInitializer.initAllScripts(ClickHouseContainerExtension.CLICKHOUSE_CONTAINER, List.of(
-                    "sql/data/insert_history_payments.sql"
-            ));
-        }
-    }
 }

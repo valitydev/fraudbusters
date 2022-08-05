@@ -15,6 +15,7 @@ import dev.vality.fraudbusters.service.dto.SearchFieldDto;
 import dev.vality.fraudbusters.service.dto.SortDto;
 import dev.vality.fraudbusters.util.PaymentTypeByContextResolver;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +44,18 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
         PaymentTypeByContextResolver.class,
         FraudPaymentRepository.class,
         FraudPaymentRowMapper.class,
-        AggregationStatusGeneralRepositoryImpl.class},
-        initializers = HistoricalFraudPaymentDataTest.Initializer.class)
+        AggregationStatusGeneralRepositoryImpl.class})
 class HistoricalFraudPaymentDataTest {
 
     @Autowired
     private Repository<FraudPaymentRow> fraudPaymentRowRepository;
+
+    @BeforeAll
+    static void setUp() throws Exception {
+        ChInitializer.initAllScripts(ClickHouseContainerExtension.CLICKHOUSE_CONTAINER, List.of(
+                "sql/data/insert_history_fraud_payments.sql"
+        ));
+    }
 
     @Test
     void getFraudPaymentsByTimeSlot() {
@@ -150,16 +157,5 @@ class HistoricalFraudPaymentDataTest {
         assertEquals(2, fraudPaymentRows.size());
         assertEquals("group_1", fraudPaymentRows.get(0).getPartyId());
         assertEquals("group_1", fraudPaymentRows.get(1).getPartyId());
-    }
-
-
-    public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        @SneakyThrows
-        @Override
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            ChInitializer.initAllScripts(ClickHouseContainerExtension.CLICKHOUSE_CONTAINER, List.of(
-                    "sql/data/insert_history_fraud_payments.sql"
-            ));
-        }
     }
 }

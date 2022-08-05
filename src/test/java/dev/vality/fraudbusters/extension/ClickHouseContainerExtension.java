@@ -22,6 +22,7 @@ public class ClickHouseContainerExtension implements BeforeAllCallback, AfterAll
     public void beforeAll(ExtensionContext context) throws Exception {
         CLICKHOUSE_CONTAINER = new ClickHouseContainer(VERSION);
         CLICKHOUSE_CONTAINER.start();
+        log.info("{}", CLICKHOUSE_CONTAINER.getFirstMappedPort());
         ChInitializer.initAllScripts(CLICKHOUSE_CONTAINER, List.of(
                 "sql/db_init.sql",
                 "sql/V3__create_fraud_payments.sql",
