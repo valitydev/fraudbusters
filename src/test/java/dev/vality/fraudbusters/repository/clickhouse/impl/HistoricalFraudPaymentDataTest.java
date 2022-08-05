@@ -1,10 +1,12 @@
 package dev.vality.fraudbusters.repository.clickhouse.impl;
 
 import dev.vality.clickhouse.initializer.ChInitializer;
-import dev.vality.fraudbusters.config.ClickhouseConfig;
+import dev.vality.fraudbusters.config.TestClickhouseConfig;
+import dev.vality.fraudbusters.config.properties.ClickhouseProperties;
 import dev.vality.fraudbusters.constant.PaymentField;
 import dev.vality.fraudbusters.constant.SortOrder;
 import dev.vality.fraudbusters.domain.FraudPaymentRow;
+import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
 import dev.vality.fraudbusters.repository.Repository;
 import dev.vality.fraudbusters.repository.clickhouse.mapper.FraudPaymentRowMapper;
 import dev.vality.fraudbusters.service.dto.FieldType;
@@ -18,13 +20,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.testcontainers.containers.ClickHouseContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.HashSet;
@@ -37,18 +36,19 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @Testcontainers
 @DataJdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {ClickhouseConfig.class, PaymentTypeByContextResolver.class,
-        FraudPaymentRepository.class, FraudPaymentRowMapper.class, AggregationStatusGeneralRepositoryImpl.class},
+@ExtendWith({SpringExtension.class, ClickHouseContainerExtension.class})
+@ContextConfiguration(classes = {
+        ClickhouseProperties.class,
+        TestClickhouseConfig.class,
+        PaymentTypeByContextResolver.class,
+        FraudPaymentRepository.class,
+        FraudPaymentRowMapper.class,
+        AggregationStatusGeneralRepositoryImpl.class},
         initializers = HistoricalFraudPaymentDataTest.Initializer.class)
 class HistoricalFraudPaymentDataTest {
 
     @Autowired
     private Repository<FraudPaymentRow> fraudPaymentRowRepository;
-
-    @Container
-    public static ClickHouseContainer clickHouseContainer =
-            new ClickHouseContainer("yandex/clickhouse-server:19.17");
 
     @Test
     void getFraudPaymentsByTimeSlot() {
@@ -157,22 +157,7 @@ class HistoricalFraudPaymentDataTest {
         @SneakyThrows
         @Override
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            TestPropertyValues
-                    .of(
-                            "clickhouse.db.url=" + clickHouseContainer.getJdbcUrl(),
-                            "clickhouse.db.user=" + clickHouseContainer.getUsername(),
-                            "clickhouse.db.password=" + clickHouseContainer.getPassword()
-                    )
-                    .applyTo(configurableApplicationContext.getEnvironment());
-            ChInitializer.initAllScripts(clickHouseContainer, List.of(
-                    "sql/db_init.sql",
-                    "sql/V3__create_fraud_payments.sql",
-                    "sql/V4__create_payment.sql",
-                    "sql/V5__add_fields.sql",
-                    "sql/V6__add_result_fields_payment.sql",
-                    "sql/V7__add_fields.sql",
-                    "sql/V8__create_withdrawal.sql",
-                    "sql/V9__add_phone_category_card.sql",
+            ChInitializer.initAllScripts(ClickHouseContainerExtension.CLICKHOUSE_CONTAINER, List.of(
                     "sql/data/insert_history_fraud_payments.sql"
             ));
         }

@@ -5,25 +5,38 @@ import dev.vality.damsel.domain.RiskScore;
 import dev.vality.damsel.fraudbusters.*;
 import dev.vality.damsel.proxy_inspector.Context;
 import dev.vality.damsel.proxy_inspector.InspectorProxySrv;
+import dev.vality.fraudbusters.config.MockExternalServiceConfig;
+import dev.vality.fraudbusters.config.TestClickhouseConfig;
+import dev.vality.fraudbusters.config.properties.KafkaTopics;
+import dev.vality.fraudbusters.constants.EndToEndIntegrationTemplates;
+import dev.vality.fraudbusters.constants.TestProperties;
+import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
 import dev.vality.fraudbusters.factory.TestObjectsFactory;
 import dev.vality.fraudbusters.pool.HistoricalPool;
 import dev.vality.fraudbusters.repository.clickhouse.impl.ChargebackRepository;
 import dev.vality.fraudbusters.repository.clickhouse.impl.PaymentRepositoryImpl;
 import dev.vality.fraudbusters.repository.clickhouse.impl.RefundRepository;
 import dev.vality.fraudbusters.util.BeanUtil;
+import dev.vality.fraudbusters.util.ReferenceKeyGenerator;
+import dev.vality.testcontainers.annotations.KafkaSpringBootTest;
+import dev.vality.testcontainers.annotations.kafka.KafkaTestcontainer;
+import dev.vality.testcontainers.annotations.kafka.config.KafkaProducer;
 import dev.vality.trusted.tokens.ConditionTemplate;
+import dev.vality.trusted.tokens.TrustedTokensSrv;
 import dev.vality.woody.thrift.impl.http.THClientBuilder;
 import dev.vality.woody.thrift.impl.http.THSpawnClientBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -38,6 +51,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import static dev.vality.fraudbusters.factory.TestObjectsFactory.createCommandTemplate;
+import static dev.vality.fraudbusters.util.BeanUtil.crateCommandTemplateReference;
+import static dev.vality.fraudbusters.util.BeanUtil.createTemplateReference;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -45,48 +61,30 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @Slf4j
 @ActiveProfiles("full-prod")
+@KafkaSpringBootTest
+@KafkaTestcontainer(properties = {"kafka.listen.result.concurrency=1"},
+        topicsKeys = {
+                "kafka.topic.template",
+                "kafka.topic.group-list",
+                "kafka.topic.reference",
+                "kafka.topic.group-reference",
+                "kafka.topic.full-template"
+        })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@SpringBootTest(webEnvironment = RANDOM_PORT, classes = FraudBustersApplication.class,
-        properties = {"kafka.listen.result.concurrency=1", "kafka.historical.listener.enable=true"})
-class EndToEndIntegrationTest extends JUnit5IntegrationTest {
+@SpringBootTest(webEnvironment = RANDOM_PORT, classes = {FraudBustersApplication.class, TestClickhouseConfig.class},
+        properties = {
+                "kafka.listen.result.concurrency=1",
+                "kafka.historical.listener.enable=true",
+                "spring.main.allow-bean-definition-overriding=true"
+        })
+@ExtendWith({ClickHouseContainerExtension.class})
+@Import({MockExternalServiceConfig.class})
+class EndToEndIntegrationTest {
 
     public static final String CAPTURED = "captured";
     public static final String PROCESSED = "processed";
     public static final String FAILED = "failed";
 
-    private static final String TEMPLATE = """
-            rule:TEMPLATE: count("email", 10, 0, "party_id", "shop_id") > 1
-              AND count("email", 10) < 3
-              AND sum("email", 10, "party_id", "shop_id") >= 18000
-              AND countSuccess("card_token", 10, "party_id", "shop_id") > 1
-              AND in(countryBy("country_bank"), "RUS")
-              OR sumRefund("card_token", 10, "party_id", "shop_id") > 0
-              OR countRefund("card_token", 10, "party_id", "shop_id") > 0
-              OR countChargeback("card_token", 10, "party_id", "shop_id") > 0
-              OR sumChargeback("card_token", 10, "party_id", "shop_id") > 0
-             -> declineAndNotify;
-            """;
-
-    private static final String TEMPLATE_CONCRETE =
-            "rule:TEMPLATE_CONCRETE:  sumSuccess(\"email\", 10) >= 29000  -> decline;";
-    private static final String GROUP_DECLINE =
-            "rule:GROUP_DECLINE:  1 >= 0  -> decline;";
-    private static final String GROUP_NORMAL =
-            "rule:GROUP_NORMAL:  1 < 0  -> decline;";
-    private static final String TEMPLATE_CONCRETE_SHOP = """
-            rule:TEMPLATE_CONCRETE_SHOP:  sum("email", 10) >= 18000
-             AND isTrusted(
-                paymentsConditions(
-                    condition("RUB",1,1000,10),
-                    condition("EUR",2,20)
-                ),
-                withdrawalsConditions(
-                    condition("USD",0,3000,3),
-                    condition("CAD",2,4)
-                )
-             )
-             -> accept;";
-            """;
     private static final String P_ID = "test";
     private static final String GROUP_P_ID = "group_1";
 
@@ -100,6 +98,15 @@ class EndToEndIntegrationTest extends JUnit5IntegrationTest {
     private static final String FRAUD_INSPECTOR_SERVICE_URL = "http://localhost:%s/fraud_inspector/v1";
     private static final String HISTORICAL_SERVICE_URL = "http://localhost:%s/historical_data/v1/";
 
+    @Autowired
+    ColumbusServiceSrv.Iface geoIpServiceSrv;
+    @Autowired
+    TrustedTokensSrv.Iface trustedTokensSrv;
+
+    @Autowired
+    private KafkaProducer<TBase<?, ?>> testThriftKafkaProducer;
+    @Autowired
+    protected KafkaTopics kafkaTopics;
     @Autowired
     PaymentRepositoryImpl paymentRepository;
     @Autowired
@@ -116,47 +123,59 @@ class EndToEndIntegrationTest extends JUnit5IntegrationTest {
     private HistoricalPool<String> timeReferencePoolImpl;
     @Autowired
     private HistoricalPool<String> timeGroupReferencePoolImpl;
+
     @LocalServerPort
     int serverPort;
 
     @BeforeEach
     public void init() throws ExecutionException, InterruptedException, TException {
-        produceTemplate(GLOBAL_REF, TEMPLATE, kafkaTopics.getFullTemplate());
-        produceReference(true, null, null, GLOBAL_REF);
+        testThriftKafkaProducer.send(kafkaTopics.getFullTemplate(),
+                createCommandTemplate(GLOBAL_REF, EndToEndIntegrationTemplates.TEMPLATE));
+        testThriftKafkaProducer.send(kafkaTopics.getFullReference(),
+                crateCommandTemplateReference(createTemplateReference(true, null, null, GLOBAL_REF)));
 
-        produceTemplate(PARTY_TEMPLATE, TEMPLATE_CONCRETE, kafkaTopics.getFullTemplate());
-        produceReference(false, P_ID, null, PARTY_TEMPLATE);
+        testThriftKafkaProducer.send(kafkaTopics.getFullTemplate(),
+                createCommandTemplate(PARTY_TEMPLATE, EndToEndIntegrationTemplates.TEMPLATE_CONCRETE));
+        TemplateReference templateReference = createTemplateReference(false, P_ID, null, PARTY_TEMPLATE);
+        testThriftKafkaProducer.send(
+                kafkaTopics.getFullReference(),
+                ReferenceKeyGenerator.generateTemplateKey(templateReference),
+                crateCommandTemplateReference(templateReference));
 
-        produceTemplate(SHOP_REF, TEMPLATE_CONCRETE_SHOP, kafkaTopics.getFullTemplate());
-        produceReference(false, P_ID, BeanUtil.ID_VALUE_SHOP, SHOP_REF);
+        testThriftKafkaProducer.send(kafkaTopics.getFullTemplate(),
+                createCommandTemplate(SHOP_REF, EndToEndIntegrationTemplates.TEMPLATE_CONCRETE_SHOP));
+        templateReference = createTemplateReference(false, P_ID, BeanUtil.ID_VALUE_SHOP, SHOP_REF);
+        testThriftKafkaProducer.send(
+                kafkaTopics.getFullReference(),
+                ReferenceKeyGenerator.generateTemplateKey(templateReference),
+                crateCommandTemplateReference(templateReference));
 
-        produceTemplate(GROUP_TEMPLATE_DECLINE, GROUP_DECLINE, kafkaTopics.getFullTemplate());
-        produceTemplate(GROUP_TEMPLATE_NORMAL, GROUP_NORMAL, kafkaTopics.getFullTemplate());
+        testThriftKafkaProducer.send(kafkaTopics.getFullTemplate(),
+                createCommandTemplate(GROUP_TEMPLATE_DECLINE, EndToEndIntegrationTemplates.GROUP_DECLINE));
+        testThriftKafkaProducer.send(kafkaTopics.getFullTemplate(),
+                createCommandTemplate(GROUP_TEMPLATE_NORMAL, EndToEndIntegrationTemplates.GROUP_NORMAL));
 
-        produceGroup(GROUP_ID, List.of(new PriorityId()
+        Command groupCommand = BeanUtil.createGroupCommand(GROUP_ID, List.of(new PriorityId()
                 .setId(GROUP_TEMPLATE_DECLINE)
                 .setPriority(2L), new PriorityId()
                 .setId(GROUP_TEMPLATE_NORMAL)
-                .setPriority(1L)), kafkaTopics.getFullGroupList());
-        produceGroupReference(GROUP_P_ID, null, GROUP_ID);
+                .setPriority(1L)));
+        testThriftKafkaProducer.send(kafkaTopics.getFullGroupList(),
+                GROUP_ID,
+                groupCommand);
+
+        testThriftKafkaProducer.send(kafkaTopics.getFullGroupReference(),
+                ReferenceKeyGenerator.generateTemplateKeyByList(GROUP_P_ID, null),
+                BeanUtil.createGroupReferenceCommand(GROUP_P_ID, null, GROUP_ID));
         Mockito.when(geoIpServiceSrv.getLocationIsoCode(any())).thenReturn("RUS");
         Mockito.when(trustedTokensSrv.isTokenTrusted(anyString(), any(ConditionTemplate.class))).thenReturn(true);
     }
 
     @Test
     public void test() throws URISyntaxException, TException, InterruptedException {
-        waitingTopic(kafkaTopics.getTemplate());
-        waitingTopic(kafkaTopics.getGroupList());
-        waitingTopic(kafkaTopics.getReference());
-        waitingTopic(kafkaTopics.getGroupReference());
-        waitingTopic(kafkaTopics.getFullTemplate());
-
         testFraudRules();
-
         testValidation();
-
         testHistoricalPoolLinks();
-
         testApplyRuleOnHistoricalDataSets();
     }
 
@@ -166,7 +185,7 @@ class EndToEndIntegrationTest extends JUnit5IntegrationTest {
                 .withNetworkTimeout(300000);
         InspectorProxySrv.Iface client = clientBuilder.build(InspectorProxySrv.Iface.class);
 
-        Thread.sleep(TIMEOUT);
+        Thread.sleep(TestProperties.TIMEOUT);
 
         Context context = BeanUtil.createContext();
         RiskScore riskScore = client.inspectPayment(context);
@@ -236,7 +255,7 @@ class EndToEndIntegrationTest extends JUnit5IntegrationTest {
         ValidateTemplateResponse validateTemplateResponse = client.validateCompilationTemplate(
                 List.of(new Template()
                         .setId("dfsdf")
-                        .setTemplate(TEMPLATE.getBytes()))
+                        .setTemplate(EndToEndIntegrationTemplates.TEMPLATE.getBytes()))
         );
 
         assertTrue(validateTemplateResponse.getErrors().isEmpty());

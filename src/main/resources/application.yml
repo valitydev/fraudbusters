@@ -111,8 +111,8 @@ clickhouse.db:
   url: "jdbc:clickhouse://localhost:8123/default"
   user: "user"
   password: "password"
-  connection.timeout: 300000
-  socket.timeout: 300000
+  connection-timeout: 300000
+  socket-timeout: 300000
   compress: false
   distributed-connections-pool-size: 50
   max-distributed-connections: 50

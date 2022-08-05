@@ -5,6 +5,7 @@ import dev.vality.damsel.fraudbusters.*;
 import dev.vality.fraudbusters.config.MockExternalServiceConfig;
 import dev.vality.fraudbusters.config.properties.KafkaTopics;
 import dev.vality.fraudbusters.constant.EventSource;
+import dev.vality.fraudbusters.constants.LoadDataIntegrationsTemplates;
 import dev.vality.fraudbusters.factory.TestObjectsFactory;
 import dev.vality.fraudbusters.pool.HistoricalPool;
 import dev.vality.fraudbusters.util.BeanUtil;
@@ -72,15 +73,6 @@ class LoadDataIntegrationTest {
     public static final String PAYMENT_2 = "payment_2";
     public static final String PAYMENT_0 = "payment_0";
 
-    private static final String TEMPLATE = """
-            rule:TEMPLATE: sum("card_token", 1000, "party_id", "shop_id", "mobile") > 0
-             and unique("email", "ip", 1444, "recurrent") < 2 and isRecurrent() == false
-             and count("card_token", 1000, "party_id", "shop_id") > 5  -> decline
-            """;
-    private static final String TEMPLATE_2 =
-            "rule:TEMPLATE: count(\"card_token\", 1000, \"party_id\", \"shop_id\") > 2  -> decline;";
-    private static final String TEMPLATE_CONCRETE =
-            "rule:TEMPLATE_CONCRETE: count(\"card_token\", 10) > 0  -> accept;";
     private final String globalRef = UUID.randomUUID().toString();
     private static final long TIMEOUT = 1000L;
 
@@ -105,7 +97,8 @@ class LoadDataIntegrationTest {
     @SneakyThrows
     void testLoadData() {
         when(geoIpServiceSrv.getLocationIsoCode(any())).thenReturn("RUS");
-        Command crateCommandTemplate = TestObjectsFactory.crateCommandTemplate(globalRef, TEMPLATE);
+        Command crateCommandTemplate =
+                TestObjectsFactory.createCommandTemplate(globalRef, LoadDataIntegrationsTemplates.TEMPLATE);
         testThriftKafkaProducer.send(kafkaTopics.getFullTemplate(), crateCommandTemplate);
         Command crateCommandReference = TestObjectsFactory.crateCommandReference(globalRef);
         testThriftKafkaProducer.send(kafkaTopics.getFullReference(), crateCommandReference);
@@ -116,7 +109,8 @@ class LoadDataIntegrationTest {
                 timeReferencePoolImpl.size() == 1);
 
         final String oldTime = String.valueOf(LocalDateTime.now());
-        Command crateCommandTemplate2 = TestObjectsFactory.crateCommandTemplate(globalRef, TEMPLATE_2);
+        Command crateCommandTemplate2 =
+                TestObjectsFactory.createCommandTemplate(globalRef, LoadDataIntegrationsTemplates.TEMPLATE_2);
         testThriftKafkaProducer.send(kafkaTopics.getFullTemplate(), crateCommandTemplate2);
 
         await().until(() ->
@@ -142,7 +136,8 @@ class LoadDataIntegrationTest {
         checkPayment(PAYMENT_0, ResultStatus.THREE_DS, 1);
 
         String localId = UUID.randomUUID().toString();
-        Command crateCommandConcreteTemplate = TestObjectsFactory.crateCommandTemplate(localId, TEMPLATE_CONCRETE);
+        Command crateCommandConcreteTemplate =
+                TestObjectsFactory.createCommandTemplate(localId, LoadDataIntegrationsTemplates.TEMPLATE_CONCRETE);
         testThriftKafkaProducer.send(kafkaTopics.getFullTemplate(), crateCommandConcreteTemplate);
         Command crateCommandConcreteReference = TestObjectsFactory.crateCommandReference(localId);
         testThriftKafkaProducer.send(kafkaTopics.getFullReference(), crateCommandConcreteReference);

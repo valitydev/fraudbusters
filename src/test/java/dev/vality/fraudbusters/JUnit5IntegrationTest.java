@@ -55,8 +55,6 @@ import static org.mockito.ArgumentMatchers.any;
 })
 public class JUnit5IntegrationTest {
 
-    protected static final long TIMEOUT = 1000L;
-
     @Value("${kafka.topic.event.sink.initial}")
     public String eventSinkTopic;
     @Value("${kafka.topic.event.sink.aggregated}")
@@ -118,15 +116,6 @@ public class JUnit5IntegrationTest {
         }
     }
 
-    void produceGroup(String localId, List<PriorityId> priorityIds, String topic)
-            throws InterruptedException, ExecutionException {
-        try (Producer<String, Command> producer = createProducer()) {
-            Command command = BeanUtil.createGroupCommand(localId, priorityIds);
-            ProducerRecord<String, Command> producerRecord = new ProducerRecord<>(topic, localId, command);
-            producer.send(producerRecord).get();
-        }
-    }
-
     void produceReference(boolean isGlobal, String party, String shopId, String idTemplate)
             throws InterruptedException, ExecutionException {
         try (Producer<String, Command> producer = createProducer()) {
@@ -155,17 +144,6 @@ public class JUnit5IntegrationTest {
                 ConsumerRecords<String, Object> records = consumer.poll(Duration.ofSeconds(1L));
                 return !records.isEmpty();
             });
-        }
-    }
-
-    void produceGroupReference(String party, String shopId, String idGroup)
-            throws InterruptedException, ExecutionException {
-        try (Producer<String, Command> producer = createProducer()) {
-            Command command = BeanUtil.createGroupReferenceCommand(party, shopId, idGroup);
-            String key = ReferenceKeyGenerator.generateTemplateKeyByList(party, shopId);
-            ProducerRecord<String, Command> producerRecord =
-                    new ProducerRecord<>(kafkaTopics.getFullGroupReference(), key, command);
-            producer.send(producerRecord).get();
         }
     }
 

@@ -1,17 +1,20 @@
 package dev.vality.fraudbusters.extension;
 
 import dev.vality.clickhouse.initializer.ChInitializer;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.ClickHouseContainer;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Slf4j
 public class ClickHouseContainerExtension implements BeforeAllCallback, AfterAllCallback {
 
-    private static final String VERSION = "yandex/clickhouse-server:19.17";
+    private static final String VERSION = "clickhouse/clickhouse-server:22.3.4";
 
     public static ClickHouseContainer CLICKHOUSE_CONTAINER;
 

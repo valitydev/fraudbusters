@@ -497,7 +497,7 @@ public abstract class TestObjectsFactory {
                 );
     }
 
-    public static Command crateCommandTemplate(String id, String templateString) {
+    public static Command createCommandTemplate(String id, String templateString) {
         Command command = new Command();
         Template template = new Template();
         template.setId(id);

@@ -55,7 +55,7 @@ class DispatchTemplateTest {
     @Test
     void testTemplatePool() {
         String id = UUID.randomUUID().toString();
-        Command command = TestObjectsFactory.crateCommandTemplate(id, TEMPLATE);
+        Command command = TestObjectsFactory.createCommandTemplate(id, TEMPLATE);
 
         testThriftKafkaProducer.send(kafkaTopics.getTemplate(), command);
 

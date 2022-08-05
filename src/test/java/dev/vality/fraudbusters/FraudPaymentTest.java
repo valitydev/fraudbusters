@@ -3,6 +3,8 @@ package dev.vality.fraudbusters;
 import dev.vality.damsel.fraudbusters.PaymentServiceSrv;
 import dev.vality.damsel.fraudbusters.PaymentStatus;
 import dev.vality.fraudbusters.config.MockExternalServiceConfig;
+import dev.vality.fraudbusters.config.TestClickhouseConfig;
+import dev.vality.fraudbusters.constants.TestProperties;
 import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
 import dev.vality.fraudbusters.repository.FraudPaymentRepositoryTest;
 import dev.vality.fraudbusters.util.BeanUtil;
@@ -12,6 +14,7 @@ import dev.vality.woody.thrift.impl.http.THClientBuilder;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +39,13 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         topicsKeys = {"kafka.topic.event.sink.payment", "kafka.topic.fraud.payment"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ExtendWith({ClickHouseContainerExtension.class})
-@SpringBootTest(webEnvironment = RANDOM_PORT)
-@Import(MockExternalServiceConfig.class)
+@SpringBootTest(webEnvironment = RANDOM_PORT, properties = {"spring.main.allow-bean-definition-overriding=true"},
+        classes = TestClickhouseConfig.class)
+@Import({MockExternalServiceConfig.class})
 class FraudPaymentTest {
 
     public static final String ID_PAYMENT = "inv";
     public static final String EMAIL = "kek@kek.ru";
-    public static final int TIMEOUT = 5000;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -66,7 +69,7 @@ class FraudPaymentTest {
 
         //Insert fraud row
         client.insertFraudPayments(List.of(FraudPaymentRepositoryTest.createFraudPayment(ID_PAYMENT)));
-        Thread.sleep(TIMEOUT * 10);
+        Thread.sleep(TestProperties.TIMEOUT * 10);
 
         //Check join and view working
         List<Map<String, Object>> maps = jdbcTemplate.queryForList("SELECT * from fraud.fraud_payment");
@@ -78,7 +81,7 @@ class FraudPaymentTest {
             PaymentServiceSrv.Iface client,
             List<dev.vality.damsel.fraudbusters.Payment> payments) throws TException, InterruptedException {
         client.insertPayments(payments);
-        Thread.sleep(TIMEOUT * 10);
+        Thread.sleep(TestProperties.TIMEOUT * 10);
     }
 
 }
