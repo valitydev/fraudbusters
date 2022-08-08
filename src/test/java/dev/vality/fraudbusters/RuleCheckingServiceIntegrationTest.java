@@ -15,9 +15,7 @@ import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolv
 import dev.vality.fraudbusters.fraud.payment.resolver.PaymentTypeResolverImpl;
 import dev.vality.fraudbusters.fraud.payment.validator.PaymentTemplateValidator;
 import dev.vality.fraudbusters.pool.HistoricalPool;
-import dev.vality.fraudbusters.repository.PaymentRepository;
 import dev.vality.fraudbusters.repository.clickhouse.impl.ChargebackRepository;
-import dev.vality.fraudbusters.repository.clickhouse.impl.PaymentRepositoryImpl;
 import dev.vality.fraudbusters.repository.clickhouse.impl.RefundRepository;
 import dev.vality.fraudbusters.service.RuleCheckingServiceImpl;
 import dev.vality.fraudbusters.service.TimeBoundaryServiceImpl;
@@ -26,7 +24,6 @@ import dev.vality.fraudbusters.util.BeanUtil;
 import dev.vality.fraudbusters.util.CheckedResultFactory;
 import dev.vality.fraudo.FraudoPaymentParser;
 import dev.vality.fraudo.constant.ResultStatus;
-import dev.vality.fraudo.payment.resolver.CustomerTypeResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.junit.jupiter.api.BeforeEach;

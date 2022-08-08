@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.config.service;
 
-import dev.vality.kafka.common.serialization.ThriftSerializer;
 import dev.vality.damsel.fraudbusters.ReferenceInfo;
+import dev.vality.kafka.common.serialization.ThriftSerializer;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

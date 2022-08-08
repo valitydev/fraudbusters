@@ -2,7 +2,6 @@ package dev.vality.fraudbusters.service;
 
 import dev.vality.fraudbusters.config.properties.DefaultTemplateProperties;
 import dev.vality.fraudbusters.repository.PaymentRepository;
-import dev.vality.fraudbusters.repository.clickhouse.impl.FraudResultRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

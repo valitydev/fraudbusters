@@ -1,12 +1,12 @@
 package dev.vality.fraudbusters.stream.impl;
 
-import dev.vality.fraudo.model.ResultModel;
-import dev.vality.fraudo.visitor.TemplateVisitor;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.pool.HistoricalPool;
 import dev.vality.fraudbusters.stream.RuleApplier;
 import dev.vality.fraudbusters.util.CheckedResultFactory;
+import dev.vality.fraudo.model.ResultModel;
+import dev.vality.fraudo.visitor.TemplateVisitor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.ParserRuleContext;

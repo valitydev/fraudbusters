@@ -6,9 +6,7 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.ClickHouseContainer;
-import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Slf4j

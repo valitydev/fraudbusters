@@ -1,9 +1,9 @@
 package dev.vality.fraudbusters.fraud.payment.resolver;
 
-import dev.vality.fraudo.exception.UnresolvableFieldException;
-import dev.vality.fraudo.resolver.FieldResolver;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
+import dev.vality.fraudo.exception.UnresolvableFieldException;
+import dev.vality.fraudo.resolver.FieldResolver;
 
 public class PaymentModelFieldResolver implements FieldResolver<PaymentModel, PaymentCheckedField> {
 

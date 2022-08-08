@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.config;
 
-import dev.vality.fraudbusters.config.properties.ClickhouseProperties;
 import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -69,8 +69,9 @@ class LoadDataIntegrationTest {
     public static final String PAYMENT_2 = "payment_2";
     public static final String PAYMENT_0 = "payment_0";
 
+    public static final int DEFAULT_TIMEOUT = 15;
+
     private final String globalRef = UUID.randomUUID().toString();
-    private static final long TIMEOUT = 1000L;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -99,9 +100,9 @@ class LoadDataIntegrationTest {
         Command crateCommandReference = TestObjectsFactory.crateCommandReference(globalRef);
         testThriftKafkaProducer.send(kafkaTopics.getFullReference(), crateCommandReference);
 
-        await().atMost(5, SECONDS).until(() ->
+        await().atMost(DEFAULT_TIMEOUT, SECONDS).until(() ->
                 timeTemplateTimePoolImpl.size() == 1);
-        await().atMost(5, SECONDS).until(() ->
+        await().atMost(DEFAULT_TIMEOUT, SECONDS).until(() ->
                 timeReferencePoolImpl.size() == 1);
 
         final String oldTime = String.valueOf(LocalDateTime.now());
@@ -135,8 +136,8 @@ class LoadDataIntegrationTest {
         Command crateCommandConcreteReference = TestObjectsFactory.crateCommandReference(localId);
         testThriftKafkaProducer.send(kafkaTopics.getFullReference(), crateCommandConcreteReference);
 
-        await().atMost(5, SECONDS).until(() -> timeTemplateTimePoolImpl.get(localId, 0L) == null);
-        await().atMost(5, SECONDS).until(() -> timeReferencePoolImpl.get(localId, 0L) == null);
+        await().atMost(DEFAULT_TIMEOUT, SECONDS).until(() -> timeTemplateTimePoolImpl.get(localId, 0L) == null);
+        await().atMost(DEFAULT_TIMEOUT, SECONDS).until(() -> timeReferencePoolImpl.get(localId, 0L) == null);
 
         payment.setId(PAYMENT_2);
         payment.setEventTime(String.valueOf(LocalDateTime.now()));
@@ -149,7 +150,7 @@ class LoadDataIntegrationTest {
                 createChargeback(dev.vality.damsel.fraudbusters.ChargebackStatus.cancelled)
         ));
 
-        await().atMost(5, SECONDS).until(() -> jdbcTemplate.queryForList("SELECT * from " +
+        await().atMost(DEFAULT_TIMEOUT, SECONDS).until(() -> jdbcTemplate.queryForList("SELECT * from " +
                 EventSource.FRAUD_EVENTS_CHARGEBACK.getTable()).size() == 2);
 
         //Refund
@@ -158,7 +159,7 @@ class LoadDataIntegrationTest {
                 BeanUtil.createRefund(dev.vality.damsel.fraudbusters.RefundStatus.failed)
         ));
 
-        await().atMost(5, SECONDS).until(() -> jdbcTemplate.queryForList("SELECT * from " +
+        await().atMost(DEFAULT_TIMEOUT, SECONDS).until(() -> jdbcTemplate.queryForList("SELECT * from " +
                 EventSource.FRAUD_EVENTS_REFUND.getTable()).size() == 2);
 
         //Withdrawal
@@ -168,7 +169,7 @@ class LoadDataIntegrationTest {
                 createChargeback(WithdrawalStatus.succeeded)
         ));
 
-        await().atMost(5, SECONDS).until(() -> jdbcTemplate.queryForList("SELECT * from " +
+        await().atMost(DEFAULT_TIMEOUT, SECONDS).until(() -> jdbcTemplate.queryForList("SELECT * from " +
                 EventSource.FRAUD_EVENTS_WITHDRAWAL.getTable()).size() == 3);
     }
 
@@ -183,7 +184,7 @@ class LoadDataIntegrationTest {
                 )
         );
 
-        await().atMost(10, SECONDS).until(() -> jdbcTemplate.queryForList("SELECT * from " +
+        await().atMost(DEFAULT_TIMEOUT, SECONDS).until(() -> jdbcTemplate.queryForList("SELECT * from " +
                 EventSource.FRAUD_EVENTS_PAYMENT.getTable()).size() == 5);
     }
 
@@ -198,7 +199,7 @@ class LoadDataIntegrationTest {
     }
 
     private void checkPayment(String payment1, ResultStatus status, int expectedCount) {
-        await().atMost(10, SECONDS).until(() -> {
+        await().atMost(DEFAULT_TIMEOUT, SECONDS).until(() -> {
             List<Map<String, Object>> maps =
                     jdbcTemplate.queryForList(String.format("SELECT * from fraud.payment where id='%s'", payment1));
             return maps.size() == expectedCount && maps.get(0).get("resultStatus").equals(status.name());

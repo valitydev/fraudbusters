@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.stream;
 
-import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.pool.Pool;
@@ -8,6 +7,7 @@ import dev.vality.fraudbusters.pool.PoolImpl;
 import dev.vality.fraudbusters.stream.impl.RuleApplierImpl;
 import dev.vality.fraudbusters.stream.impl.TemplateVisitorImpl;
 import dev.vality.fraudbusters.util.ReferenceKeyGenerator;
+import dev.vality.fraudo.constant.ResultStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

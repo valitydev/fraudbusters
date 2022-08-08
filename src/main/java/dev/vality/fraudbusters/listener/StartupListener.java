@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.listener;
 
-import dev.vality.kafka.common.loader.PreloadListener;
-import dev.vality.kafka.common.loader.PreloadListenerImpl;
 import dev.vality.damsel.fraudbusters.Command;
 import dev.vality.fraudbusters.config.properties.KafkaTopics;
 import dev.vality.fraudbusters.exception.StartException;
@@ -12,6 +10,8 @@ import dev.vality.fraudbusters.listener.payment.TemplateReferenceListener;
 import dev.vality.fraudbusters.pool.Pool;
 import dev.vality.fraudbusters.service.PoolMonitoringService;
 import dev.vality.fraudbusters.stream.StreamManager;
+import dev.vality.kafka.common.loader.PreloadListener;
+import dev.vality.kafka.common.loader.PreloadListenerImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.ParserRuleContext;

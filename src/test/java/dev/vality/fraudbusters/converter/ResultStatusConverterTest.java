@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.converter;
 
-import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.damsel.fraudbusters.*;
+import dev.vality.fraudo.constant.ResultStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

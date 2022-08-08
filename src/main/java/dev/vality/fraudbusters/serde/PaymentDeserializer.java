@@ -1,8 +1,8 @@
 package dev.vality.fraudbusters.serde;
 
-import dev.vality.kafka.common.serialization.AbstractThriftDeserializer;
 import dev.vality.damsel.fraudbusters.Payment;
 import dev.vality.fraudbusters.config.service.ListenersConfigurationService;
+import dev.vality.kafka.common.serialization.AbstractThriftDeserializer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 

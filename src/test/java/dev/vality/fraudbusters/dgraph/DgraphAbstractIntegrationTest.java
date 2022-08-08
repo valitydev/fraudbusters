@@ -28,7 +28,6 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.thrift.TBase;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.rnorth.ducttape.unreliables.Unreliables;

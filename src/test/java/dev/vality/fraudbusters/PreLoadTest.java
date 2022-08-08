@@ -36,7 +36,6 @@ import java.net.URISyntaxException;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @Slf4j
@@ -93,13 +92,12 @@ class PreLoadTest {
                 .withNetworkTimeout(300000);
         client = clientBuilder.build(InspectorProxySrv.Iface.class);
 
-        await().atMost(5, SECONDS).until(() -> timeTemplateTimePoolImpl.size() == 1);
-        await().atMost(5, SECONDS).until(() -> timeReferencePoolImpl.size() == 1);
+        await().atMost(15, SECONDS).until(() -> timeTemplateTimePoolImpl.size() == 1);
+        await().atMost(15, SECONDS).until(() -> timeReferencePoolImpl.size() == 1);
 
         Context context = BeanUtil.createContext();
-        RiskScore riskScore = client.inspectPayment(context);
-
-        assertEquals(RiskScore.low, riskScore);
+        await().atMost(15, SECONDS).until(() ->
+                RiskScore.low.equals(client.inspectPayment(context)));
     }
 
 }
