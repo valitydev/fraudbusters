@@ -187,7 +187,7 @@ class EndToEndIntegrationTest {
                 .withNetworkTimeout(300000);
         InspectorProxySrv.Iface client = clientBuilder.build(InspectorProxySrv.Iface.class);
 
-        await().atMost(TestProperties.TIMEOUT, SECONDS)
+        await().atMost(20, SECONDS)
                 .until(() -> client.inspectPayment(BeanUtil.createContext()) == RiskScore.high);
 
         Context context = BeanUtil.createContext();
