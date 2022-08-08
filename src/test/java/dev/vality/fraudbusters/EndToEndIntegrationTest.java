@@ -64,13 +64,14 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @Slf4j
 @ActiveProfiles("full-prod")
 @KafkaSpringBootTest
-@KafkaTestcontainer(topicsKeys = {
-        "kafka.topic.template",
-        "kafka.topic.group-list",
-        "kafka.topic.reference",
-        "kafka.topic.group-reference",
-        "kafka.topic.full-template"
-})
+@KafkaTestcontainer(
+        topicsKeys = {
+                "kafka.topic.template",
+                "kafka.topic.group-list",
+                "kafka.topic.reference",
+                "kafka.topic.group-reference",
+                "kafka.topic.full-template"
+        })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = {FraudBustersApplication.class, TestClickhouseConfig.class},
         properties = {
