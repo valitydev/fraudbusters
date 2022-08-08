@@ -428,12 +428,16 @@ public class BeanUtil {
     }
 
     public static Payment createPayment(PaymentStatus status) {
+        return createPayment(status, "payment_id");
+    }
+
+    public static Payment createPayment(PaymentStatus status, String id) {
         return new Payment()
                 .setStatus(status)
                 .setClientInfo(createEmail())
                 .setCost(createCash())
                 .setEventTime(String.valueOf(LocalDateTime.now()))
-                .setId("payment_id")
+                .setId(id)
                 .setPaymentTool(createBankCardResult())
                 .setProviderInfo(createProviderInfo())
                 .setReferenceInfo(createReferenceInfo());
