@@ -54,6 +54,8 @@ import java.util.concurrent.ExecutionException;
 import static dev.vality.fraudbusters.factory.TestObjectsFactory.createCommandTemplate;
 import static dev.vality.fraudbusters.util.BeanUtil.crateCommandTemplateReference;
 import static dev.vality.fraudbusters.util.BeanUtil.createTemplateReference;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -62,14 +64,13 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @Slf4j
 @ActiveProfiles("full-prod")
 @KafkaSpringBootTest
-@KafkaTestcontainer(properties = {"kafka.listen.result.concurrency=1"},
-        topicsKeys = {
-                "kafka.topic.template",
-                "kafka.topic.group-list",
-                "kafka.topic.reference",
-                "kafka.topic.group-reference",
-                "kafka.topic.full-template"
-        })
+@KafkaTestcontainer(topicsKeys = {
+        "kafka.topic.template",
+        "kafka.topic.group-list",
+        "kafka.topic.reference",
+        "kafka.topic.group-reference",
+        "kafka.topic.full-template"
+})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = {FraudBustersApplication.class, TestClickhouseConfig.class},
         properties = {
@@ -185,17 +186,15 @@ class EndToEndIntegrationTest {
                 .withNetworkTimeout(300000);
         InspectorProxySrv.Iface client = clientBuilder.build(InspectorProxySrv.Iface.class);
 
-        Thread.sleep(TestProperties.TIMEOUT);
+        await().atMost(TestProperties.TIMEOUT, SECONDS)
+                .until(() -> client.inspectPayment(BeanUtil.createContext()) == RiskScore.high);
 
         Context context = BeanUtil.createContext();
-        RiskScore riskScore = client.inspectPayment(context);
-        assertEquals(RiskScore.high, riskScore);
-
         paymentRepository.insertBatch(List.of(BeanUtil.convertContextToPayment(context, PROCESSED)));
         paymentRepository.insertBatch(List.of(BeanUtil.convertContextToPayment(context, CAPTURED)));
 
         context = BeanUtil.createContext();
-        riskScore = client.inspectPayment(context);
+        RiskScore riskScore = client.inspectPayment(context);
         assertEquals(RiskScore.fatal, riskScore);
 
         paymentRepository.insertBatch(List.of(BeanUtil.convertContextToPayment(context, FAILED)));

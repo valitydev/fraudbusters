@@ -31,7 +31,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -48,21 +47,19 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @Slf4j
 @ActiveProfiles("full-prod")
-@KafkaTestcontainer(
-        properties = {
-                "kafka.listen.result.concurrency=1",
-                "kafka.historical.listener.enable=true",
-                "kafka.aggr.payment.min.bytes=1"},
-        topicsKeys = {
-                "kafka.topic.template",
-                "kafka.topic.reference",
-                "kafka.topic.event.sink.payment"})
+@KafkaTestcontainer(topicsKeys = {
+        "kafka.topic.template",
+        "kafka.topic.reference",
+        "kafka.topic.event.sink.payment"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ContextConfiguration(classes = {KafkaProducerConfig.class})
 @ExtendWith({ClickHouseContainerExtension.class})
-@SpringBootTest(webEnvironment = RANDOM_PORT, properties = {"spring.main.allow-bean-definition-overriding=true"},
+@SpringBootTest(webEnvironment = RANDOM_PORT, properties = {
+        "spring.main.allow-bean-definition-overriding=true",
+        "kafka.listen.result.concurrency=1",
+        "kafka.historical.listener.enable=true",
+        "kafka.aggr.payment.min.bytes=1"},
         classes = TestClickhouseConfig.class)
-@Import({MockExternalServiceConfig.class})
+@Import({MockExternalServiceConfig.class, KafkaProducerConfig.class})
 class LoadDataIntegrationTest {
 
     public static final String PAYMENT_1 = "payment_1";

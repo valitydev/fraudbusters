@@ -1,5 +1,9 @@
 package dev.vality.fraudbusters.constants;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RuleCheckingServiceIntegrationTemplates {
 
     public static final String FIRST_GROUP_TEMPLATE_PARTY_KEY = "FIRST_GROUP_TEMPLATE_PARTY_KEY";

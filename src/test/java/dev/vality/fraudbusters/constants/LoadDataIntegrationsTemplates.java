@@ -1,5 +1,9 @@
 package dev.vality.fraudbusters.constants;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LoadDataIntegrationsTemplates {
 
     public static final String TEMPLATE = """
