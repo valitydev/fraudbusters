@@ -1,5 +1,6 @@
 package dev.vality.fraudbusters;
 
+import dev.vality.fraudbusters.config.MockExternalServiceConfig;
 import dev.vality.fraudo.FraudoPaymentParser;
 import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static dev.vality.fraudbusters.constants.RuleCheckingServiceIntegrationTemplates.*;
 import static dev.vality.fraudbusters.util.ReferenceKeyGenerator.generateTemplateKey;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -34,52 +37,22 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = FraudBustersApplication.class,
         properties = {"kafka.listen.result.concurrency=1", "kafka.historical.listener.enable=true"})
-class RuleCheckingServiceIntegrationTest extends JUnit5IntegrationTest {
+@Import({MockExternalServiceConfig.class})
+class RuleCheckingServiceIntegrationTest {
 
     @Autowired
     private RuleCheckingServiceImpl ruleTestingService;
-
     @Autowired
     private HistoricalPool<List<String>> timeGroupPoolImpl;
-
     @Autowired
     private HistoricalPool<String> timeReferencePoolImpl;
-
     @Autowired
     private HistoricalPool<String> timeGroupReferencePoolImpl;
-
     @Autowired
     private HistoricalPool<ParserRuleContext> timeTemplatePoolImpl;
-
     @Autowired
     private FraudContextParser<FraudoPaymentParser.ParseContext> paymentContextParser;
 
-    private static final String FIRST_GROUP_TEMPLATE_PARTY_KEY = "FIRST_GROUP_TEMPLATE_PARTY_KEY";
-    private static final String SECOND_GROUP_TEMPLATE_PARTY_KEY = "SECOND_GROUP_TEMPLATE_PARTY_KEY";
-    private static final String FIRST_GROUP_TEMPLATE_SHOP_KEY = "FIRST_GROUP_TEMPLATE_SHOP_KEY";
-    private static final String SECOND_GROUP_TEMPLATE_SHOP_KEY = "SECOND_GROUP_TEMPLATE_SHOP_KEY";
-    private static final String TEMPLATE_PARTY_KEY = "TEMPLATE_PARTY_KEY";
-    private static final String TEMPLATE_SHOP_KEY = "TEMPLATE_SHOP_KEY";
-    private static final String PREVIOUS_TEMPLATE_PARTY_KEY = "PREVIOUS_TEMPLATE_PARTY_KEY";
-    private static final String PREVIOUS_TEMPLATE_SHOP_KEY = "PREVIOUS_TEMPLATE_SHOP_KEY";
-    private static final String FIRST_GROUP_TEMPLATE_PARTY = "rule: amount() > 110 \n" +
-            "-> accept;";
-    private static final String SECOND_GROUP_TEMPLATE_PARTY = "rule: amount() > 100 \n" +
-            "-> accept;";
-    private static final String FIRST_GROUP_TEMPLATE_SHOP = "rule: amount() > 85 \n" +
-            "-> accept;";
-    private static final String SECOND_GROUP_TEMPLATE_SHOP = "rule: amount() > 80 \n" +
-            "-> accept;";
-    private static final String TEMPLATE = "rule: amount() > 5 \n" +
-            "-> accept;";
-    private static final String TEMPLATE_PARTY = "rule: amount() > 60 \n" +
-            "-> accept;";
-    private static final String TEMPLATE_SHOP = "rule: amount() > 55 \n" +
-            "-> accept;";
-    private static final String PREVIOUS_TEMPLATE_PARTY = "rule: amount() > 200 \n" +
-            "-> accept;";
-    private static final String PREVIOUS_TEMPLATE_SHOP = "rule: amount() > 100 \n" +
-            "-> accept;";
     private static final Instant now = Instant.now();
     private static final long TIMESTAMP = now.toEpochMilli();
     private static final long RULE_TIMESTAMP = TIMESTAMP - 1_000;
@@ -91,7 +64,6 @@ class RuleCheckingServiceIntegrationTest extends JUnit5IntegrationTest {
 
     private static final String RULE_CHECKED = "0";
 
-    @Override
     @BeforeEach
     void setUp() {
         timeGroupPoolImpl.keySet()
