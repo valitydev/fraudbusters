@@ -1,25 +1,44 @@
 package dev.vality.fraudbusters;
 
 import dev.vality.fraudbusters.config.MockExternalServiceConfig;
-import dev.vality.fraudo.FraudoPaymentParser;
-import dev.vality.fraudo.constant.ResultStatus;
+import dev.vality.fraudbusters.config.payment.HistoricalPaymentPoolConfig;
+import dev.vality.fraudbusters.config.payment.PaymentFraudoConfig;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
 import dev.vality.fraudbusters.factory.TestObjectsFactory;
 import dev.vality.fraudbusters.fraud.FraudContextParser;
+import dev.vality.fraudbusters.fraud.localstorage.LocalResultStorageRepository;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
+import dev.vality.fraudbusters.fraud.payment.CountryByIpResolver;
+import dev.vality.fraudbusters.fraud.payment.PaymentContextParserImpl;
+import dev.vality.fraudbusters.fraud.payment.resolver.CustomerTypeResolverImpl;
+import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
+import dev.vality.fraudbusters.fraud.payment.resolver.PaymentTypeResolverImpl;
+import dev.vality.fraudbusters.fraud.payment.validator.PaymentTemplateValidator;
 import dev.vality.fraudbusters.pool.HistoricalPool;
+import dev.vality.fraudbusters.repository.PaymentRepository;
+import dev.vality.fraudbusters.repository.clickhouse.impl.ChargebackRepository;
+import dev.vality.fraudbusters.repository.clickhouse.impl.PaymentRepositoryImpl;
+import dev.vality.fraudbusters.repository.clickhouse.impl.RefundRepository;
 import dev.vality.fraudbusters.service.RuleCheckingServiceImpl;
+import dev.vality.fraudbusters.service.TimeBoundaryServiceImpl;
 import dev.vality.fraudbusters.service.dto.CascadingTemplateDto;
 import dev.vality.fraudbusters.util.BeanUtil;
+import dev.vality.fraudbusters.util.CheckedResultFactory;
+import dev.vality.fraudo.FraudoPaymentParser;
+import dev.vality.fraudo.constant.ResultStatus;
+import dev.vality.fraudo.payment.resolver.CustomerTypeResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -30,15 +49,34 @@ import java.util.UUID;
 import static dev.vality.fraudbusters.constants.RuleCheckingServiceIntegrationTemplates.*;
 import static dev.vality.fraudbusters.util.ReferenceKeyGenerator.generateTemplateKey;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @Slf4j
 @ActiveProfiles("full-prod")
+@ExtendWith({SpringExtension.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@SpringBootTest(webEnvironment = RANDOM_PORT, classes = FraudBustersApplication.class,
-        properties = {"kafka.listen.result.concurrency=1", "kafka.historical.listener.enable=true"})
+@ContextConfiguration(classes = {
+        PaymentTemplateValidator.class,
+        RuleCheckingServiceImpl.class,
+        PaymentContextParserImpl.class,
+        CheckedResultFactory.class,
+        PaymentFraudoConfig.class,
+        TimeBoundaryServiceImpl.class,
+        PaymentTypeResolverImpl.class,
+        DatabasePaymentFieldResolver.class,
+        HistoricalPaymentPoolConfig.class})
 @Import({MockExternalServiceConfig.class})
 class RuleCheckingServiceIntegrationTest {
+
+    @MockBean
+    private RefundRepository refundRepository;
+    @MockBean
+    private ChargebackRepository chargebackRepository;
+    @MockBean
+    private CountryByIpResolver countryByIpResolver;
+    @MockBean
+    private CustomerTypeResolverImpl customerTypeResolver;
+    @MockBean
+    private LocalResultStorageRepository localResultStorageRepository;
 
     @Autowired
     private RuleCheckingServiceImpl ruleTestingService;
