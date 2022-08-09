@@ -9,7 +9,6 @@ import dev.vality.fraudbusters.config.MockExternalServiceConfig;
 import dev.vality.fraudbusters.config.TestClickhouseConfig;
 import dev.vality.fraudbusters.config.properties.KafkaTopics;
 import dev.vality.fraudbusters.constants.EndToEndIntegrationTemplates;
-import dev.vality.fraudbusters.constants.TestProperties;
 import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
 import dev.vality.fraudbusters.factory.TestObjectsFactory;
 import dev.vality.fraudbusters.pool.HistoricalPool;
@@ -29,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -129,8 +129,8 @@ class EndToEndIntegrationTest {
     @LocalServerPort
     int serverPort;
 
-    @BeforeEach
-    public void init() throws ExecutionException, InterruptedException, TException {
+    @BeforeAll
+    public void init() throws TException {
         testThriftKafkaProducer.send(kafkaTopics.getFullTemplate(),
                 createCommandTemplate(GLOBAL_REF, EndToEndIntegrationTemplates.TEMPLATE));
         testThriftKafkaProducer.send(kafkaTopics.getFullReference(),
@@ -187,7 +187,7 @@ class EndToEndIntegrationTest {
                 .withNetworkTimeout(300000);
         InspectorProxySrv.Iface client = clientBuilder.build(InspectorProxySrv.Iface.class);
 
-        await().atMost(20, SECONDS)
+        await().between(5, SECONDS, 30, SECONDS)
                 .until(() -> client.inspectPayment(BeanUtil.createContext()) == RiskScore.high);
 
         Context context = BeanUtil.createContext();
