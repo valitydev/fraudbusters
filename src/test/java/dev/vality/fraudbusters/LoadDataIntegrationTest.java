@@ -31,6 +31,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -52,7 +53,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         "kafka.topic.reference",
         "kafka.topic.event.sink.payment"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ExtendWith({ClickHouseContainerExtension.class})
+@ExtendWith({SpringExtension.class, ClickHouseContainerExtension.class})
 @SpringBootTest(webEnvironment = RANDOM_PORT, properties = {
         "spring.main.allow-bean-definition-overriding=true",
         "kafka.listen.result.concurrency=1",

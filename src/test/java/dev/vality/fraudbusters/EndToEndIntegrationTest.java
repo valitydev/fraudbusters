@@ -9,6 +9,7 @@ import dev.vality.fraudbusters.config.MockExternalServiceConfig;
 import dev.vality.fraudbusters.config.TestClickhouseConfig;
 import dev.vality.fraudbusters.config.properties.KafkaTopics;
 import dev.vality.fraudbusters.constants.EndToEndIntegrationTemplates;
+import dev.vality.fraudbusters.constants.TestProperties;
 import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
 import dev.vality.fraudbusters.factory.TestObjectsFactory;
 import dev.vality.fraudbusters.pool.HistoricalPool;
@@ -28,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,8 +54,6 @@ import java.util.concurrent.ExecutionException;
 import static dev.vality.fraudbusters.factory.TestObjectsFactory.createCommandTemplate;
 import static dev.vality.fraudbusters.util.BeanUtil.crateCommandTemplateReference;
 import static dev.vality.fraudbusters.util.BeanUtil.createTemplateReference;
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -129,8 +127,8 @@ class EndToEndIntegrationTest {
     @LocalServerPort
     int serverPort;
 
-    @BeforeAll
-    public void init() throws TException {
+    @BeforeEach
+    public void init() throws ExecutionException, InterruptedException, TException {
         testThriftKafkaProducer.send(kafkaTopics.getFullTemplate(),
                 createCommandTemplate(GLOBAL_REF, EndToEndIntegrationTemplates.TEMPLATE));
         testThriftKafkaProducer.send(kafkaTopics.getFullReference(),
@@ -171,6 +169,8 @@ class EndToEndIntegrationTest {
                 BeanUtil.createGroupReferenceCommand(GROUP_P_ID, null, GROUP_ID));
         Mockito.when(geoIpServiceSrv.getLocationIsoCode(any())).thenReturn("RUS");
         Mockito.when(trustedTokensSrv.isTokenTrusted(anyString(), any(ConditionTemplate.class))).thenReturn(true);
+
+        Thread.sleep(TestProperties.TIMEOUT);
     }
 
     @Test
@@ -187,15 +187,15 @@ class EndToEndIntegrationTest {
                 .withNetworkTimeout(300000);
         InspectorProxySrv.Iface client = clientBuilder.build(InspectorProxySrv.Iface.class);
 
-        await().between(5, SECONDS, 30, SECONDS)
-                .until(() -> client.inspectPayment(BeanUtil.createContext()) == RiskScore.high);
-
         Context context = BeanUtil.createContext();
+        RiskScore riskScore = client.inspectPayment(context);
+        assertEquals(RiskScore.high, riskScore);
+
         paymentRepository.insertBatch(List.of(BeanUtil.convertContextToPayment(context, PROCESSED)));
         paymentRepository.insertBatch(List.of(BeanUtil.convertContextToPayment(context, CAPTURED)));
 
         context = BeanUtil.createContext();
-        RiskScore riskScore = client.inspectPayment(context);
+        riskScore = client.inspectPayment(context);
         assertEquals(RiskScore.fatal, riskScore);
 
         paymentRepository.insertBatch(List.of(BeanUtil.convertContextToPayment(context, FAILED)));

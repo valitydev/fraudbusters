@@ -116,20 +116,20 @@ public class StartupListener implements ApplicationListener<ContextRefreshedEven
             ExecutorService executorService = Executors.newFixedThreadPool(COUNT_PRELOAD_TASKS);
 
             tasks.addAll(List.of(
-                    () -> waitPreLoad(latch, templateListenerFactory, kafkaTopics.getTemplate(), templateListener),
-                    () -> waitPreLoad(
-                            latch,
-                            referenceListenerFactory,
-                            kafkaTopics.getReference(),
-                            templateReferenceListener
-                    ),
-                    () -> waitPreLoad(latch, groupListenerFactory, kafkaTopics.getGroupList(), groupListener),
-                    () -> waitPreLoad(
-                            latch,
-                            groupReferenceListenerFactory,
-                            kafkaTopics.getGroupReference(),
-                            groupReferenceListener
-                    )
+                            () -> waitPreLoad(latch, templateListenerFactory, kafkaTopics.getTemplate(), templateListener),
+                            () -> waitPreLoad(
+                                    latch,
+                                    referenceListenerFactory,
+                                    kafkaTopics.getReference(),
+                                    templateReferenceListener
+                            ),
+                            () -> waitPreLoad(latch, groupListenerFactory, kafkaTopics.getGroupList(), groupListener),
+                            () -> waitPreLoad(
+                                    latch,
+                                    groupReferenceListenerFactory,
+                                    kafkaTopics.getGroupReference(),
+                                    groupReferenceListener
+                            )
                     )
             );
 

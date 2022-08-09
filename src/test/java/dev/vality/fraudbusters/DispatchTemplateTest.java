@@ -11,12 +11,15 @@ import dev.vality.testcontainers.annotations.kafka.config.KafkaProducer;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.apache.thrift.TBase;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.UUID;
 
@@ -24,8 +27,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @ActiveProfiles("full-prod")
+@ExtendWith({SpringExtension.class})
 @KafkaTestcontainer(
         properties = {
                 "kafka.listen.result.concurrency=1"},
@@ -34,6 +39,7 @@ import static org.mockito.Mockito.verify;
                 "kafka.topic.reference"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @KafkaSpringBootTest
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 @Import(MockExternalServiceConfig.class)
 class DispatchTemplateTest {
 
