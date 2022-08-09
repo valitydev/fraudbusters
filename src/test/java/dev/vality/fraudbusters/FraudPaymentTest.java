@@ -4,7 +4,6 @@ import dev.vality.damsel.fraudbusters.PaymentServiceSrv;
 import dev.vality.damsel.fraudbusters.PaymentStatus;
 import dev.vality.fraudbusters.config.MockExternalServiceConfig;
 import dev.vality.fraudbusters.config.TestClickhouseConfig;
-import dev.vality.fraudbusters.constants.TestProperties;
 import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
 import dev.vality.fraudbusters.repository.FraudPaymentRepositoryTest;
 import dev.vality.fraudbusters.util.BeanUtil;
@@ -28,6 +27,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -45,6 +46,8 @@ class FraudPaymentTest {
 
     public static final String ID_PAYMENT = "inv";
     public static final String EMAIL = "kek@kek.ru";
+    public static final String SELECT_FROM_FRAUD_FRAUD_PAYMENT = "SELECT * from fraud.fraud_payment";
+    public static final String SELECT_FROM_PAYMENT = "SELECT * from fraud.payment";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -64,23 +67,17 @@ class FraudPaymentTest {
         dev.vality.damsel.fraudbusters.Payment payment = BeanUtil.createPayment(PaymentStatus.captured);
         payment.setId(ID_PAYMENT);
         payment.getClientInfo().setEmail(EMAIL);
-        insertWithTimeout(client, List.of(payment));
+        client.insertPayments(List.of(payment));
+        await().atMost(30, SECONDS)
+                .until(() -> jdbcTemplate.queryForList(SELECT_FROM_PAYMENT).size() == 1);
 
         //Insert fraud row
         client.insertFraudPayments(List.of(FraudPaymentRepositoryTest.createFraudPayment(ID_PAYMENT)));
-        Thread.sleep(TestProperties.TIMEOUT * 10);
+        await().atMost(30, SECONDS)
+                .until(() -> jdbcTemplate.queryForList(SELECT_FROM_FRAUD_FRAUD_PAYMENT).size() == 1);
 
-        //Check join and view working
-        List<Map<String, Object>> maps = jdbcTemplate.queryForList("SELECT * from fraud.fraud_payment");
-        assertEquals(1, maps.size());
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(SELECT_FROM_FRAUD_FRAUD_PAYMENT);
         assertEquals(EMAIL, maps.get(0).get("email"));
-    }
-
-    private void insertWithTimeout(
-            PaymentServiceSrv.Iface client,
-            List<dev.vality.damsel.fraudbusters.Payment> payments) throws TException, InterruptedException {
-        client.insertPayments(payments);
-        Thread.sleep(TestProperties.TIMEOUT * 10);
     }
 
 }
