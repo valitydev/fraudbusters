@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.converter;
 
-import dev.vality.geck.common.util.TBaseUtil;
 import dev.vality.damsel.domain.PaymentTool;
 import dev.vality.damsel.fraudbusters.Error;
 import dev.vality.damsel.fraudbusters.*;
@@ -9,6 +8,7 @@ import dev.vality.fraudbusters.domain.CheckedPayment;
 import dev.vality.fraudbusters.domain.TimeProperties;
 import dev.vality.fraudbusters.util.PaymentTypeByContextResolver;
 import dev.vality.fraudbusters.util.TimestampUtil;
+import dev.vality.geck.common.util.TBaseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;

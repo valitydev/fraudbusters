@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.listener;
 
-import dev.vality.kafka.common.loader.PreloadListener;
-import dev.vality.kafka.common.loader.PreloadListenerImpl;
 import dev.vality.damsel.fraudbusters.Command;
 import dev.vality.fraudbusters.config.properties.KafkaTopics;
 import dev.vality.fraudbusters.exception.StartException;
@@ -10,9 +8,10 @@ import dev.vality.fraudbusters.listener.payment.GroupReferenceListener;
 import dev.vality.fraudbusters.listener.payment.TemplateListener;
 import dev.vality.fraudbusters.listener.payment.TemplateReferenceListener;
 import dev.vality.fraudbusters.pool.Pool;
-import dev.vality.fraudbusters.service.CardPoolManagementService;
 import dev.vality.fraudbusters.service.PoolMonitoringService;
 import dev.vality.fraudbusters.stream.StreamManager;
+import dev.vality.kafka.common.loader.PreloadListener;
+import dev.vality.kafka.common.loader.PreloadListenerImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -65,7 +64,6 @@ public class StartupListener implements ApplicationListener<ContextRefreshedEven
     private final KafkaTopics kafkaTopics;
 
     private final PoolMonitoringService poolMonitoringService;
-    private final CardPoolManagementService cardPoolManagementService;
 
     @Value("${preload.timeout:20}")
     private long preloadTimeout;
@@ -117,23 +115,24 @@ public class StartupListener implements ApplicationListener<ContextRefreshedEven
 
             ExecutorService executorService = Executors.newFixedThreadPool(COUNT_PRELOAD_TASKS);
 
-            tasks.add(cardPoolManagementService::updateTrustedTokens);
-
             tasks.addAll(List.of(
-                    () -> waitPreLoad(latch, templateListenerFactory, kafkaTopics.getTemplate(), templateListener),
-                    () -> waitPreLoad(
-                            latch,
-                            referenceListenerFactory,
-                            kafkaTopics.getReference(),
-                            templateReferenceListener
-                    ),
-                    () -> waitPreLoad(latch, groupListenerFactory, kafkaTopics.getGroupList(), groupListener),
-                    () -> waitPreLoad(
-                            latch,
-                            groupReferenceListenerFactory,
-                            kafkaTopics.getGroupReference(),
-                            groupReferenceListener
-                    )
+                            () -> waitPreLoad(latch,
+                                    templateListenerFactory,
+                                    kafkaTopics.getTemplate(),
+                                    templateListener),
+                            () -> waitPreLoad(
+                                    latch,
+                                    referenceListenerFactory,
+                                    kafkaTopics.getReference(),
+                                    templateReferenceListener
+                            ),
+                            () -> waitPreLoad(latch, groupListenerFactory, kafkaTopics.getGroupList(), groupListener),
+                            () -> waitPreLoad(
+                                    latch,
+                                    groupReferenceListenerFactory,
+                                    kafkaTopics.getGroupReference(),
+                                    groupReferenceListener
+                            )
                     )
             );
 

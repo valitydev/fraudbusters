@@ -1,9 +1,9 @@
 package dev.vality.fraudbusters.fraud.payment.resolver;
 
-import dev.vality.fraudo.resolver.CountryResolver;
 import dev.vality.fraudbusters.constant.ClickhouseUtilsValue;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.payment.CountryByIpResolver;
+import dev.vality.fraudo.resolver.CountryResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

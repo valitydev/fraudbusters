@@ -1,34 +1,29 @@
 package dev.vality.fraudbusters.repository;
 
-import dev.vality.clickhouse.initializer.ChInitializer;
+import dev.vality.columbus.ColumbusServiceSrv;
 import dev.vality.damsel.fraudbusters.FraudPayment;
 import dev.vality.damsel.fraudbusters.PaymentStatus;
-import dev.vality.columbus.ColumbusServiceSrv;
-import dev.vality.fraudbusters.config.ClickhouseConfig;
+import dev.vality.fraudbusters.config.TestClickhouseConfig;
+import dev.vality.fraudbusters.config.properties.ClickhouseProperties;
 import dev.vality.fraudbusters.domain.FraudPaymentRow;
 import dev.vality.fraudbusters.domain.TimeProperties;
+import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.repository.clickhouse.impl.AggregationGeneralRepositoryImpl;
 import dev.vality.fraudbusters.repository.clickhouse.impl.AggregationStatusGeneralRepositoryImpl;
 import dev.vality.fraudbusters.repository.clickhouse.impl.FraudPaymentRepository;
 import dev.vality.fraudbusters.repository.clickhouse.mapper.FraudPaymentRowMapper;
 import dev.vality.fraudbusters.util.TimestampUtil;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.testcontainers.containers.ClickHouseContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.sql.SQLException;
@@ -40,24 +35,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @Testcontainers
-@ExtendWith(SpringExtension.class)
+@ExtendWith({SpringExtension.class, ClickHouseContainerExtension.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ContextConfiguration(classes = {ClickhouseConfig.class,
+@ContextConfiguration(classes = {
+        ClickhouseProperties.class,
+        TestClickhouseConfig.class,
         DatabasePaymentFieldResolver.class,
         AggregationGeneralRepositoryImpl.class,
         AggregationStatusGeneralRepositoryImpl.class,
         FraudPaymentRepository.class,
         FraudPaymentRowMapper.class
-},
-        initializers = FraudPaymentRepositoryTest.Initializer.class)
+})
 public class FraudPaymentRepositoryTest {
 
     private static final String SELECT_COUNT_AS_CNT_FROM_FRAUD_EVENTS_UNIQUE =
             "SELECT count() as cnt from fraud.fraud_payment";
 
-    @Container
-    public static ClickHouseContainer clickHouseContainer =
-            new ClickHouseContainer("yandex/clickhouse-server:19.17");
     @Autowired
     DatabasePaymentFieldResolver databasePaymentFieldResolver;
     @MockBean
@@ -109,30 +102,4 @@ public class FraudPaymentRepositoryTest {
         return List.of(value, value2);
     }
 
-    public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        @SneakyThrows
-        @Override
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            log.info("clickhouse.db.url={}", clickHouseContainer.getJdbcUrl());
-            TestPropertyValues
-                    .of(
-                            "clickhouse.db.url=" + clickHouseContainer.getJdbcUrl(),
-                            "clickhouse.db.user=" + clickHouseContainer.getUsername(),
-                            "clickhouse.db.password=" + clickHouseContainer.getPassword()
-                    )
-                    .applyTo(configurableApplicationContext.getEnvironment());
-
-            ChInitializer.initAllScripts(
-                    clickHouseContainer,
-                    List.of("sql/db_init.sql",
-                            "sql/V3__create_fraud_payments.sql",
-                            "sql/V4__create_payment.sql",
-                            "sql/V5__add_fields.sql",
-                            "sql/V6__add_result_fields_payment.sql",
-                            "sql/V7__add_fields.sql",
-                            "sql/V8__create_withdrawal.sql",
-                            "sql/V9__add_phone_category_card.sql")
-            );
-        }
-    }
 }

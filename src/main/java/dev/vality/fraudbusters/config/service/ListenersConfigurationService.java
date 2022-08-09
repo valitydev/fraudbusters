@@ -1,9 +1,9 @@
 package dev.vality.fraudbusters.config.service;
 
-import dev.vality.kafka.common.exception.handler.SeekToCurrentWithSleepBatchErrorHandler;
 import dev.vality.damsel.fraudbusters.Command;
 import dev.vality.fraudbusters.serde.CommandDeserializer;
 import dev.vality.fraudbusters.service.ConsumerGroupIdService;
+import dev.vality.kafka.common.exception.handler.SeekToCurrentWithSleepBatchErrorHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Deserializer;

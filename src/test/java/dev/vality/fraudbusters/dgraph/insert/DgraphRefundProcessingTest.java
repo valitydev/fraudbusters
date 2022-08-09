@@ -4,11 +4,13 @@ import dev.vality.damsel.fraudbusters.Refund;
 import dev.vality.fraudbusters.dgraph.DgraphAbstractIntegrationTest;
 import dev.vality.fraudbusters.factory.TestDgraphObjectFactory;
 import dev.vality.fraudbusters.factory.properties.OperationProperties;
+import dev.vality.fraudbusters.listener.events.clickhouse.RefundEventListener;
 import dev.vality.fraudbusters.serde.RefundDeserializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Instant;
@@ -21,6 +23,9 @@ import java.util.concurrent.ExecutionException;
 public class DgraphRefundProcessingTest extends DgraphAbstractIntegrationTest {
 
     private static final String KAFKA_REFUND_TOPIC = "refund_event";
+
+    @MockBean
+    private RefundEventListener refundEventListener;
 
     @Test
     public void processRefundFromKafkaTest() throws Exception {

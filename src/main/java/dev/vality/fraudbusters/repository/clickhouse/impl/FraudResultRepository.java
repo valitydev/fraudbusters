@@ -1,7 +1,6 @@
 package dev.vality.fraudbusters.repository.clickhouse.impl;
 
 import com.google.common.collect.Lists;
-import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.fraudbusters.constant.ClickhouseSchemeNames;
 import dev.vality.fraudbusters.constant.EventSource;
 import dev.vality.fraudbusters.domain.Event;
@@ -18,6 +17,7 @@ import dev.vality.fraudbusters.repository.clickhouse.setter.EventBatchPreparedSt
 import dev.vality.fraudbusters.repository.clickhouse.util.AggregationUtil;
 import dev.vality.fraudbusters.repository.clickhouse.util.FilterUtil;
 import dev.vality.fraudbusters.service.dto.FilterDto;
+import dev.vality.fraudo.constant.ResultStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;

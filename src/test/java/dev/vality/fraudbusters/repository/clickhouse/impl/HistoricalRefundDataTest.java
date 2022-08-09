@@ -2,9 +2,11 @@ package dev.vality.fraudbusters.repository.clickhouse.impl;
 
 import dev.vality.clickhouse.initializer.ChInitializer;
 import dev.vality.damsel.fraudbusters.Refund;
-import dev.vality.fraudbusters.config.ClickhouseConfig;
+import dev.vality.fraudbusters.config.TestClickhouseConfig;
+import dev.vality.fraudbusters.config.properties.ClickhouseProperties;
 import dev.vality.fraudbusters.constant.PaymentField;
 import dev.vality.fraudbusters.constant.SortOrder;
+import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
 import dev.vality.fraudbusters.repository.Repository;
 import dev.vality.fraudbusters.repository.clickhouse.mapper.RefundMapper;
 import dev.vality.fraudbusters.service.dto.FieldType;
@@ -12,19 +14,14 @@ import dev.vality.fraudbusters.service.dto.FilterDto;
 import dev.vality.fraudbusters.service.dto.SearchFieldDto;
 import dev.vality.fraudbusters.service.dto.SortDto;
 import dev.vality.fraudbusters.util.PaymentTypeByContextResolver;
-import lombok.SneakyThrows;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.testcontainers.containers.ClickHouseContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.HashSet;
@@ -37,19 +34,25 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @Testcontainers
 @DataJdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {ClickhouseConfig.class, PaymentTypeByContextResolver.class,
-        RefundRepository.class, RefundMapper.class, AggregationStatusGeneralRepositoryImpl.class},
-        initializers = HistoricalRefundDataTest.Initializer.class)
+@ExtendWith({SpringExtension.class, ClickHouseContainerExtension.class})
+@ContextConfiguration(classes = {
+        ClickhouseProperties.class,
+        TestClickhouseConfig.class,
+        PaymentTypeByContextResolver.class,
+        RefundRepository.class,
+        RefundMapper.class,
+        AggregationStatusGeneralRepositoryImpl.class})
 class HistoricalRefundDataTest {
 
     @Autowired
     private Repository<Refund> refundRepository;
 
-    @Container
-    public static ClickHouseContainer clickHouseContainer =
-            new ClickHouseContainer("yandex/clickhouse-server:19.17");
-
+    @BeforeAll
+    static void setUp() throws Exception {
+        ChInitializer.initAllScripts(ClickHouseContainerExtension.CLICKHOUSE_CONTAINER, List.of(
+                "sql/data/insert_history_refunds.sql"
+        ));
+    }
 
     @Test
     void getRefundsByTimeSlot() {
@@ -151,28 +154,5 @@ class HistoricalRefundDataTest {
         assertEquals(2, refunds.size());
         assertEquals("partyId_2", refunds.get(0).getReferenceInfo().getMerchantInfo().getPartyId());
         assertEquals("partyId_2", refunds.get(1).getReferenceInfo().getMerchantInfo().getPartyId());
-    }
-
-
-    public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        @SneakyThrows
-        @Override
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            TestPropertyValues
-                    .of(
-                            "clickhouse.db.url=" + clickHouseContainer.getJdbcUrl(),
-                            "clickhouse.db.user=" + clickHouseContainer.getUsername(),
-                            "clickhouse.db.password=" + clickHouseContainer.getPassword()
-                    )
-                    .applyTo(configurableApplicationContext.getEnvironment());
-            ChInitializer.initAllScripts(clickHouseContainer, List.of(
-                    "sql/db_init.sql",
-                    "sql/V4__create_payment.sql",
-                    "sql/V5__add_fields.sql",
-                    "sql/V6__add_result_fields_payment.sql",
-                    "sql/V7__add_fields.sql",
-                    "sql/data/insert_history_refunds.sql"
-            ));
-        }
     }
 }

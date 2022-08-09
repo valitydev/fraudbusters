@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.converter;
 
-import dev.vality.geck.common.util.TypeUtil;
 import dev.vality.damsel.domain.Cash;
 import dev.vality.damsel.domain.Payer;
 import dev.vality.damsel.proxy_inspector.Context;
@@ -12,6 +11,7 @@ import dev.vality.fraudbusters.domain.Metadata;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.util.PayerFieldExtractor;
 import dev.vality.fraudbusters.util.PaymentTypeByContextResolver;
+import dev.vality.geck.common.util.TypeUtil;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.convert.converter.Converter;

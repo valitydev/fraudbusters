@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.util;
 
-import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.damsel.fraudbusters.CheckResult;
 import dev.vality.damsel.fraudbusters.ConcreteCheckResult;
 import dev.vality.damsel.fraudbusters.Payment;
@@ -8,6 +7,7 @@ import dev.vality.damsel.fraudbusters.PaymentStatus;
 import dev.vality.fraudbusters.converter.CheckedResultModelToCheckResultConverter;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
 import dev.vality.fraudbusters.factory.TestObjectsFactory;
+import dev.vality.fraudo.constant.ResultStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

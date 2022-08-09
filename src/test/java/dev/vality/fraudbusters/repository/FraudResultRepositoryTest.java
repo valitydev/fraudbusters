@@ -2,10 +2,12 @@ package dev.vality.fraudbusters.repository;
 
 import dev.vality.clickhouse.initializer.ChInitializer;
 import dev.vality.columbus.ColumbusServiceSrv;
-import dev.vality.fraudbusters.config.ClickhouseConfig;
+import dev.vality.fraudbusters.config.TestClickhouseConfig;
+import dev.vality.fraudbusters.config.properties.ClickhouseProperties;
 import dev.vality.fraudbusters.constant.EventField;
 import dev.vality.fraudbusters.converter.FraudResultToEventConverter;
 import dev.vality.fraudbusters.domain.*;
+import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.FieldModel;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
@@ -15,7 +17,6 @@ import dev.vality.fraudbusters.repository.clickhouse.impl.FraudResultRepository;
 import dev.vality.fraudbusters.repository.clickhouse.mapper.EventMapper;
 import dev.vality.fraudbusters.util.BeanUtil;
 import dev.vality.fraudo.constant.ResultStatus;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,15 +24,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.testcontainers.containers.ClickHouseContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.sql.SQLException;
@@ -44,19 +40,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @Testcontainers
-@ExtendWith(SpringExtension.class)
+@ExtendWith({SpringExtension.class, ClickHouseContainerExtension.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ContextConfiguration(classes = {FraudResultToEventConverter.class, ClickhouseConfig.class,
-        DatabasePaymentFieldResolver.class, AggregationGeneralRepositoryImpl.class, FraudResultRepository.class,
-        EventMapper.class},
-        initializers = FraudResultRepositoryTest.Initializer.class)
+@ContextConfiguration(classes = {
+        FraudResultToEventConverter.class,
+        ClickhouseProperties.class,
+        TestClickhouseConfig.class,
+        DatabasePaymentFieldResolver.class,
+        AggregationGeneralRepositoryImpl.class,
+        FraudResultRepository.class,
+        EventMapper.class
+})
 public class FraudResultRepositoryTest {
 
     private static final String SELECT_COUNT_AS_CNT_FROM_FRAUD_EVENTS_UNIQUE =
             "SELECT count() as cnt from fraud.events_unique";
 
-    @Container
-    public static ClickHouseContainer clickHouseContainer = new ClickHouseContainer("yandex/clickhouse-server:19.17");
     @Autowired
     FraudResultToEventConverter fraudResultToEventConverter;
     @Autowired
@@ -70,7 +69,7 @@ public class FraudResultRepositoryTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        ChInitializer.initAllScripts(clickHouseContainer, List.of(
+        ChInitializer.initAllScripts(ClickHouseContainerExtension.CLICKHOUSE_CONTAINER, List.of(
                 "sql/db_init.sql",
                 "sql/V3__create_fraud_payments.sql",
                 "sql/V4__create_payment.sql",
@@ -271,21 +270,6 @@ public class FraudResultRepositoryTest {
                 List.of(resolve)
         );
         assertEquals(Integer.valueOf(1), sum);
-    }
-
-    public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        @SneakyThrows
-        @Override
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            log.info("clickhouse.db.url={}", clickHouseContainer.getJdbcUrl());
-            TestPropertyValues
-                    .of(
-                            "clickhouse.db.url=" + clickHouseContainer.getJdbcUrl(),
-                            "clickhouse.db.user=" + clickHouseContainer.getUsername(),
-                            "clickhouse.db.password=" + clickHouseContainer.getPassword()
-                    )
-                    .applyTo(configurableApplicationContext.getEnvironment());
-        }
     }
 
 }

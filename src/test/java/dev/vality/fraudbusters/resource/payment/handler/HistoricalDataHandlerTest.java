@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.resource.payment.handler;
 
-import dev.vality.geck.common.util.TBaseUtil;
 import dev.vality.damsel.fraudbusters.*;
 import dev.vality.fraudbusters.constant.PaymentToolType;
 import dev.vality.fraudbusters.converter.*;
@@ -15,6 +14,7 @@ import dev.vality.fraudbusters.service.HistoricalDataService;
 import dev.vality.fraudbusters.service.RuleCheckingService;
 import dev.vality.fraudbusters.service.dto.*;
 import dev.vality.fraudbusters.util.HistoricalTransactionCheckFactory;
+import dev.vality.geck.common.util.TBaseUtil;
 import org.apache.thrift.TException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

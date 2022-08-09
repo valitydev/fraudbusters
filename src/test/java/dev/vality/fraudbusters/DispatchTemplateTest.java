@@ -1,89 +1,80 @@
 package dev.vality.fraudbusters;
 
 import dev.vality.damsel.fraudbusters.Command;
-import dev.vality.damsel.fraudbusters.CommandBody;
-import dev.vality.damsel.fraudbusters.TemplateReference;
-import dev.vality.fraudbusters.constant.TemplateLevel;
+import dev.vality.fraudbusters.config.MockExternalServiceConfig;
+import dev.vality.fraudbusters.config.properties.KafkaTopics;
+import dev.vality.fraudbusters.factory.TestObjectsFactory;
 import dev.vality.fraudbusters.pool.Pool;
-import lombok.extern.slf4j.Slf4j;
+import dev.vality.testcontainers.annotations.KafkaSpringBootTest;
+import dev.vality.testcontainers.annotations.kafka.KafkaTestcontainer;
+import dev.vality.testcontainers.annotations.kafka.config.KafkaProducer;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.thrift.TBase;
 import org.junit.jupiter.api.Test;
-import org.rnorth.ducttape.unreliables.Unreliables;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.util.StringUtils;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-@Slf4j
 @ActiveProfiles("full-prod")
+@ExtendWith({SpringExtension.class})
+@KafkaTestcontainer(
+        properties = {
+                "kafka.listen.result.concurrency=1"},
+        topicsKeys = {
+                "kafka.topic.template",
+                "kafka.topic.reference"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@SpringBootTest(webEnvironment = RANDOM_PORT,
-        classes = FraudBustersApplication.class,
-        properties = "kafka.listen.result.concurrency=1")
-class DispatchTemplateTest extends JUnit5IntegrationTest {
+@KafkaSpringBootTest
+@SpringBootTest(webEnvironment = RANDOM_PORT)
+@Import(MockExternalServiceConfig.class)
+class DispatchTemplateTest {
 
     public static final String TEMPLATE = "rule: 12 >= 1 -> accept;";
-    public static final int TIMEOUT = 20;
+    public static final int TIMEOUT = 5000;
 
     @Autowired
-    private Pool<ParserRuleContext> templatePoolImpl;
+    private KafkaTopics kafkaTopics;
+
     @Autowired
+    private KafkaProducer<TBase<?, ?>> testThriftKafkaProducer;
+
+    @MockBean
+    private Pool<ParserRuleContext> templatePoolImpl;
+    @MockBean
+    @Qualifier("referencePoolImpl")
     private Pool<String> referencePoolImpl;
 
     @Test
-    public void testPools() throws ExecutionException, InterruptedException {
-
+    void testTemplatePool() {
         String id = UUID.randomUUID().toString();
+        Command command = TestObjectsFactory.createCommandTemplate(id, TEMPLATE);
 
-        produceTemplate(id, TEMPLATE, kafkaTopics.getTemplate());
+        testThriftKafkaProducer.send(kafkaTopics.getTemplate(), command);
 
-        //check message in topic
-        waitingTopic(kafkaTopics.getTemplate());
-
-        //check parse context created
-        Unreliables.retryUntilTrue(TIMEOUT, TimeUnit.SECONDS, () -> {
-            ParserRuleContext parseContext = templatePoolImpl.get(id);
-            return parseContext != null;
-        });
-
-        //create global template reference
-        try (Producer<String, Command> producer = createProducer()) {
-            Command command = new Command();
-            TemplateReference value = new TemplateReference();
-            value.setIsGlobal(true);
-            value.setTemplateId(id);
-            command.setCommandBody(CommandBody.reference(value));
-            command.setCommandType(dev.vality.damsel.fraudbusters.CommandType.CREATE);
-            command.setCommandTime(LocalDateTime.now().toString());
-
-            ProducerRecord<String, Command> producerRecord = new ProducerRecord<>(
-                    kafkaTopics.getReference(),
-                    TemplateLevel.GLOBAL.name(),
-                    command
-            );
-            producer.send(producerRecord).get();
-        }
-
-        //check that global reference created
-        Unreliables.retryUntilTrue(TIMEOUT, TimeUnit.SECONDS, () -> {
-            String result = referencePoolImpl.get(TemplateLevel.GLOBAL.name());
-            if (!StringUtils.hasLength(result)) {
-                return false;
-            }
-            assertEquals(id, result);
-            return true;
-        });
+        verify(templatePoolImpl, timeout(TIMEOUT).times(1)).add(anyString(), any(ParserRuleContext.class));
     }
 
+    @Test
+    void testGlobalReferencePool() {
+        String id = UUID.randomUUID().toString();
+        Command command = TestObjectsFactory.crateCommandReference(id);
+
+        testThriftKafkaProducer.send(kafkaTopics.getReference(), command);
+
+        verify(referencePoolImpl, timeout(TIMEOUT).times(1)).add(anyString(), anyString());
+    }
 }

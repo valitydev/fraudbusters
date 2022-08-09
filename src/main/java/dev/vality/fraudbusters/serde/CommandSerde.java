@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.serde;
 
-import dev.vality.kafka.common.serialization.ThriftSerializer;
 import dev.vality.damsel.fraudbusters.Command;
+import dev.vality.kafka.common.serialization.ThriftSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;

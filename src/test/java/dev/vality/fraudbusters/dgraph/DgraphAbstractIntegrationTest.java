@@ -2,24 +2,14 @@ package dev.vality.fraudbusters.dgraph;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.vality.columbus.ColumbusServiceSrv;
-import dev.vality.damsel.wb_list.WbListServiceSrv;
 import dev.vality.fraudbusters.FraudBustersApplication;
 import dev.vality.fraudbusters.dgraph.insert.model.Aggregates;
 import dev.vality.fraudbusters.dgraph.insert.model.TestQuery;
 import dev.vality.fraudbusters.exception.DgraphException;
 import dev.vality.fraudbusters.extension.KafkaContainerExtension;
 import dev.vality.fraudbusters.extension.config.KafkaTopicsConfig;
-import dev.vality.fraudbusters.listener.events.clickhouse.ChargebackEventListener;
-import dev.vality.fraudbusters.listener.events.clickhouse.FraudPaymentListener;
-import dev.vality.fraudbusters.listener.events.clickhouse.RefundEventListener;
-import dev.vality.fraudbusters.listener.events.clickhouse.WithdrawalEventListener;
-import dev.vality.fraudbusters.repository.clickhouse.impl.PaymentRepositoryImpl;
-import dev.vality.fraudbusters.service.CardPoolManagementService;
-import dev.vality.fraudbusters.service.ShopManagementService;
 import dev.vality.fraudbusters.util.KeyGenerator;
 import dev.vality.kafka.common.serialization.ThriftSerializer;
-import dev.vality.trusted.tokens.TrustedTokensSrv;
 import io.dgraph.DgraphClient;
 import io.dgraph.DgraphGrpc;
 import io.dgraph.DgraphProto;
@@ -43,7 +33,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.rnorth.ducttape.unreliables.Unreliables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -91,36 +80,6 @@ public abstract class DgraphAbstractIntegrationTest {
 
     @Autowired
     protected DgraphClient dgraphClient;
-
-    @MockBean
-    private ColumbusServiceSrv.Iface geoIpServiceSrv;
-
-    @MockBean
-    private WbListServiceSrv.Iface wbListServiceSrv;
-
-    @MockBean
-    private TrustedTokensSrv.Iface trustedTokensSrv;
-
-    @MockBean
-    private ShopManagementService shopManagementService;
-
-    @MockBean
-    private CardPoolManagementService cardPoolManagementService;
-
-    @MockBean
-    private PaymentRepositoryImpl paymentRepository;
-
-    @MockBean
-    private FraudPaymentListener fraudPaymentListener;
-
-    @MockBean
-    private RefundEventListener refundEventListener;
-
-    @MockBean
-    private ChargebackEventListener chargebackEventListener;
-
-    @MockBean
-    private WithdrawalEventListener withdrawalEventListener;
 
     private static GenericContainer dgraphServer;
     private static volatile boolean isDgraphStarted;

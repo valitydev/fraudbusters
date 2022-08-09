@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.converter;
 
-import dev.vality.geck.common.util.TBaseUtil;
 import dev.vality.damsel.domain.BankCard;
 import dev.vality.damsel.domain.PaymentTool;
 import dev.vality.damsel.fraudbusters.Error;
@@ -9,6 +8,7 @@ import dev.vality.fraudbusters.constant.PaymentToolType;
 import dev.vality.fraudbusters.domain.dgraph.common.DgraphPayment;
 import dev.vality.fraudbusters.domain.dgraph.side.*;
 import dev.vality.fraudbusters.util.PaymentTypeByContextResolver;
+import dev.vality.geck.common.util.TBaseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

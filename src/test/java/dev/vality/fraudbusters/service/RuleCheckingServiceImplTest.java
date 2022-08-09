@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.service;
 
-import dev.vality.fraudo.FraudoPaymentParser;
-import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
 import dev.vality.fraudbusters.exception.InvalidTemplateException;
 import dev.vality.fraudbusters.fraud.FraudContextParser;
@@ -11,6 +9,8 @@ import dev.vality.fraudbusters.pool.HistoricalPool;
 import dev.vality.fraudbusters.service.dto.CascadingTemplateDto;
 import dev.vality.fraudbusters.stream.impl.RuleCheckingApplierImpl;
 import dev.vality.fraudbusters.util.CheckedResultFactory;
+import dev.vality.fraudo.FraudoPaymentParser;
+import dev.vality.fraudo.constant.ResultStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

@@ -2,9 +2,11 @@ package dev.vality.fraudbusters.repository;
 
 import dev.vality.clickhouse.initializer.ChInitializer;
 import dev.vality.columbus.ColumbusServiceSrv;
-import dev.vality.fraudbusters.config.ClickhouseConfig;
+import dev.vality.fraudbusters.config.TestClickhouseConfig;
+import dev.vality.fraudbusters.config.properties.ClickhouseProperties;
 import dev.vality.fraudbusters.constant.EventField;
 import dev.vality.fraudbusters.converter.FraudResultToEventConverter;
+import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.FieldModel;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
@@ -18,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,32 +27,35 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.testcontainers.containers.ClickHouseContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.sql.SQLException;
 import java.util.List;
 
+import static dev.vality.fraudbusters.extension.ClickHouseContainerExtension.CLICKHOUSE_CONTAINER;
 import static dev.vality.fraudbusters.util.BeanUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @ActiveProfiles("full-prod")
 @Testcontainers
-@ExtendWith(SpringExtension.class)
+@ExtendWith({SpringExtension.class, ClickHouseContainerExtension.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ContextConfiguration(classes = {PaymentRepositoryImpl.class, FraudResultToEventConverter.class, ClickhouseConfig.class,
-        DatabasePaymentFieldResolver.class, AggregationGeneralRepositoryImpl.class, CheckedPaymentMapper.class},
+@ContextConfiguration(classes = {
+        TestClickhouseConfig.class,
+        ClickhouseProperties.class,
+        PaymentRepositoryImpl.class,
+        FraudResultToEventConverter.class,
+        DatabasePaymentFieldResolver.class,
+        AggregationGeneralRepositoryImpl.class,
+        CheckedPaymentMapper.class
+},
         initializers = PaymentRepositoryTest.Initializer.class)
 public class PaymentRepositoryTest {
 
     public static final long FROM = 1588761200000L;
     public static final long TO = 1588761209000L;
 
-    @Container
-    public static ClickHouseContainer clickHouseContainer =
-            new ClickHouseContainer("yandex/clickhouse-server:19.17");
     @Autowired
     DatabasePaymentFieldResolver databasePaymentFieldResolver;
     @Autowired
@@ -134,21 +138,7 @@ public class PaymentRepositoryTest {
         @SneakyThrows
         @Override
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            log.info("clickhouse.db.url={}", clickHouseContainer.getJdbcUrl());
-            TestPropertyValues
-                    .of(
-                            "clickhouse.db.url=" + clickHouseContainer.getJdbcUrl(),
-                            "clickhouse.db.user=" + clickHouseContainer.getUsername(),
-                            "clickhouse.db.password=" + clickHouseContainer.getPassword()
-                    )
-                    .applyTo(configurableApplicationContext.getEnvironment());
-            ChInitializer.initAllScripts(clickHouseContainer, List.of(
-                    "sql/db_init.sql",
-                    "sql/V3__create_fraud_payments.sql",
-                    "sql/V4__create_payment.sql",
-                    "sql/V5__add_fields.sql",
-                    "sql/V6__add_result_fields_payment.sql",
-                    "sql/V7__add_fields.sql",
+            ChInitializer.initAllScripts(CLICKHOUSE_CONTAINER, List.of(
                     "sql/data/inserts_event_sink.sql"
             ));
         }

@@ -1,16 +1,18 @@
 package dev.vality.fraudbusters.extension;
 
 import dev.vality.clickhouse.initializer.ChInitializer;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.ClickHouseContainer;
 
-import java.sql.SQLException;
 import java.util.List;
 
-public class ClickHouseContainerExtension implements BeforeAllCallback {
+@Slf4j
+public class ClickHouseContainerExtension implements BeforeAllCallback, AfterAllCallback {
 
-    private static final String VERSION = "yandex/clickhouse-server:19.17";
+    private static final String VERSION = "clickhouse/clickhouse-server:22.3.4";
 
     public static ClickHouseContainer CLICKHOUSE_CONTAINER;
 
@@ -18,6 +20,7 @@ public class ClickHouseContainerExtension implements BeforeAllCallback {
     public void beforeAll(ExtensionContext context) throws Exception {
         CLICKHOUSE_CONTAINER = new ClickHouseContainer(VERSION);
         CLICKHOUSE_CONTAINER.start();
+        log.info("{}", CLICKHOUSE_CONTAINER.getFirstMappedPort());
         ChInitializer.initAllScripts(CLICKHOUSE_CONTAINER, List.of(
                 "sql/db_init.sql",
                 "sql/V3__create_fraud_payments.sql",
@@ -30,11 +33,8 @@ public class ClickHouseContainerExtension implements BeforeAllCallback {
         ));
     }
 
-    public static void executeScripts(List<String> scriptFilePaths) {
-        try {
-            ChInitializer.initAllScripts(CLICKHOUSE_CONTAINER, scriptFilePaths);
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
+    @Override
+    public void afterAll(ExtensionContext extensionContext) {
+        CLICKHOUSE_CONTAINER.stop();
     }
 }

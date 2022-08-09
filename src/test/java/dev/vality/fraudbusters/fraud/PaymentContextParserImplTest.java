@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.fraud;
 
-import dev.vality.fraudo.FraudoPaymentParser;
 import dev.vality.fraudbusters.fraud.payment.PaymentContextParserImpl;
+import dev.vality.fraudo.FraudoPaymentParser;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

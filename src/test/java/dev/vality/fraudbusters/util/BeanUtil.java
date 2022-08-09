@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.util;
 
-import dev.vality.geck.common.util.TypeUtil;
-import dev.vality.kafka.common.serialization.ThriftSerializer;
 import dev.vality.damsel.base.Content;
 import dev.vality.damsel.domain.*;
 import dev.vality.damsel.fraudbusters.ClientInfo;
@@ -16,6 +14,8 @@ import dev.vality.fraudbusters.constant.ClickhouseUtilsValue;
 import dev.vality.fraudbusters.domain.CheckedPayment;
 import dev.vality.fraudbusters.domain.TimeProperties;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
+import dev.vality.geck.common.util.TypeUtil;
+import dev.vality.kafka.common.serialization.ThriftSerializer;
 import dev.vality.machinegun.eventsink.MachineEvent;
 import dev.vality.machinegun.msgpack.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -146,6 +146,25 @@ public class BeanUtil {
         paymentModel.setAmount(AMOUNT_SECOND);
         paymentModel.setBinCountryCode(BIN_COUNTRY_CODE);
         return paymentModel;
+    }
+
+    public Command crateCommandTemplate(String localId, String templateString) {
+        Command command = new Command();
+        Template template = new Template();
+        template.setId(localId);
+        template.setTemplate(templateString.getBytes());
+        command.setCommandBody(CommandBody.template(template));
+        command.setCommandType(dev.vality.damsel.fraudbusters.CommandType.CREATE);
+        command.setCommandTime(LocalDateTime.now().toString());
+        return command;
+    }
+
+    public static Command crateCommandTemplateReference(TemplateReference value) {
+        Command command = new Command();
+        command.setCommandType(CommandType.CREATE);
+        command.setCommandBody(CommandBody.reference(value));
+        command.setCommandTime(LocalDateTime.now().toString());
+        return command;
     }
 
     @NotNull
@@ -409,12 +428,16 @@ public class BeanUtil {
     }
 
     public static Payment createPayment(PaymentStatus status) {
+        return createPayment(status, "payment_id");
+    }
+
+    public static Payment createPayment(PaymentStatus status, String id) {
         return new Payment()
                 .setStatus(status)
                 .setClientInfo(createEmail())
                 .setCost(createCash())
                 .setEventTime(String.valueOf(LocalDateTime.now()))
-                .setId("payment_id")
+                .setId(id)
                 .setPaymentTool(createBankCardResult())
                 .setProviderInfo(createProviderInfo())
                 .setReferenceInfo(createReferenceInfo());
@@ -477,6 +500,18 @@ public class BeanUtil {
                 .setEventTime(String.valueOf(LocalDateTime.now()))
                 .setDestinationResource(resource)
                 .setProviderInfo(createProviderInfo());
+    }
+
+    public static TemplateReference createTemplateReference(boolean isGlobal,
+                                                            String party,
+                                                            String shopId,
+                                                            String idTemplate) {
+        TemplateReference value = new TemplateReference();
+        value.setTemplateId(idTemplate);
+        value.setPartyId(party);
+        value.setShopId(shopId);
+        value.setIsGlobal(isGlobal);
+        return value;
     }
 
     private static Account createAccount() {

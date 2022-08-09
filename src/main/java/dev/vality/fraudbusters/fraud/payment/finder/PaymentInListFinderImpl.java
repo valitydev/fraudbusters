@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.fraud.payment.finder;
 
-import dev.vality.fraudo.finder.InListFinder;
-import dev.vality.fraudo.model.Pair;
 import dev.vality.damsel.wb_list.*;
 import dev.vality.fraudbusters.aspect.BasicMetric;
 import dev.vality.fraudbusters.constant.EventField;
@@ -12,6 +10,8 @@ import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.repository.PaymentRepository;
 import dev.vality.fraudbusters.util.TimestampUtil;
+import dev.vality.fraudo.finder.InListFinder;
+import dev.vality.fraudo.model.Pair;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;

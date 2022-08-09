@@ -1,4 +1,3 @@
-
 INSERT INTO fraud.events_unique
 (timestamp, eventTime, eventTimeHour, partyId, shopId, email, fingerprint, amount, currency, mobile, paymentId,
  ip, bin, maskedPan, cardToken, resultStatus, checkedRule, checkedTemplate, bankCountry, invoiceId, bankName)

@@ -1,9 +1,9 @@
 package dev.vality.fraudbusters.fraud.payment.validator;
 
-import dev.vality.fraudo.FraudoPaymentLexer;
-import dev.vality.fraudo.FraudoPaymentParser;
 import dev.vality.fraudbusters.fraud.FraudTemplateValidator;
 import dev.vality.fraudbusters.fraud.listener.ValidateErrorListener;
+import dev.vality.fraudo.FraudoPaymentLexer;
+import dev.vality.fraudo.FraudoPaymentParser;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;

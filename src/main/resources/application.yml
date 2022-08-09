@@ -111,8 +111,8 @@ clickhouse.db:
   url: "jdbc:clickhouse://localhost:8123/default"
   user: "user"
   password: "password"
-  connection.timeout: 300000
-  socket.timeout: 300000
+  connection-timeout: 300000
+  socket-timeout: 300000
   compress: false
   distributed-connections-pool-size: 50
   max-distributed-connections: 50
@@ -132,12 +132,12 @@ dgraph:
   keyFile: "dgraphuser.p12"
   keyPassword: "pswd"
 
-geo.ip.service.url: "localhost:29092/v1/columbus"
+geo.ip.service.url: "http://localhost:29092/v1/columbus"
 
-wb.list.service.url: "localhost:29092/v1/wb_list"
+wb.list.service.url: "http://localhost:29092/v1/wb_list"
 
 trusted.tokens:
-  url: "localhost:29092/v1/trusted_tokens"
+  url: "http://localhost:29092/v1/trusted_tokens"
   timeout: 10000
 
 default.template:
@@ -148,15 +148,3 @@ result.full.check:
   enabled: true
 
 time.pool.cleanup.gap: 60
-
-card-token-pool:
-  maxAttempts: 5
-  retryDelayMs: 500
-  filePath: tokens
-  scheduleRateMs: 600000
-
-load.isTrusted.enabled: false
-
-trusted.providers:
-  list: 108,114,118,119,121,125,126,128,130,134,135,136,132,137,143,139,144,149
-  interval-time-year: 1.5

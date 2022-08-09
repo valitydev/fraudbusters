@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import dev.vality.fraudbusters.config.properties.ClickhouseProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,37 +14,21 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
+@RequiredArgsConstructor
 public class ClickhouseConfig {
 
-    @Value("${clickhouse.db.url}")
-    private String dbUrl;
-
-    @Value("${clickhouse.db.user}")
-    private String user;
-
-    @Value("${clickhouse.db.password}")
-    private String password;
-
-    @Value("${clickhouse.db.compress}")
-    private String compress;
-
-    @Value("${clickhouse.db.connection.timeout:60000}")
-    private String connectionTimeout;
-
-    @Value("${clickhouse.db.socket.timeout:60000}")
-    private String socketTimeout;
+    private final ClickhouseProperties clickhouseProperties;
 
     @Bean
     public ClickHouseDataSource clickHouseDataSource() {
         Properties info = new Properties();
-        info.put(ClickHouseQueryParam.USER.getKey(), user);
-        info.put(ClickHouseQueryParam.PASSWORD.getKey(), password);
-        info.put(ClickHouseQueryParam.COMPRESS.getKey(), compress);
-        return new ClickHouseDataSource(dbUrl, info);
+        info.put(ClickHouseQueryParam.USER.getKey(), clickhouseProperties.getUser());
+        info.put(ClickHouseQueryParam.PASSWORD.getKey(), clickhouseProperties.getPassword());
+        info.put(ClickHouseQueryParam.COMPRESS.getKey(), clickhouseProperties.getCompress());
+        return new ClickHouseDataSource(clickhouseProperties.getUrl(), info);
     }
 
     @Bean
-    @Autowired
     public JdbcTemplate jdbcTemplate(DataSource clickHouseDataSource) {
         return new JdbcTemplate(clickHouseDataSource);
     }
@@ -52,18 +36,20 @@ public class ClickhouseConfig {
     @Bean
     public JdbcTemplate longQueryJdbcTemplate() {
         Properties info = new Properties();
-        info.put(ClickHouseQueryParam.USER.getKey(), user);
-        info.put(ClickHouseQueryParam.PASSWORD.getKey(), password);
+        info.put(ClickHouseQueryParam.USER.getKey(), clickhouseProperties.getUser());
+        info.put(ClickHouseQueryParam.PASSWORD.getKey(), clickhouseProperties.getPassword());
         info.put(ClickHouseQueryParam.COMPRESS.getKey(), true);
-        info.put(ClickHouseQueryParam.CONNECT_TIMEOUT.getKey(), connectionTimeout);
-        info.put(ClickHouseConnectionSettings.CONNECTION_TIMEOUT.getKey(), Integer.parseInt(connectionTimeout));
-        info.put(ClickHouseConnectionSettings.SOCKET_TIMEOUT.getKey(), Integer.parseInt(socketTimeout));
-        return new JdbcTemplate(new ClickHouseDataSource(dbUrl, info));
+        info.put(ClickHouseQueryParam.CONNECT_TIMEOUT.getKey(), clickhouseProperties.getConnectionTimeout());
+        info.put(ClickHouseConnectionSettings.CONNECTION_TIMEOUT.getKey(),
+                Integer.parseInt(clickhouseProperties.getConnectionTimeout()));
+        info.put(ClickHouseConnectionSettings.SOCKET_TIMEOUT.getKey(),
+                Integer.parseInt(clickhouseProperties.getSocketTimeout()));
+        return new JdbcTemplate(new ClickHouseDataSource(clickhouseProperties.getUrl(), info));
     }
 
     @Bean
-    public NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
-        return new NamedParameterJdbcTemplate(clickHouseDataSource());
+    public NamedParameterJdbcTemplate namedParameterJdbcTemplate(ClickHouseDataSource clickHouseDataSource) {
+        return new NamedParameterJdbcTemplate(clickHouseDataSource);
     }
 
 }

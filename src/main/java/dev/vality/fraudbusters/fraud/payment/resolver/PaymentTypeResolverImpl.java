@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.fraud.payment.resolver;
 
-import dev.vality.fraudo.payment.resolver.PaymentTypeResolver;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
+import dev.vality.fraudo.payment.resolver.PaymentTypeResolver;
 import org.springframework.stereotype.Component;
 
 @Component

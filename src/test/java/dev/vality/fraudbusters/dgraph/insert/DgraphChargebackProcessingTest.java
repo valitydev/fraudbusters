@@ -4,11 +4,13 @@ import dev.vality.damsel.fraudbusters.Chargeback;
 import dev.vality.fraudbusters.dgraph.DgraphAbstractIntegrationTest;
 import dev.vality.fraudbusters.factory.TestDgraphObjectFactory;
 import dev.vality.fraudbusters.factory.properties.OperationProperties;
+import dev.vality.fraudbusters.listener.events.clickhouse.ChargebackEventListener;
 import dev.vality.fraudbusters.serde.ChargebackDeserializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Instant;
@@ -21,6 +23,9 @@ import java.util.concurrent.ExecutionException;
 public class DgraphChargebackProcessingTest extends DgraphAbstractIntegrationTest {
 
     private static final String KAFKA_CHARGEBACK_TOPIC = "chargeback_event";
+
+    @MockBean
+    private ChargebackEventListener chargebackEventListener;
 
     @Test
     public void processChargebackFromKafkaTest() throws Exception {

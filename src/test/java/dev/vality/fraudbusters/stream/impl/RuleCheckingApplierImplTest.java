@@ -1,14 +1,14 @@
 package dev.vality.fraudbusters.stream.impl;
 
+import dev.vality.fraudbusters.domain.CheckedResultModel;
+import dev.vality.fraudbusters.fraud.model.PaymentModel;
+import dev.vality.fraudbusters.pool.HistoricalPool;
+import dev.vality.fraudbusters.util.CheckedResultFactory;
 import dev.vality.fraudo.FraudoPaymentParser;
 import dev.vality.fraudo.constant.ResultStatus;
 import dev.vality.fraudo.model.ResultModel;
 import dev.vality.fraudo.model.RuleResult;
 import dev.vality.fraudo.visitor.TemplateVisitor;
-import dev.vality.fraudbusters.domain.CheckedResultModel;
-import dev.vality.fraudbusters.fraud.model.PaymentModel;
-import dev.vality.fraudbusters.pool.HistoricalPool;
-import dev.vality.fraudbusters.util.CheckedResultFactory;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
