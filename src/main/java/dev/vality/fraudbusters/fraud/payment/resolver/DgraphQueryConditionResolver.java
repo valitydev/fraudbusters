@@ -42,7 +42,8 @@ public class DgraphQueryConditionResolver {
             case PARTY_ID -> String.format(DgraphFieldConditionTemplate.PARTY_ID, paymentModel.getPartyId());
             case SHOP_ID -> String.format(DgraphFieldConditionTemplate.SHOP_ID, paymentModel.getShopId());
             case LAST_DIGITS -> String.format(DgraphFieldConditionTemplate.LAST_DIGITS, paymentModel.getPan());
-            case COUNTRY_BANK -> String.format(DgraphFieldConditionTemplate.COUNTRY_BANK, paymentModel.getBinCountryCode());
+            case COUNTRY_BANK ->
+                    String.format(DgraphFieldConditionTemplate.COUNTRY_BANK, paymentModel.getBinCountryCode());
             case CURRENCY -> String.format(DgraphFieldConditionTemplate.CURRENCY, paymentModel.getCurrency());
             case MOBILE -> String.format(DgraphFieldConditionTemplate.MOBILE, paymentModel.isMobile());
             case RECURRENT -> String.format(DgraphFieldConditionTemplate.RECURRENT, paymentModel.isRecurrent());
