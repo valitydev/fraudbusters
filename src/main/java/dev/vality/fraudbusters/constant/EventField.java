@@ -2,6 +2,7 @@ package dev.vality.fraudbusters.constant;
 
 public enum EventField {
 
+    id,
     timestamp,
     eventTimeHour,
     eventTime,

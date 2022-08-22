@@ -32,6 +32,8 @@ public class EventParametersGenerator {
         Optional.ofNullable(value.getBankCountry()).ifPresent(v -> parameters.put(EventField.bankCountry.name(), v));
         Optional.ofNullable(value.getCurrency()).ifPresent(v -> parameters.put(EventField.currency.name(), v));
         Optional.ofNullable(value.getInvoiceId()).ifPresent(v -> parameters.put(EventField.invoiceId.name(), v));
+        Optional.ofNullable(value.getInvoiceId())
+                .ifPresent(v -> parameters.put(EventField.id.name(), v + "." + value.getPaymentId()));
         Optional.ofNullable(value.getMaskedPan()).ifPresent(v -> parameters.put(EventField.maskedPan.name(), v));
         Optional.ofNullable(value.getBankName()).ifPresent(v -> parameters.put(EventField.bankName.name(), v));
         Optional.ofNullable(value.getCardToken()).ifPresent(v -> parameters.put(EventField.cardToken.name(), v));
