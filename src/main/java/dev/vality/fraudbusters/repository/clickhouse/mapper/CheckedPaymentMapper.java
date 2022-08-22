@@ -23,7 +23,7 @@ public class CheckedPaymentMapper implements RowMapper<CheckedPayment> {
         payment.setCardToken(rs.getString(PaymentField.CARD_TOKEN.getValue()));
         payment.setCardCategory(rs.getString(PaymentField.CARD_CATEGORY.getValue()));
         payment.setBin(rs.getString(PaymentField.BIN.getValue()));
-        payment.setMaskedPan(rs.getString(PaymentField.MASKED_PAN.getValue()));
+        payment.setLastDigits(rs.getString(PaymentField.LAST_DIGITS.getValue()));
         payment.setPaymentSystem(rs.getString(PaymentField.PAYMENT_SYSTEM.getValue()));
         payment.setPaymentTool(rs.getString(PaymentField.PAYMENT_TOOL.getValue()));
         payment.setTerminal(rs.getString(PaymentField.TERMINAL.getValue()));

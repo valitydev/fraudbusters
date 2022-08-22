@@ -40,7 +40,7 @@ public class FraudPaymentRepository implements Repository<FraudPaymentRow>, Aggr
                      ip,
                      fingerprint,
                      bin,
-                     maskedPan,
+                     lastDigits,
                      cardToken,
                      cardCategory,
                      paymentSystem,

@@ -42,7 +42,7 @@ public class PaymentToCheckedPaymentConverter implements Converter<Payment, Chec
         checkedPayment.setPaymentTool(TBaseUtil.unionFieldToEnum(paymentTool, PaymentToolType.class).name());
         checkedPayment.setBin(paymentTool.isSetBankCard() ? paymentTool.getBankCard().getBin() : UNKNOWN);
         checkedPayment.setCardCategory(paymentTool.isSetBankCard() ? paymentTool.getBankCard().getCategory() : UNKNOWN);
-        checkedPayment.setMaskedPan(paymentTool.isSetBankCard() ? paymentTool.getBankCard().getLastDigits() : UNKNOWN);
+        checkedPayment.setLastDigits(paymentTool.isSetBankCard() ? paymentTool.getBankCard().getLastDigits() : UNKNOWN);
         checkedPayment.setCardToken(paymentTool.isSetBankCard() ? paymentTool.getBankCard().getToken() : UNKNOWN);
         checkedPayment.setPaymentSystem(paymentTool.isSetBankCard()
                 ? paymentTool.getBankCard().payment_system.getId()

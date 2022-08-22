@@ -26,7 +26,7 @@ public class FraudPaymentRowMapper implements RowMapper<FraudPaymentRow> {
         fraudPaymentRow.setCardToken(rs.getString(PaymentField.CARD_TOKEN.getValue()));
         fraudPaymentRow.setCardCategory(rs.getString(PaymentField.CARD_CATEGORY.getValue()));
         fraudPaymentRow.setBin(rs.getString(PaymentField.BIN.getValue()));
-        fraudPaymentRow.setMaskedPan(rs.getString(PaymentField.MASKED_PAN.getValue()));
+        fraudPaymentRow.setLastDigits(rs.getString(PaymentField.LAST_DIGITS.getValue()));
         fraudPaymentRow.setPaymentSystem(rs.getString(PaymentField.PAYMENT_SYSTEM.getValue()));
         fraudPaymentRow.setPaymentTool(rs.getString(PaymentField.PAYMENT_TOOL.getValue()));
         fraudPaymentRow.setTerminal(rs.getString(PaymentField.TERMINAL.getValue()));

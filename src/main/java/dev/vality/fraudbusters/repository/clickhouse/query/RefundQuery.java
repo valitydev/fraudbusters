@@ -8,27 +8,27 @@ import lombok.NoArgsConstructor;
 public class RefundQuery {
 
     public static final String SELECT_HISTORY_REFUND = String.format("""
-            SELECT
-                eventTime,
-                partyId,
-                shopId,
-                email,
-                amount as amount,
-                currency,
-                id,
-                cardToken,
-                bin,
-                maskedPan,
-                bankCountry,
-                fingerprint,
-                ip,
-                status,
-                errorReason,
-                errorCode,
-                paymentSystem,
-                providerId,
-                terminal,
-                paymentId
+                    SELECT
+                        eventTime,
+                        partyId,
+                        shopId,
+                        email,
+                        amount as amount,
+                        currency,
+                        id,
+                        cardToken,
+                        bin,
+                        lastDigits,
+                        bankCountry,
+                        fingerprint,
+                        ip,
+                        status,
+                        errorReason,
+                        errorCode,
+                        paymentSystem,
+                        providerId,
+                        terminal,
+                        paymentId
              FROM
              %s
              WHERE

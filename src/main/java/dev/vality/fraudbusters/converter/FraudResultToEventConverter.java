@@ -54,7 +54,7 @@ public class FraudResultToEventConverter implements BatchConverter<FraudResult, 
             event.setBankName(metadata.getBankName());
             event.setCurrency(metadata.getCurrency());
             event.setInvoiceId(metadata.getInvoiceId());
-            event.setMaskedPan(metadata.getMaskedPan());
+            event.setLastDigits(metadata.getLastDigits());
             event.setPaymentId(metadata.getPaymentId());
             event.setPayerType(metadata.getPayerType());
             event.setTokenProvider(metadata.getTokenProvider());

@@ -29,15 +29,15 @@ public class DgraphPaymentProcessingTest extends DgraphAbstractIntegrationTest {
     @Test
     public void processPaymentFromKafkaTest() throws Exception {
         OperationProperties operationProperties = OperationProperties.builder()
-                 .tokenId("token1")
-                 .email("email1")
-                 .fingerprint("finger1")
-                 .partyId("party1")
-                 .shopId("shop1")
-                 .bin("bin1")
-                 .ip("ip1")
-                 .country("Russia")
-                 .maskedPan("0101")
+                .tokenId("token1")
+                .email("email1")
+                .fingerprint("finger1")
+                .partyId("party1")
+                .shopId("shop1")
+                .bin("bin1")
+                .ip("ip1")
+                .country("Russia")
+                .lastDigits("0101")
                  .build();
         producePayments(KAFKA_PAYMENT_TOPIC, generatePayments(5, operationProperties));
         waitingTopic(KAFKA_PAYMENT_TOPIC, PaymentDeserializer.class);
@@ -71,7 +71,7 @@ public class DgraphPaymentProcessingTest extends DgraphAbstractIntegrationTest {
                 .bin("bin1")
                 .ip("ip1")
                 .country("Russia")
-                .maskedPan("0101")
+                .lastDigits("0101")
                 .build();
         producePayments(KAFKA_PAYMENT_TOPIC, generatePayments(6, secondOperationProperties));
         checkCountOfObjects("Token", 2);
@@ -93,7 +93,7 @@ public class DgraphPaymentProcessingTest extends DgraphAbstractIntegrationTest {
                 .bin("bin3")
                 .ip("ip3")
                 .country("BeloRussia")
-                .maskedPan("0101")
+                .lastDigits("0101")
                 .build();
         producePayments(KAFKA_PAYMENT_TOPIC, generatePayments(10, thirdOperationProperties));
         checkCountOfObjects("Token", 3);

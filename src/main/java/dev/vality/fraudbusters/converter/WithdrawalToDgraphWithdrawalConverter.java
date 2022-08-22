@@ -87,7 +87,7 @@ public class WithdrawalToDgraphWithdrawalConverter implements Converter<Withdraw
     private DgraphToken convertToken(String withdrawalCreatedAt, BankCard bankCard) {
         DgraphToken dgraphToken = new DgraphToken();
         dgraphToken.setTokenId(bankCard.getToken() == null ? UNKNOWN : bankCard.getToken());
-        dgraphToken.setMaskedPan(bankCard.getLastDigits() == null ? UNKNOWN : bankCard.getLastDigits());
+        dgraphToken.setLastDigits(bankCard.getLastDigits() == null ? UNKNOWN : bankCard.getLastDigits());
         dgraphToken.setLastActTime(withdrawalCreatedAt);
         dgraphToken.setTokenizationMethod(
                 bankCard.getTokenizationMethod() == null ? null : bankCard.getTokenizationMethod().name());

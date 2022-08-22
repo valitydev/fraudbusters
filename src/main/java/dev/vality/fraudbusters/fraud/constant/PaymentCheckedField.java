@@ -11,7 +11,7 @@ public enum PaymentCheckedField {
     COUNTRY_BANK("country_bank"),
     COUNTRY_IP("country_ip"),
     BIN("bin"),
-    PAN("pan"),
+    LAST_DIGITS("last_digits"),
     CURRENCY("currency"),
     SHOP_ID("shop_id"),
     PARTY_ID("party_id"),

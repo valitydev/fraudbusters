@@ -20,7 +20,7 @@ public class FraudResultQuery {
                         ip,
                         fingerprint,
                         invoiceId,
-                        maskedPan,
+                        lastDigits,
                         bin,
                         bankName,
                         paymentId as id,

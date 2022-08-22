@@ -97,7 +97,7 @@ public final class TestDgraphObjectFactory {
                 new BankCard()
                         .setToken(properties.getTokenId())
                         .setBin(properties.getBin())
-                        .setLastDigits(properties.getMaskedPan())
+                        .setLastDigits(properties.getLastDigits())
                         .setPaymentToken(new BankCardTokenServiceRef().setId("PT-111"))
                         .setPaymentSystem(new PaymentSystemRef().setId("PS-111"))
         ));
@@ -165,7 +165,7 @@ public final class TestDgraphObjectFactory {
         dgraphRefund.setErrorCode(null);
         dgraphRefund.setErrorReason(null);
         dgraphRefund.setSourcePayment(createTestDgraphPaymentLink("TestPayId"));
-        dgraphRefund.setCardToken(createTestDgraphToken("token", "maskedPan"));
+        dgraphRefund.setCardToken(createTestDgraphToken("token", "lastDigits"));
         dgraphRefund.setBin(createTestDgraphBin());
         dgraphRefund.setFingerprint(fingerprintExists ? createTestDgraphFingerprint() : null);
         dgraphRefund.setOperationIp(ipExists ? createTestDgraphIp() : null);
@@ -197,7 +197,7 @@ public final class TestDgraphObjectFactory {
         dgraphChargeback.setCategory("category");
         dgraphChargeback.setCode("code404");
         dgraphChargeback.setPayment(createTestDgraphPaymentLink("TestPayId"));
-        dgraphChargeback.setCardToken(createTestDgraphToken("token", "maskedPan"));
+        dgraphChargeback.setCardToken(createTestDgraphToken("token", "lastDigits"));
         dgraphChargeback.setBin(createTestDgraphBin());
         dgraphChargeback.setFingerprint(fingerprintExists ? createTestDgraphFingerprint() : null);
         dgraphChargeback.setOperationIp(ipExists ? createTestDgraphIp() : null);
@@ -223,10 +223,10 @@ public final class TestDgraphObjectFactory {
         return dgraphBin;
     }
 
-    private static DgraphToken createTestDgraphToken(String tokenId, String maskedPan) {
+    private static DgraphToken createTestDgraphToken(String tokenId, String lastDigits) {
         DgraphToken dgraphToken = new DgraphToken();
         dgraphToken.setTokenId(tokenId);
-        dgraphToken.setMaskedPan(maskedPan);
+        dgraphToken.setLastDigits(lastDigits);
         return dgraphToken;
     }
 
@@ -403,7 +403,7 @@ public final class TestDgraphObjectFactory {
             dgraphWithdrawal.setDigitalWalletDataProvider("P-1");
         } else if (resource.isSetBankCard()) {
             dgraphWithdrawal.setBin(createTestDgraphBin());
-            dgraphWithdrawal.setCardToken(createTestDgraphToken("tokenID", "MaskedPAN"));
+            dgraphWithdrawal.setCardToken(createTestDgraphToken("tokenID", "LastDIGITS"));
         }
         return dgraphWithdrawal;
     }

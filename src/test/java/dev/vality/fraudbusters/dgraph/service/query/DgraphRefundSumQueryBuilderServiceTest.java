@@ -182,7 +182,7 @@ public class DgraphRefundSumQueryBuilderServiceTest extends AbstractDgraphQueryB
     public void getRefundsSumQueryByPanRootWithMinimalDataTest() {
         String query = getRefundsSumQuery(
                 DgraphEntity.TOKEN,
-                Map.of(DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN))
+                Map.of(DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS))
         );
         assertNotNull(query);
         assertEquals(REFUNDS_SUM_QUERY_BY_PAN_ROOT_WITH_MINIMAL_DATASET, query);
@@ -192,7 +192,7 @@ public class DgraphRefundSumQueryBuilderServiceTest extends AbstractDgraphQueryB
     public void getRefundsSumQueryByPanRootWithUsualDatasetTest() {
         String query = getRefundsSumQuery(
                 DgraphEntity.TOKEN,
-                createTestUsualDgraphEntityMap(DgraphEntity.TOKEN, PaymentCheckedField.PAN)
+                createTestUsualDgraphEntityMap(DgraphEntity.TOKEN, PaymentCheckedField.LAST_DIGITS)
         );
         assertNotNull(query);
         assertEquals(REFUNDS_SUM_QUERY_BY_PAN_ROOT_WITH_USUAL_DATASET, query);

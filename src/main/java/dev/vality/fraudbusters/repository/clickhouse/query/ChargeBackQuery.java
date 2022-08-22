@@ -9,27 +9,27 @@ public class ChargeBackQuery {
 
     public static final String SELECT_HISTORY_CHARGEBACK = String.format("""
             SELECT
-                eventTime,
-                partyId,
-                shopId,
-                email,
-                amount as amount,
-                currency,
-                id,
-                bankCountry,
-                cardToken,
-                bin,
-                maskedPan,
-                paymentSystem,
-                providerId,
-                status,
-                ip,
-                fingerprint,
-                terminal,
-                paymentId,
-                chargebackCode,
-                category
-             FROM
+                        eventTime,
+                        partyId,
+                        shopId,
+                        email,
+                        amount as amount,
+                        currency,
+                        id,
+                        bankCountry,
+                        cardToken,
+                        bin,
+                        lastDigits,
+                        paymentSystem,
+                        providerId,
+                        status,
+                        ip,
+                        fingerprint,
+                        terminal,
+                        paymentId,
+                        chargebackCode,
+                        category
+                     FROM
             %s
              WHERE
                 timestamp >= toDate(:from)

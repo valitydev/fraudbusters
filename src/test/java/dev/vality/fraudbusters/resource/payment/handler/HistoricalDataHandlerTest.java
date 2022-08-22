@@ -304,7 +304,7 @@ class HistoricalDataHandlerTest {
         assertEquals(event.getBankName(),
                 actualFraudResult.getTransaction().getPaymentTool().getBankCard().getBankName());
         assertEquals(event.getBin(), actualFraudResult.getTransaction().getPaymentTool().getBankCard().getBin());
-        assertEquals(event.getMaskedPan(),
+        assertEquals(event.getLastDigits(),
                 actualFraudResult.getTransaction().getPaymentTool().getBankCard().getLastDigits());
         assertEquals(event.getIp(), actualFraudResult.getTransaction().getClientInfo().getIp());
         assertEquals(event.getEmail(), actualFraudResult.getTransaction().getClientInfo().getEmail());

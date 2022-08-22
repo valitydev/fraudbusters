@@ -36,7 +36,7 @@ public class DgraphEntityResolver {
             throw new UnknownFieldException();
         }
         return switch (field) {
-            case CARD_TOKEN, PAN -> DgraphEntity.TOKEN;
+            case CARD_TOKEN, LAST_DIGITS -> DgraphEntity.TOKEN;
             case PARTY_ID -> DgraphEntity.PARTY;
             case SHOP_ID -> DgraphEntity.SHOP;
             case FINGERPRINT -> DgraphEntity.FINGERPRINT;

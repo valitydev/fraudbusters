@@ -79,7 +79,7 @@ public class ContextToFraudRequestConverter implements Converter<Context, FraudR
         metadata.setPaymentId(payment.getPayment().getId());
         PayerFieldExtractor.getBankCard(context.getPayment().getPayment().getPayer())
                 .ifPresent(bankCard -> {
-                    metadata.setMaskedPan(bankCard.getLastDigits());
+                    metadata.setLastDigits(bankCard.getLastDigits());
                     metadata.setBankName(bankCard.getBankName());
                     metadata.setPayerType(
                             PayerFieldExtractor.getPayerType(context.getPayment().getPayment().getPayer()));

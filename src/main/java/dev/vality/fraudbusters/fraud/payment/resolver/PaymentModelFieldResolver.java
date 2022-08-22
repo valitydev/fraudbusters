@@ -16,7 +16,7 @@ public class PaymentModelFieldResolver implements FieldResolver<PaymentModel, Pa
             case EMAIL -> paymentModel.getEmail();
             case COUNTRY_BANK -> paymentModel.getBinCountryCode();
             case CARD_TOKEN -> paymentModel.getCardToken();
-            case PAN -> paymentModel.getPan();
+            case LAST_DIGITS -> paymentModel.getPan();
             default -> throw new UnresolvableFieldException(fieldName);
         };
     }

@@ -22,7 +22,7 @@ public class CheckedPaymentExtractor implements ResultSetExtractor<CheckedPaymen
             payment.setIp(rs.getString("ip"));
             payment.setFingerprint(rs.getString("fingerprint"));
             payment.setBin(rs.getString("bin"));
-            payment.setMaskedPan(rs.getString("maskedPan"));
+            payment.setLastDigits(rs.getString("lastDigits"));
             payment.setCardToken(rs.getString("cardToken"));
             payment.setCardCategory(rs.getString("cardCategory"));
             payment.setPaymentSystem(rs.getString("paymentSystem"));

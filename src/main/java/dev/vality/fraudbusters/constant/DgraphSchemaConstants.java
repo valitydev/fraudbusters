@@ -94,10 +94,10 @@ public final class DgraphSchemaConstants {
                 chargebacks: Chargeback
                 withdrawals: Withdrawal
             }
-            
+                        
             type Token {
                 tokenId
-                maskedPan
+                lastDigits
                 tokenizationMethod
                 paymentSystem
                 issuerCountry

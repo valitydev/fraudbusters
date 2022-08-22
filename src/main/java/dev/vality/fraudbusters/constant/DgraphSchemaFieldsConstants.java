@@ -49,7 +49,7 @@ public final class DgraphSchemaFieldsConstants {
             ips: [uid] .
             issuerCountry: string .
             lastActTime: datetime @index(day) .
-            maskedPan: string .
+            lastDigits: string .
             mobile: bool .
             operationIp: uid .
             party: uid .

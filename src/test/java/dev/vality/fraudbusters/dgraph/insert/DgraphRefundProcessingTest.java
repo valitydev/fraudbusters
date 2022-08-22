@@ -31,7 +31,7 @@ public class DgraphRefundProcessingTest extends DgraphAbstractIntegrationTest {
     public void processRefundFromKafkaTest() throws Exception {
         OperationProperties operationProperties = OperationProperties.builder()
                 .tokenId("token1")
-                .maskedPan("0101")
+                .lastDigits("0101")
                 .email("email1")
                 .fingerprint("finger1")
                 .partyId("party1")
@@ -69,7 +69,7 @@ public class DgraphRefundProcessingTest extends DgraphAbstractIntegrationTest {
 
         OperationProperties secondOperationProperties = OperationProperties.builder()
                 .tokenId("token2")
-                .maskedPan("0101")
+                .lastDigits("0101")
                 .email("email2")
                 .fingerprint("finger1")
                 .partyId("party1")
@@ -93,7 +93,7 @@ public class DgraphRefundProcessingTest extends DgraphAbstractIntegrationTest {
 
         OperationProperties thirdOperationProperties = OperationProperties.builder()
                 .tokenId("token3")
-                .maskedPan("0101")
+                .lastDigits("0101")
                 .email("email3")
                 .fingerprint("finger3")
                 .partyId("party3")

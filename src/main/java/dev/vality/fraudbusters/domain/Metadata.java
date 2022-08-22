@@ -13,7 +13,7 @@ public class Metadata {
     private String currency;
     private String invoiceId;
     private String paymentId;
-    private String maskedPan;
+    private String lastDigits;
     private String bankName;
 
     private String payerType;
