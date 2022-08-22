@@ -130,7 +130,7 @@ class HistoricalFraudResultDataTest {
         List<Event> fraudResults = fraudResultRepository.getByFilter(filter);
 
         assertFalse(fraudResults.isEmpty());
-        assertEquals(7, fraudResults.size());
+        assertEquals(3, fraudResults.size());
     }
 
     @Test
