@@ -1,10 +1,8 @@
 package dev.vality.fraudbusters.util;
 
-import dev.vality.damsel.base.Content;
 import dev.vality.damsel.domain.*;
 import dev.vality.damsel.fraudbusters.ClientInfo;
 import dev.vality.damsel.fraudbusters.*;
-import dev.vality.damsel.payment_processing.*;
 import dev.vality.damsel.proxy_inspector.Invoice;
 import dev.vality.damsel.proxy_inspector.InvoicePayment;
 import dev.vality.damsel.proxy_inspector.Party;
@@ -15,16 +13,11 @@ import dev.vality.fraudbusters.domain.CheckedPayment;
 import dev.vality.fraudbusters.domain.TimeProperties;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.geck.common.util.TypeUtil;
-import dev.vality.kafka.common.serialization.ThriftSerializer;
-import dev.vality.machinegun.eventsink.MachineEvent;
-import dev.vality.machinegun.msgpack.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("VariableDeclarationUsageDistance")
@@ -91,16 +84,6 @@ public class BeanUtil {
         );
 
         return new Context(payment);
-    }
-
-    private static Payer createCustomerPayer() {
-        return Payer.customer(new CustomerPayer(
-                "custId",
-                "1",
-                "rec_paym_tool",
-                createPaymentTool(),
-                new ContactInfo()
-        ));
     }
 
     public static PaymentTool createPaymentTool() {
@@ -211,114 +194,6 @@ public class BeanUtil {
                 .setPartyId(party)
                 .setShopId(shopId)));
         return command;
-    }
-
-    @NotNull
-    public static MachineEvent createMachineEvent(InvoiceChange invoiceChange, String sourceId) {
-        MachineEvent message = new MachineEvent();
-        EventPayload payload = new EventPayload();
-        ArrayList<InvoiceChange> invoiceChanges = new ArrayList<>();
-        invoiceChanges.add(invoiceChange);
-        payload.setInvoiceChanges(invoiceChanges);
-
-        message.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
-        message.setEventId(1L);
-        message.setSourceNs(SOURCE_NS);
-        message.setSourceId(sourceId);
-
-        ThriftSerializer<EventPayload> eventPayloadThriftSerializer = new ThriftSerializer<>();
-        Value data = new Value();
-        data.setBin(eventPayloadThriftSerializer.serialize("", payload));
-        message.setData(data);
-        return message;
-    }
-
-    @NotNull
-    public static InvoiceCreated createInvoiceCreate(String sourceId) {
-        var invoice = new dev.vality.damsel.domain.Invoice();
-
-        invoice.setId(sourceId);
-        invoice.setOwnerId("owner_id");
-        invoice.setShopId(SHOP_ID);
-        invoice.setCreatedAt("2016-08-10T16:07:18Z");
-        invoice.setStatus(InvoiceStatus.unpaid(new InvoiceUnpaid()));
-        invoice.setDue("2016-08-10T16:07:23Z");
-        invoice.setCost(new Cash(12L, new CurrencyRef("RUB")));
-        invoice.setDetails(new InvoiceDetails("product"));
-
-        InvoiceCreated invoiceCreated = new InvoiceCreated();
-        invoiceCreated.setInvoice(invoice);
-
-        Content content = new Content();
-        content.setType("contentType");
-        content.setData("test".getBytes());
-        invoice.setContext(content);
-        return invoiceCreated;
-    }
-
-    @NotNull
-    public static InvoiceChange createInvoiceCaptured() {
-        InvoiceChange invoiceChange = new InvoiceChange();
-        InvoicePaymentChange invoicePaymentChange = new InvoicePaymentChange();
-        invoicePaymentChange.setId("1");
-        InvoicePaymentChangePayload payload = new InvoicePaymentChangePayload();
-        InvoicePaymentStatusChanged invoicePaymentStatusChanged = new InvoicePaymentStatusChanged();
-        invoicePaymentStatusChanged.setStatus(InvoicePaymentStatus.captured(new InvoicePaymentCaptured()));
-        payload.setInvoicePaymentStatusChanged(invoicePaymentStatusChanged);
-        invoicePaymentChange.setPayload(payload);
-        invoiceChange.setInvoicePaymentChange(invoicePaymentChange);
-        return invoiceChange;
-    }
-
-    @NotNull
-    public static InvoiceChange createPaymentStarted() {
-        InvoiceChange invoiceChange = new InvoiceChange();
-        InvoicePaymentChange invoicePaymentChange = new InvoicePaymentChange();
-        InvoicePaymentChangePayload invoicePaymentChangePayload = new InvoicePaymentChangePayload();
-        invoicePaymentChange.setId(PAYMENT_ID);
-        InvoicePaymentStarted payload = new InvoicePaymentStarted();
-        dev.vality.damsel.domain.InvoicePayment payment = new dev.vality.damsel.domain.InvoicePayment();
-        Cash cost = new Cash();
-        cost.setAmount(123L);
-        cost.setCurrency(createRubCurrency());
-        payment.setCost(cost);
-        payment.setCreatedAt("2016-08-10T16:07:18Z");
-        payment.setId(PAYMENT_ID);
-        payment.setStatus(InvoicePaymentStatus.processed(new InvoicePaymentProcessed()));
-        Payer payer = createCustomerPayer();
-        PaymentResourcePayer payerResource = new PaymentResourcePayer();
-        ContactInfo contactInfo = new ContactInfo();
-        contactInfo.setEmail(TEST_MAIL_RU);
-        DisposablePaymentResource resource = new DisposablePaymentResource();
-        dev.vality.damsel.domain.ClientInfo clientInfo = createClientInfo();
-        resource.setClientInfo(clientInfo);
-        resource.setPaymentTool(createPaymentTool());
-        payerResource.setResource(resource);
-        payerResource.setContactInfo(contactInfo);
-        payer.setPaymentResource(payerResource);
-        payment.setPayer(payer);
-        InvoicePaymentFlow flow = new InvoicePaymentFlow();
-        InvoicePaymentFlowHold invoicePaymentFlowHold = new InvoicePaymentFlowHold();
-        invoicePaymentFlowHold.setOnHoldExpiration(OnHoldExpiration.capture);
-        invoicePaymentFlowHold.setHeldUntil("werwer");
-
-        flow.setHold(invoicePaymentFlowHold);
-
-        payment.setFlow(flow);
-        payload.setPayment(payment);
-
-        invoicePaymentChangePayload.setInvoicePaymentStarted(payload);
-        invoicePaymentChange.setPayload(invoicePaymentChangePayload);
-        invoiceChange.setInvoicePaymentChange(invoicePaymentChange);
-        return invoiceChange;
-    }
-
-    @NotNull
-    public static dev.vality.damsel.domain.ClientInfo createClientInfo() {
-        dev.vality.damsel.domain.ClientInfo clientInfo = new dev.vality.damsel.domain.ClientInfo();
-        clientInfo.setFingerprint("finger");
-        clientInfo.setIpAddress("123.123.123.123");
-        return clientInfo;
     }
 
     @NotNull

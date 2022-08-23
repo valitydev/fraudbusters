@@ -24,7 +24,6 @@
         <fraudo.version>1.0.3</fraudo.version>
         <clickhouse-jdbc.version>0.3.1</clickhouse-jdbc.version>
         <fraudbusters-proto.version>1.102-269908f</fraudbusters-proto.version>
-        <machinegun-proto.version>1.21-e4784ab</machinegun-proto.version>
         <trusted.tokens.proto.version>1.7-6d29f86</trusted.tokens.proto.version>
         <wb.list.proto.version>1.44-5dbd6d4</wb.list.proto.version>
         <dgraph4j.version>21.12.0</dgraph4j.version>
@@ -127,11 +126,6 @@
             <groupId>dev.vality</groupId>
             <artifactId>fraudbusters-proto</artifactId>
             <version>${fraudbusters-proto.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>dev.vality</groupId>
-            <artifactId>machinegun-proto</artifactId>
-            <version>${machinegun-proto.version}</version>
         </dependency>
         <dependency>
             <groupId>dev.vality</groupId>

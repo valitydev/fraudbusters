@@ -7,6 +7,8 @@ import java.time.LocalDate;
 @Data
 public class Event {
 
+    private String id;
+
     private LocalDate timestamp;
     private Long eventTimeHour;
     private Long eventTime;
