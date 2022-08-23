@@ -25,7 +25,7 @@ public class ChargebackBatchPreparedStatementSetter implements BatchPreparedStat
             timestamp, eventTimeHour, eventTime,
             id,
             email, ip, fingerprint,
-            bin, maskedPan, cardToken, paymentSystem, paymentTool ,
+            bin, lastDigits, cardToken, paymentSystem, paymentTool ,
             terminal, providerId, bankCountry,
             partyId, shopId,
             amount, currency,

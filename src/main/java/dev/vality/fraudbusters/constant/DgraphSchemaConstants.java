@@ -97,7 +97,7 @@ public final class DgraphSchemaConstants {
             
             type Token {
                 tokenId
-                maskedPan
+                lastDigits
                 tokenizationMethod
                 paymentSystem
                 issuerCountry

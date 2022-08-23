@@ -1,6 +1,6 @@
 INSERT INTO fraud.events_unique
 (timestamp, eventTime, eventTimeHour, partyId, shopId, email, fingerprint, amount, currency, mobile, id, paymentId,
- ip, bin, maskedPan, cardToken, resultStatus, checkedRule, checkedTemplate, bankCountry, invoiceId, bankName)
+ ip, bin, lastDigits, cardToken, resultStatus, checkedRule, checkedTemplate, bankCountry, invoiceId, bankName)
 VALUES ('2020-06-06', 1588761208, 1588759200000, 'group_1', '2035728', 'email', '4bef59146f8e4640ab34915f84ddac8b',
         105004, 'RUB', 1, '2PkraBdGJbs.1', '1', '204.26.61.110', '666', '3125',
         '477bba133c182267fe5f086924abdc5db71f77bfc27f01f2843f2cdc69d89f05', 'ACCEPT', '', 'RULE_NOT_CHECKED', 'RUS',

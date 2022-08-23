@@ -20,7 +20,7 @@ public class PaymentQuery {
                         cardToken,
                         cardCategory,
                         bin,
-                        maskedPan,
+                        lastDigits,
                         bankCountry,
                         fingerprint,
                         ip,

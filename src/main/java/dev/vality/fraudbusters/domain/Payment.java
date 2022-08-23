@@ -10,7 +10,7 @@ import lombok.ToString;
 public class Payment extends BaseRaw {
 
     private String bin;
-    private String maskedPan;
+    private String lastDigits;
     private String paymentTool;
 
 }

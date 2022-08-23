@@ -54,7 +54,7 @@ public final class DgraphTestAggregationUtils {
 
     public static Set<PaymentCheckedField> createTestTokenFields() {
         Set<PaymentCheckedField> tokenFields = new TreeSet<>();
-        tokenFields.add(PaymentCheckedField.PAN);
+        tokenFields.add(PaymentCheckedField.LAST_DIGITS);
         tokenFields.add(PaymentCheckedField.CARD_TOKEN);
         return tokenFields;
     }
@@ -69,7 +69,7 @@ public final class DgraphTestAggregationUtils {
     public static OperationProperties createDefaultOperationProperties() {
         return OperationProperties.builder()
                 .tokenId("newToken")
-                .maskedPan("0070")
+                .lastDigits("0070")
                 .email("test2@test.com")
                 .fingerprint("newFinger")
                 .partyId("newParty")
@@ -84,7 +84,7 @@ public final class DgraphTestAggregationUtils {
     public static OperationProperties createDefaultOperationProperties(PaymentModel paymentModel) {
         return OperationProperties.builder()
                 .tokenId(paymentModel.getCardToken())
-                .maskedPan(paymentModel.getPan())
+                .lastDigits(paymentModel.getLastDigits())
                 .email(paymentModel.getEmail())
                 .fingerprint(paymentModel.getFingerprint())
                 .partyId(paymentModel.getPartyId())
@@ -99,7 +99,7 @@ public final class DgraphTestAggregationUtils {
     public static PaymentModel createTestPaymentModel() {
         PaymentModel paymentModel = new PaymentModel();
         paymentModel.setBin("000000");
-        paymentModel.setPan("2424");
+        paymentModel.setLastDigits("2424");
         paymentModel.setBinCountryCode("Russia");
         paymentModel.setCardToken("token001");
         paymentModel.setPartyId("party1");

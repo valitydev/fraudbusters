@@ -28,7 +28,7 @@ public class EventMapper implements RowMapper<Event> {
         event.setShopId(rs.getString(PaymentField.SHOP_ID.getValue()));
         event.setAmount(rs.getLong(PaymentField.AMOUNT.getValue()));
         event.setCurrency(rs.getString(PaymentField.CURRENCY.getValue()));
-        event.setMaskedPan(rs.getString(PaymentField.MASKED_PAN.getValue()));
+        event.setLastDigits(rs.getString(PaymentField.LAST_DIGITS.getValue()));
         event.setBin(rs.getString(PaymentField.BIN.getValue()));
         event.setBankName(rs.getString(PaymentField.BANK_NAME.getValue()));
         event.setResultStatus(rs.getString(FraudResultField.RESULT_STATUS.getValue()));

@@ -13,7 +13,7 @@ public final class DgraphFieldConditionTemplate {
     public static final String CARD_TOKEN = "eq(tokenId, \"%s\")";
     public static final String PARTY_ID = "eq(partyId, \"%s\")";
     public static final String SHOP_ID = "eq(shopId, \"%s\")";
-    public static final String PAN = "eq(maskedPan, \"%s\")";
+    public static final String LAST_DIGITS = "eq(lastDigits, \"%s\")";
     public static final String COUNTRY_BANK = "eq(countryName, \"%s\")";
     public static final String CURRENCY = "eq(currencyCode, \"%s\")";
     public static final String MOBILE = "eq(mobile, %s)";

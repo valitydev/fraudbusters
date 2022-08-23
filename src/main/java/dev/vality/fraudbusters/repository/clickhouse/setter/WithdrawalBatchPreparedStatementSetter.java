@@ -17,7 +17,7 @@ import static dev.vality.fraudbusters.constant.ClickhouseUtilsValue.UNKNOWN;
 public class WithdrawalBatchPreparedStatementSetter implements BatchPreparedStatementSetter {
 
     public static final String FIELDS = """
-            timestamp, eventTimeHour, eventTime, id, amount, currency, bin, maskedPan, cardToken, paymentSystem,
+            timestamp, eventTimeHour, eventTime, id, amount, currency, bin, lastDigits, cardToken, paymentSystem,
             terminal, providerId, bankCountry, identityId, accountId, accountCurrency, status, errorCode,
             errorReason
             """;

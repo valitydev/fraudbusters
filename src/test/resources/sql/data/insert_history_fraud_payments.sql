@@ -1,6 +1,6 @@
 INSERT INTO fraud.fraud_payment
 (timestamp, eventTime, eventTimeHour, partyId, shopId, email, fingerprint, amount, currency, status, id,
- ip, bin, maskedPan, paymentTool, cardToken, paymentSystem, terminal, providerId, bankCountry, fraudType, comment)
+ ip, bin, lastDigits, paymentTool, cardToken, paymentSystem, terminal, providerId, bankCountry, fraudType, comment)
 VALUES ('2020-05-06', 1588761208, 1588759200000, 'group_1', '2035728', 'email', '4bef59146f8e4640ab34915f84ddac8b',
         105002, 'RUB', 'captured', '1DkraVdGJbs.1', '204.26.61.110', '666', '3125', 'bank_card',
         '477bba133c182267fe5f086924abdc5db71f77bfc27f01f2843f2cdc69d89f05', 'VISA', '123', '1', 'RUS', 'fraud', ''),

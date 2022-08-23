@@ -50,7 +50,7 @@ public class PaymentInListFinderImpl implements InListFinder<PaymentModel, Payme
         try {
             return fields.stream()
                     .anyMatch(entry ->
-                            !StringUtils.isEmpty(entry.getSecond())
+                            StringUtils.hasLength(entry.getSecond())
                             && findInList(model.getPartyId(), model.getShopId(), entry.getFirst(), entry.getSecond()));
         } catch (Exception e) {
             log.warn("InListFinderImpl error when findInList e: ", e);
@@ -60,7 +60,7 @@ public class PaymentInListFinderImpl implements InListFinder<PaymentModel, Payme
 
     public Boolean findInList(String partyId, String shopId, PaymentCheckedField field, String value) {
         try {
-            if (!StringUtils.isEmpty(value)) {
+            if (StringUtils.hasLength(value)) {
                 Row row = createRow(ListType.grey, partyId, shopId, field, value);
                 Result result = wbListServiceSrv.getRowInfo(row);
                 if (result.getRowInfo() != null && result.getRowInfo().isSetCountInfo()) {
@@ -120,7 +120,7 @@ public class PaymentInListFinderImpl implements InListFinder<PaymentModel, Payme
             String partyId = model.getPartyId();
             String shopId = model.getShopId();
             List<Row> rows = fields.stream()
-                    .filter(entry -> entry.getFirst() != null && !StringUtils.isEmpty(entry.getSecond()))
+                    .filter(entry -> entry.getFirst() != null && StringUtils.hasLength(entry.getSecond()))
                     .map(entry -> createRow(white, partyId, shopId, entry.getFirst(), entry.getSecond()))
                     .collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(rows)) {

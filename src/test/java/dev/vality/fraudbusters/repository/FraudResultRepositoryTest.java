@@ -76,7 +76,9 @@ public class FraudResultRepositoryTest {
                 "sql/V5__add_fields.sql",
                 "sql/V6__add_result_fields_payment.sql",
                 "sql/V7__add_fields.sql",
-                "sql/V10__add_id_inspect_result.sql"
+                "sql/V8__create_withdrawal.sql",
+                "sql/V10__add_id_inspect_result.sql",
+                "sql/V11__rename_masked_pan.sql"
         ));
     }
 

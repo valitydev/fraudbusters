@@ -57,7 +57,7 @@ public class EventToHistoricalTransactionCheckConverter implements Converter<Eve
         bankCard.setToken(event.getCardToken());
         bankCard.setBankName(event.getBankName());
         bankCard.setBin(event.getBin());
-        bankCard.setLastDigits(event.getMaskedPan());
+        bankCard.setLastDigits(event.getLastDigits());
         return new Payment()
                 .setId(event.getId())
                 .setEventTime(TimestampUtil.getStringDate(event.getEventTime()))

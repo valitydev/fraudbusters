@@ -27,7 +27,7 @@ public class ChargebackMapper implements RowMapper<Chargeback> {
         paymentTool.setBankCard(bankCard);
         bankCard.setToken(rs.getString(PaymentField.CARD_TOKEN.getValue()));
         bankCard.setBin(rs.getString(PaymentField.BIN.getValue()));
-        bankCard.setLastDigits(rs.getString(PaymentField.MASKED_PAN.getValue()));
+        bankCard.setLastDigits(rs.getString(PaymentField.LAST_DIGITS.getValue()));
         bankCard.setPaymentSystem(new PaymentSystemRef().setId(rs.getString(PaymentField.PAYMENT_SYSTEM.getValue())));
         return new Chargeback()
                 .setId(rs.getString(PaymentField.ID.getValue()))

@@ -12,18 +12,18 @@ import java.util.List;
 public class PaymentBatchPreparedStatementSetter implements BatchPreparedStatementSetter {
 
     public static final String FIELDS = """
-                                        timestamp, eventTimeHour, eventTime,
-                                        id,
-                                        email, phone, ip, fingerprint,
-                                        bin, maskedPan, cardToken, cardCategory, paymentSystem, paymentTool,
-                                        terminal, providerId, bankCountry,
-                                        partyId, shopId,
-                                        amount, currency,
-                                        status, errorCode, errorReason,
-                                        payerType, tokenProvider,
-                                        checkedTemplate, checkedRule, resultStatus, checkedResultsJson, mobile,
-                                        recurrent
-                                        """;
+            timestamp, eventTimeHour, eventTime,
+            id,
+            email, phone, ip, fingerprint,
+            bin, lastDigits, cardToken, cardCategory, paymentSystem, paymentTool,
+            terminal, providerId, bankCountry,
+            partyId, shopId,
+            amount, currency,
+            status, errorCode, errorReason,
+            payerType, tokenProvider,
+            checkedTemplate, checkedRule, resultStatus, checkedResultsJson, mobile,
+            recurrent
+            """;
 
     public static final String FIELDS_MARK = "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?";
 
@@ -43,7 +43,7 @@ public class PaymentBatchPreparedStatementSetter implements BatchPreparedStateme
         ps.setString(l++, checkedPayment.getFingerprint());
 
         ps.setString(l++, checkedPayment.getBin());
-        ps.setString(l++, checkedPayment.getMaskedPan());
+        ps.setString(l++, checkedPayment.getLastDigits());
         ps.setString(l++, checkedPayment.getCardToken());
         ps.setString(l++, checkedPayment.getCardCategory());
         ps.setString(l++, checkedPayment.getPaymentSystem());

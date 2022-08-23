@@ -95,7 +95,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.EMAIL,
                 Map.of(
                         DgraphEntity.FINGERPRINT, Set.of(PaymentCheckedField.FINGERPRINT),
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN)
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS)
                 )
         );
         assertNotNull(query);
@@ -276,7 +276,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.TOKEN,
                 DgraphEntity.IP,
                 Map.of(
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN),
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS),
                         DgraphEntity.FINGERPRINT, Set.of(PaymentCheckedField.FINGERPRINT)
                 )
         );
@@ -820,7 +820,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.IP,
                 Map.of(
                         DgraphEntity.BIN, Set.of(PaymentCheckedField.BIN),
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN)
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS)
                 )
         );
         assertNotNull(query);
@@ -834,7 +834,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.IP,
                 Map.of(
                         DgraphEntity.CURRENCY, Set.of(PaymentCheckedField.CURRENCY),
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN)
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS)
                 )
         );
         assertNotNull(query);
@@ -848,7 +848,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.IP,
                 Map.of(
                         DgraphEntity.SHOP, Set.of(PaymentCheckedField.SHOP_ID),
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN)
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS)
                 )
         );
         assertNotNull(query);
@@ -862,7 +862,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.IP,
                 Map.of(
                         DgraphEntity.PARTY, Set.of(PaymentCheckedField.PARTY_ID),
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN)
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS)
                 )
         );
         assertNotNull(query);
@@ -876,7 +876,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.IP,
                 Map.of(
                         DgraphEntity.PAYMENT, Set.of(PaymentCheckedField.MOBILE),
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN)
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS)
                 )
         );
         assertNotNull(query);
@@ -890,7 +890,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.IP,
                 Map.of(
                         DgraphEntity.PAYMENT, Set.of(PaymentCheckedField.RECURRENT),
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN)
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS)
                 )
         );
         assertNotNull(query);
@@ -1002,7 +1002,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.BIN,
                 Map.of(
                         DgraphEntity.EMAIL, Set.of(PaymentCheckedField.EMAIL),
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN)
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS)
                 )
         );
         assertNotNull(query);
@@ -1099,7 +1099,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.EMAIL,
                 DgraphEntity.TOKEN,
                 Map.of(
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN),
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS),
                         DgraphEntity.CURRENCY, Set.of(PaymentCheckedField.CURRENCY)
                 )
         );
@@ -1127,7 +1127,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.FINGERPRINT,
                 DgraphEntity.TOKEN,
                 Map.of(
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN),
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS),
                         DgraphEntity.FINGERPRINT, Set.of(PaymentCheckedField.FINGERPRINT)
                 )
         );
@@ -1141,7 +1141,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.COUNTRY,
                 DgraphEntity.TOKEN,
                 Map.of(
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN),
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS),
                         DgraphEntity.COUNTRY, Set.of(PaymentCheckedField.COUNTRY_BANK)
                 )
         );
@@ -1155,7 +1155,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.IP,
                 DgraphEntity.TOKEN,
                 Map.of(
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN),
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS),
                         DgraphEntity.IP, Set.of(PaymentCheckedField.COUNTRY_IP)
                 )
         );
@@ -1169,7 +1169,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.BIN,
                 DgraphEntity.TOKEN,
                 Map.of(
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN),
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS),
                         DgraphEntity.BIN, Set.of(PaymentCheckedField.BIN)
                 )
         );
@@ -1183,7 +1183,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.TOKEN,
                 DgraphEntity.TOKEN,
                 Map.of(
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN)
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS)
                 )
         );
         assertNotNull(query);
@@ -1196,7 +1196,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.CURRENCY,
                 DgraphEntity.TOKEN,
                 Map.of(
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN),
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS),
                         DgraphEntity.CURRENCY, Set.of(PaymentCheckedField.CURRENCY)
                 )
         );
@@ -1210,7 +1210,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.SHOP,
                 DgraphEntity.TOKEN,
                 Map.of(
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN),
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS),
                         DgraphEntity.SHOP, Set.of(PaymentCheckedField.SHOP_ID)
                 )
         );
@@ -1224,7 +1224,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.PARTY,
                 DgraphEntity.TOKEN,
                 Map.of(
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN),
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS),
                         DgraphEntity.PARTY, Set.of(PaymentCheckedField.PARTY_ID)
                 )
         );
@@ -1361,7 +1361,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
                 DgraphEntity.TOKEN,
                 DgraphEntity.CURRENCY,
                 Map.of(
-                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN),
+                        DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS),
                         DgraphEntity.EMAIL, Set.of(PaymentCheckedField.EMAIL)
                 )
         );
@@ -1523,7 +1523,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
         String query = getUniqueQuery(
                 DgraphEntity.TOKEN,
                 DgraphEntity.SHOP,
-                Map.of(DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN))
+                Map.of(DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS))
         );
         assertNotNull(query);
         assertEquals(UNIQUE_SHOP_IDS_BY_PAN_TEST_QUERY, query);
@@ -1666,7 +1666,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
         String query = getUniqueQuery(
                 DgraphEntity.TOKEN,
                 DgraphEntity.PARTY,
-                Map.of(DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN))
+                Map.of(DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS))
         );
         assertNotNull(query);
         assertEquals(UNIQUE_PARTY_IDS_BY_PAN_TEST_QUERY, query);
@@ -1809,7 +1809,7 @@ public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuil
         String query = getUniqueQuery(
                 DgraphEntity.TOKEN,
                 DgraphEntity.TOKEN,
-                Map.of(DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN))
+                Map.of(DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS))
         );
         assertNotNull(query);
         assertEquals(UNIQUE_CARD_TOKENS_BY_PAN_TEST_QUERY, query);

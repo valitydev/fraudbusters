@@ -12,7 +12,7 @@
 uid($constants.tokenUid) <dgraph.type> "$!cardToken.type" .
 uid($constants.tokenUid) <tokenId> "$!cardToken.tokenId" .
 uid($constants.tokenUid) <bin> uid($constants.binUid) .
-uid($constants.tokenUid) <maskedPan> "$!cardToken.maskedPan" .
+uid($constants.tokenUid) <lastDigits> "$!cardToken.lastDigits" .
 uid($constants.tokenUid) <lastActTime> "$!chargeback.createdAt" .
 uid($constants.tokenUid) <chargebacks> uid($constants.chargebackUid) (createdAt = $!chargeback.createdAt, status = "$!chargeback.status") .
 

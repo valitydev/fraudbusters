@@ -90,7 +90,7 @@ class FilterConverterTest {
                 .map(SearchFieldDto::getValue)
                 .anyMatch(value -> filter.getInvoiceId().equals(value)));
         assertTrue(searchFields.stream()
-                .filter(searchFieldDto -> searchFieldDto.getField().equals(PaymentField.MASKED_PAN))
+                .filter(searchFieldDto -> searchFieldDto.getField().equals(PaymentField.LAST_DIGITS))
                 .map(SearchFieldDto::getValue)
                 .anyMatch(value -> filter.getMaskedPan().equals(value)));
         assertEquals(sort.getField(), dto.getSort().getField());

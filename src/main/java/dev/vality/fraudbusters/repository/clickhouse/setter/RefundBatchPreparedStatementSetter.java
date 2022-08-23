@@ -23,7 +23,7 @@ import static dev.vality.fraudbusters.constant.ClickhouseUtilsValue.UNKNOWN;
 public class RefundBatchPreparedStatementSetter implements BatchPreparedStatementSetter {
 
     public static final String FIELDS = """
-            timestamp, eventTimeHour, eventTime, id, email, ip, fingerprint, bin, maskedPan, cardToken, paymentSystem,
+            timestamp, eventTimeHour, eventTime, id, email, ip, fingerprint, bin, lastDigits, cardToken, paymentSystem,
             paymentTool, terminal, providerId, bankCountry, partyId, shopId, amount, currency, status, errorCode,
             errorReason, paymentId, payerType, tokenProvider
             """;

@@ -182,7 +182,7 @@ public class DgraphRefundCountQueryBuilderServiceTest extends AbstractDgraphQuer
     public void getRefundsCountQueryByPanRootWithMinimalDataTest() {
         String query = getRefundsCountQuery(
                 DgraphEntity.TOKEN,
-                Map.of(DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN))
+                Map.of(DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS))
         );
         assertNotNull(query);
         assertEquals(REFUNDS_COUNT_QUERY_BY_PAN_ROOT_WITH_MINIMAL_DATA, query);
@@ -192,7 +192,7 @@ public class DgraphRefundCountQueryBuilderServiceTest extends AbstractDgraphQuer
     public void getRefundsCountQueryByPanRootWithUsualDatasetTest() {
         String query = getRefundsCountQuery(
                 DgraphEntity.TOKEN,
-                createTestUsualDgraphEntityMap(DgraphEntity.TOKEN, PaymentCheckedField.PAN)
+                createTestUsualDgraphEntityMap(DgraphEntity.TOKEN, PaymentCheckedField.LAST_DIGITS)
         );
         assertNotNull(query);
         assertEquals(REFUNDS_COUNT_QUERY_BY_PAN_ROOT_WITH_USUAL_DATASET, query);

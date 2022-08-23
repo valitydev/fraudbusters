@@ -83,7 +83,7 @@ public abstract class TestObjectsFactory {
         String fingerPrint = randomString();
         String terminal = randomString();
         String id = randomString();
-        String maskedPan = randomString();
+        String lastDigits = randomString();
         String invoiceId = randomString();
         filter.setPartyId(partyId);
         filter.setEmail(email);
@@ -94,7 +94,7 @@ public abstract class TestObjectsFactory {
         filter.setTerminal(terminal);
         filter.setProviderCountry(providerCountry);
         filter.setPaymentId(id);
-        filter.setMaskedPan(maskedPan);
+        filter.setMaskedPan(lastDigits);
         filter.setInvoiceId(invoiceId);
         TimestampInterval timestampInterval = new TimestampInterval();
         TimestampIntervalBound lowerBound = new TimestampIntervalBound();
@@ -214,7 +214,7 @@ public abstract class TestObjectsFactory {
         Event event = new Event();
         event.setAmount(randomLong());
         event.setEmail(randomString());
-        event.setMaskedPan(randomString());
+        event.setLastDigits(randomString());
         event.setCurrency(randomString());
         event.setPartyId(randomString());
         event.setFingerprint(randomString());
@@ -244,7 +244,7 @@ public abstract class TestObjectsFactory {
         fraudPaymentRow.setAmount(randomLong());
         fraudPaymentRow.setEmail(randomString());
         fraudPaymentRow.setPhone(randomString());
-        fraudPaymentRow.setMaskedPan(randomString());
+        fraudPaymentRow.setLastDigits(randomString());
         fraudPaymentRow.setCurrency(randomString());
         fraudPaymentRow.setPartyId(randomString());
         fraudPaymentRow.setFingerprint(randomString());
