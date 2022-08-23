@@ -9,33 +9,19 @@
 #set ($bin = $!payment.bin)
 #set ($country = $!payment.country)
 #set ($ip = $!payment.operationIp)
-uid($constants.tokenUid)
-<dgraph.type> "$!cardToken.type" .
-    uid($constants.tokenUid)
-    <tokenId> "$!cardToken.tokenId" .
-        uid($constants.tokenUid)
-        <bin> uid($constants.binUid) .
-            uid($constants.tokenUid)
-            <lastDigits> "$!cardToken.lastDigits" .
-                uid($constants.tokenUid)
-                <lastActTime> "$!payment.createdAt" .
-                    uid($constants.tokenUid)
-                    <payments> uid($constants.paymentUid) (createdAt = $!payment.createdAt, status = "$!payment.status")
-                        .
+uid($constants.tokenUid) <dgraph.type> "$!cardToken.type" .
+uid($constants.tokenUid) <tokenId> "$!cardToken.tokenId" .
+uid($constants.tokenUid) <bin> uid($constants.binUid) .
+uid($constants.tokenUid) <lastDigits> "$!cardToken.lastDigits" .
+uid($constants.tokenUid) <lastActTime> "$!payment.createdAt" .
+uid($constants.tokenUid) <payments> uid($constants.paymentUid) (createdAt = $!payment.createdAt, status = "$!payment.status") .
+uid($constants.partyUid) <dgraph.type> "$!party.type" .
+uid($constants.partyUid) <partyId> "$!party.partyId" .
+uid($constants.partyUid) <lastActTime> "$!payment.createdAt" .
+uid($constants.partyUid) <payments> uid($constants.paymentUid) (createdAt = $!payment.createdAt, status = "$!payment.status") .
+uid($constants.partyUid) <tokens> uid($constants.tokenUid) .
 
-                        uid($constants.partyUid)
-                        <dgraph.type> "$!party.type" .
-                            uid($constants.partyUid)
-                            <partyId> "$!party.partyId" .
-                                uid($constants.partyUid)
-                                <lastActTime> "$!payment.createdAt" .
-                                    uid($constants.partyUid)
-                                    <payments> uid($constants.paymentUid) (createdAt = $!payment.createdAt, status =
-                                        "$!payment.status") .
-                                        uid($constants.partyUid)
-                                        <tokens> uid($constants.tokenUid) .
-
-                                            #if($shop)
+#if($shop)
 uid($constants.shopUid) <dgraph.type> "$!shop.type" .
 uid($constants.shopUid) <shopId> "$!shop.shopId" .
 uid($constants.shopUid) <lastActTime> "$!payment.createdAt" .

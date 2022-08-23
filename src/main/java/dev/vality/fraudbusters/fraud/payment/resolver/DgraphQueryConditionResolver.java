@@ -41,7 +41,7 @@ public class DgraphQueryConditionResolver {
             case CARD_TOKEN -> String.format(DgraphFieldConditionTemplate.CARD_TOKEN, paymentModel.getCardToken());
             case PARTY_ID -> String.format(DgraphFieldConditionTemplate.PARTY_ID, paymentModel.getPartyId());
             case SHOP_ID -> String.format(DgraphFieldConditionTemplate.SHOP_ID, paymentModel.getShopId());
-            case LAST_DIGITS -> String.format(DgraphFieldConditionTemplate.LAST_DIGITS, paymentModel.getPan());
+            case LAST_DIGITS -> String.format(DgraphFieldConditionTemplate.LAST_DIGITS, paymentModel.getLastDigits());
             case COUNTRY_BANK ->
                     String.format(DgraphFieldConditionTemplate.COUNTRY_BANK, paymentModel.getBinCountryCode());
             case CURRENCY -> String.format(DgraphFieldConditionTemplate.CURRENCY, paymentModel.getCurrency());

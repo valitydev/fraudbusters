@@ -11,7 +11,7 @@ import lombok.ToString;
 public class PaymentModel extends BaseModel {
 
     private String bin;
-    private String pan;
+    private String lastDigits;
     private String binCountryCode;
     private String cardToken;
     private String shopId;

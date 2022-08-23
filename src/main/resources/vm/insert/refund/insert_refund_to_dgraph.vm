@@ -9,32 +9,19 @@
 #set ($ip = $!refund.operationIp)
 #set ($bin = $!refund.bin)
 #set ($payment = $!refund.sourcePayment)
-uid($constants.tokenUid)
-<dgraph.type> "$!cardToken.type" .
-    uid($constants.tokenUid)
-    <tokenId> "$!cardToken.tokenId" .
-        uid($constants.tokenUid)
-        <bin> uid($constants.binUid) .
-            uid($constants.tokenUid)
-            <lastDigits> "$!cardToken.lastDigits" .
-                uid($constants.tokenUid)
-                <lastActTime> "$!refund.createdAt" .
-                    uid($constants.tokenUid)
-                    <refunds> uid($constants.refundUid) (createdAt = $!refund.createdAt, status = "$!refund.status") .
+uid($constants.tokenUid) <dgraph.type> "$!cardToken.type" .
+uid($constants.tokenUid) <tokenId> "$!cardToken.tokenId" .
+uid($constants.tokenUid) <bin> uid($constants.binUid) .
+uid($constants.tokenUid) <lastDigits> "$!cardToken.lastDigits" .
+uid($constants.tokenUid) <lastActTime> "$!refund.createdAt" .
+uid($constants.tokenUid) <refunds> uid($constants.refundUid) (createdAt = $!refund.createdAt, status = "$!refund.status") .
+uid($constants.partyUid) <dgraph.type> "$!party.type" .
+uid($constants.partyUid) <partyId> "$!party.partyId" .
+uid($constants.partyUid) <lastActTime> "$!refund.createdAt" .
+uid($constants.partyUid) <refunds> uid($constants.refundUid) (createdAt = $!refund.createdAt, status = "$!refund.status") .
+uid($constants.partyUid) <tokens> uid($constants.tokenUid) .
 
-                        uid($constants.partyUid)
-                        <dgraph.type> "$!party.type" .
-                            uid($constants.partyUid)
-                            <partyId> "$!party.partyId" .
-                                uid($constants.partyUid)
-                                <lastActTime> "$!refund.createdAt" .
-                                    uid($constants.partyUid)
-                                    <refunds> uid($constants.refundUid) (createdAt = $!refund.createdAt, status =
-                                        "$!refund.status") .
-                                        uid($constants.partyUid)
-                                        <tokens> uid($constants.tokenUid) .
-
-                                            #if($shop)
+#if($shop)
 uid($constants.shopUid) <dgraph.type> "$!shop.type" .
 uid($constants.shopUid) <shopId> "$!shop.shopId" .
 uid($constants.shopUid) <lastActTime> "$!refund.createdAt" .

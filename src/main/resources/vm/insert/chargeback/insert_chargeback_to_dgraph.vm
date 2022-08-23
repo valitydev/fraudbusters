@@ -9,33 +9,19 @@
 #set ($ip = $!chargeback.operationIp)
 #set ($bin = $!chargeback.bin)
 #set ($payment = $!chargeback.payment)
-uid($constants.tokenUid)
-<dgraph.type> "$!cardToken.type" .
-    uid($constants.tokenUid)
-    <tokenId> "$!cardToken.tokenId" .
-        uid($constants.tokenUid)
-        <bin> uid($constants.binUid) .
-            uid($constants.tokenUid)
-            <lastDigits> "$!cardToken.lastDigits" .
-                uid($constants.tokenUid)
-                <lastActTime> "$!chargeback.createdAt" .
-                    uid($constants.tokenUid)
-                    <chargebacks> uid($constants.chargebackUid) (createdAt = $!chargeback.createdAt, status =
-                        "$!chargeback.status") .
+uid($constants.tokenUid) <dgraph.type> "$!cardToken.type" .
+uid($constants.tokenUid) <tokenId> "$!cardToken.tokenId" .
+uid($constants.tokenUid) <bin> uid($constants.binUid) .
+uid($constants.tokenUid) <lastDigits> "$!cardToken.lastDigits" .
+uid($constants.tokenUid) <lastActTime> "$!chargeback.createdAt" .
+uid($constants.tokenUid) <chargebacks> uid($constants.chargebackUid) (createdAt = $!chargeback.createdAt, status = "$!chargeback.status") .
+uid($constants.partyUid) <dgraph.type> "$!party.type" .
+uid($constants.partyUid) <partyId> "$!party.partyId" .
+uid($constants.partyUid) <lastActTime> "$!chargeback.createdAt" .
+uid($constants.partyUid) <chargebacks> uid($constants.chargebackUid) (createdAt = $!chargeback.createdAt, status = "$!chargeback.status") .
+uid($constants.partyUid) <tokens> uid($constants.tokenUid) .
 
-                        uid($constants.partyUid)
-                        <dgraph.type> "$!party.type" .
-                            uid($constants.partyUid)
-                            <partyId> "$!party.partyId" .
-                                uid($constants.partyUid)
-                                <lastActTime> "$!chargeback.createdAt" .
-                                    uid($constants.partyUid)
-                                    <chargebacks> uid($constants.chargebackUid) (createdAt = $!chargeback.createdAt,
-                                        status = "$!chargeback.status") .
-                                        uid($constants.partyUid)
-                                        <tokens> uid($constants.tokenUid) .
-
-                                            #if ($shop)
+#if ($shop)
 uid($constants.shopUid) <dgraph.type> "$!shop.type" .
 uid($constants.shopUid) <lastActTime> "$!chargeback.createdAt" .
 uid($constants.shopUid) <shopId> "$!shop.shopId" .
@@ -45,6 +31,7 @@ uid($constants.shopUid) <party> uid($constants.partyUid) .
 uid($constants.partyUid) <shops> uid($constants.shopUid) .
 
 #end
+
 uid($constants.currencyUid) <dgraph.type> "$!chargeback.currency.type" .
 uid($constants.currencyUid) <currencyCode> "$!chargeback.currency.currencyCode" .
 uid($constants.currencyUid) <chargebacks> uid($constants.chargebackUid) (createdAt = $!chargeback.createdAt, status = "$!chargeback.status") .

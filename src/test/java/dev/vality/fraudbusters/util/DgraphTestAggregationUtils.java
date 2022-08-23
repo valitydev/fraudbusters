@@ -84,7 +84,7 @@ public final class DgraphTestAggregationUtils {
     public static OperationProperties createDefaultOperationProperties(PaymentModel paymentModel) {
         return OperationProperties.builder()
                 .tokenId(paymentModel.getCardToken())
-                .lastDigits(paymentModel.getPan())
+                .lastDigits(paymentModel.getLastDigits())
                 .email(paymentModel.getEmail())
                 .fingerprint(paymentModel.getFingerprint())
                 .partyId(paymentModel.getPartyId())
@@ -99,7 +99,7 @@ public final class DgraphTestAggregationUtils {
     public static PaymentModel createTestPaymentModel() {
         PaymentModel paymentModel = new PaymentModel();
         paymentModel.setBin("000000");
-        paymentModel.setPan("2424");
+        paymentModel.setLastDigits("2424");
         paymentModel.setBinCountryCode("Russia");
         paymentModel.setCardToken("token001");
         paymentModel.setPartyId("party1");

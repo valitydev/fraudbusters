@@ -48,27 +48,20 @@ uid($constants.withdrawalUid) <cryptoWalletCurrency> uid($constants.cryptoCurren
 
 #end
 #if ($cardToken)
-    uid($constants.tokenUid)
-<dgraph.type> "$!cardToken.type" .
-    uid($constants.tokenUid)
-<tokenId> "$!cardToken.tokenId" .
-    uid($constants.tokenUid)
-<bin> uid($constants.binUid) .
-    uid($constants.tokenUid)
-<lastDigits> "$!cardToken.lastDigits" .
-    #if($cardToken.tokenizationMethod)
-        uid($constants.tokenUid)
-    <tokenizationMethod> "$!cardToken.tokenizationMethod" .
-    #end
-    #if($cardToken.paymentSystem)
-        uid($constants.tokenUid)
-    <paymentSystem> "$!cardToken.paymentSystem" .
-    #end
-    #if($cardToken.issuerCountry)
-        uid($constants.tokenUid)
-    <issuerCountry> "$!cardToken.issuerCountry" .
-    #end
-    #if($cardToken.bankName)
+uid($constants.tokenUid) <dgraph.type> "$!cardToken.type" .
+uid($constants.tokenUid) <tokenId> "$!cardToken.tokenId" .
+uid($constants.tokenUid) <bin> uid($constants.binUid) .
+uid($constants.tokenUid) <lastDigits> "$!cardToken.lastDigits" .
+#if($cardToken.tokenizationMethod)
+uid($constants.tokenUid) <tokenizationMethod> "$!cardToken.tokenizationMethod" .
+#end
+#if($cardToken.paymentSystem)
+uid($constants.tokenUid) <paymentSystem> "$!cardToken.paymentSystem" .
+#end
+#if($cardToken.issuerCountry)
+uid($constants.tokenUid) <issuerCountry> "$!cardToken.issuerCountry" .
+#end
+#if($cardToken.bankName)
 uid($constants.tokenUid) <bankName> "$!cardToken.bankName" .
 #end
 #if($cardToken.cardholderName)
