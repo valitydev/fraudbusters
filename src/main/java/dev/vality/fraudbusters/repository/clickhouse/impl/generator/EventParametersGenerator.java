@@ -1,6 +1,7 @@
 package dev.vality.fraudbusters.repository.clickhouse.impl.generator;
 
 import dev.vality.fraudbusters.constant.EventField;
+import dev.vality.fraudbusters.constant.Separator;
 import dev.vality.fraudbusters.domain.Event;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,8 @@ public class EventParametersGenerator {
         Optional.ofNullable(value.getCurrency()).ifPresent(v -> parameters.put(EventField.currency.name(), v));
         Optional.ofNullable(value.getInvoiceId()).ifPresent(v -> parameters.put(EventField.invoiceId.name(), v));
         Optional.ofNullable(value.getLastDigits()).ifPresent(v -> parameters.put(EventField.lastDigits.name(), v));
+        Optional.ofNullable(value.getInvoiceId())
+                .ifPresent(v -> parameters.put(EventField.id.name(), v + Separator.DOT + value.getPaymentId()));
         Optional.ofNullable(value.getBankName()).ifPresent(v -> parameters.put(EventField.bankName.name(), v));
         Optional.ofNullable(value.getCardToken()).ifPresent(v -> parameters.put(EventField.cardToken.name(), v));
         Optional.ofNullable(value.getPaymentId()).ifPresent(v -> parameters.put(EventField.paymentId.name(), v));

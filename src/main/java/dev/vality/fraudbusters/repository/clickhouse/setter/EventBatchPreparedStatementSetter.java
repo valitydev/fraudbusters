@@ -1,5 +1,6 @@
 package dev.vality.fraudbusters.repository.clickhouse.setter;
 
+import dev.vality.fraudbusters.constant.Separator;
 import dev.vality.fraudbusters.domain.Event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -13,10 +14,10 @@ public class EventBatchPreparedStatementSetter implements BatchPreparedStatement
 
     public static final String INSERT = """
             INSERT INTO fraud.events_unique
-             (timestamp, eventTimeHour, eventTime, ip, email, bin, fingerprint, shopId, partyId, resultStatus, amount,
+             (id, timestamp, eventTimeHour, eventTime, ip, email, bin, fingerprint, shopId, partyId, resultStatus, amount,
              country, checkedRule, bankCountry, currency, invoiceId, lastDigits, bankName, cardToken,
              paymentId, checkedTemplate, payerType, tokenProvider, mobile, recurrent)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
 
     private final List<Event> batch;
@@ -25,6 +26,7 @@ public class EventBatchPreparedStatementSetter implements BatchPreparedStatement
     public void setValues(PreparedStatement ps, int i) throws SQLException {
         Event event = batch.get(i);
         int l = 1;
+        ps.setObject(l++, event.getInvoiceId() + Separator.DOT + event.getPaymentId());
         ps.setObject(l++, event.getTimestamp());
         ps.setLong(l++, event.getEventTimeHour());
         ps.setLong(l++, event.getEventTime());
