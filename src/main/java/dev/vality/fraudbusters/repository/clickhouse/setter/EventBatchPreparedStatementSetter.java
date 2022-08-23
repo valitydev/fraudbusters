@@ -14,9 +14,9 @@ public class EventBatchPreparedStatementSetter implements BatchPreparedStatement
 
     public static final String INSERT = """
             INSERT INTO fraud.events_unique
-             (id, timestamp, eventTimeHour, eventTime, ip, email, bin, fingerprint, shopId, partyId, resultStatus, amount,
-             country, checkedRule, bankCountry, currency, invoiceId, lastDigits, bankName, cardToken,
-             paymentId, checkedTemplate, payerType, tokenProvider, mobile, recurrent)
+             (id, timestamp, eventTimeHour, eventTime, ip, email, bin, fingerprint, shopId, partyId,
+             resultStatus, amount, country, checkedRule, bankCountry, currency, invoiceId, lastDigits,
+             bankName, cardToken, paymentId, checkedTemplate, payerType, tokenProvider, mobile, recurrent)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
 
