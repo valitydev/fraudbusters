@@ -15,6 +15,7 @@ uid($constants.tokenUid) <bin> uid($constants.binUid) .
 uid($constants.tokenUid) <lastDigits> "$!cardToken.lastDigits" .
 uid($constants.tokenUid) <lastActTime> "$!refund.createdAt" .
 uid($constants.tokenUid) <refunds> uid($constants.refundUid) (createdAt = $!refund.createdAt, status = "$!refund.status") .
+
 uid($constants.partyUid) <dgraph.type> "$!party.type" .
 uid($constants.partyUid) <partyId> "$!party.partyId" .
 uid($constants.partyUid) <lastActTime> "$!refund.createdAt" .

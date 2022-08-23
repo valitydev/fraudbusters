@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class VelocityTemplateTest {
+class VelocityTemplateTest {
 
     private final VelocityEngine velocityEngine = new TemplateConfig().velocityEngine();
     private final TemplateService<DgraphPayment> insertPaymentQueryTemplateService =
@@ -46,7 +46,7 @@ public class VelocityTemplateTest {
             new InsertWithdrawalQueryTemplateService(velocityEngine);
 
     @Test
-    public void generatePaymentUpsertQueryTest() {
+    void generatePaymentUpsertQueryTest() {
         DgraphPayment smallTestDgraphPayment = TestDgraphObjectFactory.createSmallTestDgraphPayment();
         String firstQuery = upsertPaymentQueryTemplateService.build(smallTestDgraphPayment);
         assertNotNull(firstQuery);
@@ -59,7 +59,7 @@ public class VelocityTemplateTest {
     }
 
     @Test
-    public void generatePaymentInsertTest() {
+    void generatePaymentInsertTest() {
         DgraphPayment smallTestDgraphPayment = TestDgraphObjectFactory.createSmallTestDgraphPayment();
         String firstInsertBlock = insertPaymentQueryTemplateService.build(smallTestDgraphPayment);
         assertNotNull(firstInsertBlock);
@@ -72,7 +72,7 @@ public class VelocityTemplateTest {
     }
 
     @Test
-    public void generateRefundUpsertQueryTemplateTest() {
+    void generateRefundUpsertQueryTemplateTest() {
         DgraphRefund smallTestDgraphRefund = TestDgraphObjectFactory.createSmallTestDgraphRefund();
         String firstQuery = upsertRefundQueryTemplateService.build(smallTestDgraphRefund);
         assertNotNull(firstQuery);
@@ -85,7 +85,7 @@ public class VelocityTemplateTest {
     }
 
     @Test
-    public void generateInsertRefundTemplateTest() {
+    void generateInsertRefundTemplateTest() {
         DgraphRefund smallTestDgraphRefund = TestDgraphObjectFactory.createSmallTestDgraphRefund();
         String firstQuery = insertRefundQueryTemplateService.build(smallTestDgraphRefund);
         assertNotNull(firstQuery);
@@ -98,7 +98,7 @@ public class VelocityTemplateTest {
     }
 
     @Test
-    public void generateChargebackUpsertQueryTemplateTest() {
+    void generateChargebackUpsertQueryTemplateTest() {
         DgraphChargeback smallTestDgraphChargeback = TestDgraphObjectFactory.createSmallTestDgraphChargeback();
         String firstQuery = upsertChargebackQueryTemplateService.build(smallTestDgraphChargeback);
         assertNotNull(firstQuery);
@@ -111,7 +111,7 @@ public class VelocityTemplateTest {
     }
 
     @Test
-    public void generateInsertChargebackTemplateTest() {
+    void generateInsertChargebackTemplateTest() {
         DgraphChargeback smallTestDgraphChargeback = TestDgraphObjectFactory.createSmallTestDgraphChargeback();
         String firstQuery = insertChargebackQueryTemplateService.build(smallTestDgraphChargeback);
         assertNotNull(firstQuery);
@@ -124,7 +124,7 @@ public class VelocityTemplateTest {
     }
 
     @Test
-    public void generateWithdrawalUpsertQueryTemplateTest() {
+    void generateWithdrawalUpsertQueryTemplateTest() {
         DgraphWithdrawal testSmallDgraphWithdrawal = TestDgraphObjectFactory.createTestSmallDgraphWithdrawal();
         String firstQuery = upsertWithdrawalQueryTemplateService.build(testSmallDgraphWithdrawal);
         assertNotNull(firstQuery);
@@ -137,7 +137,7 @@ public class VelocityTemplateTest {
     }
 
     @Test
-    public void generateInsertWithdrawalTemplateTest() {
+    void generateInsertWithdrawalTemplateTest() {
         DgraphWithdrawal testSmallDgraphWithdrawal = TestDgraphObjectFactory.createTestSmallDgraphWithdrawal();
         String firstQuery = insertWithdrawalQueryTemplateService.build(testSmallDgraphWithdrawal);
         assertNotNull(firstQuery);
@@ -150,7 +150,7 @@ public class VelocityTemplateTest {
     }
 
     @Test
-    public void generateFraudPaymentUpsertQueryTemplateTest() {
+    void generateFraudPaymentUpsertQueryTemplateTest() {
         DgraphFraudPayment testFraudDgraphPayment = TestDgraphObjectFactory.createTestFraudDgraphPayment();
         String query = upsertFraudPaymentQueryTemplateService.build(testFraudDgraphPayment);
         assertNotNull(query);
@@ -158,7 +158,7 @@ public class VelocityTemplateTest {
     }
 
     @Test
-    public void generateInsertFraudPaymentTemplateTest() {
+    void generateInsertFraudPaymentTemplateTest() {
         DgraphFraudPayment testFraudDgraphPayment = TestDgraphObjectFactory.createTestFraudDgraphPayment();
         String insertBlock = insertFraudPaymentQueryTemplateService.build(testFraudDgraphPayment);
         assertNotNull(insertBlock);
