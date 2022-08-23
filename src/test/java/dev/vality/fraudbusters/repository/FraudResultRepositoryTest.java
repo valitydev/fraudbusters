@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.repository;
 
-import dev.vality.clickhouse.initializer.ChInitializer;
 import dev.vality.columbus.ColumbusServiceSrv;
 import dev.vality.fraudbusters.config.TestClickhouseConfig;
 import dev.vality.fraudbusters.config.properties.ClickhouseProperties;
@@ -19,7 +18,6 @@ import dev.vality.fraudbusters.util.BeanUtil;
 import dev.vality.fraudo.constant.ResultStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,21 +64,6 @@ public class FraudResultRepositoryTest {
     private FraudResultRepository fraudResultRepository;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    public void setUp() throws Exception {
-        ChInitializer.initAllScripts(ClickHouseContainerExtension.CLICKHOUSE_CONTAINER, List.of(
-                "sql/db_init.sql",
-                "sql/V3__create_fraud_payments.sql",
-                "sql/V4__create_payment.sql",
-                "sql/V5__add_fields.sql",
-                "sql/V6__add_result_fields_payment.sql",
-                "sql/V7__add_fields.sql",
-                "sql/V8__create_withdrawal.sql",
-                "sql/V10__add_id_inspect_result.sql",
-                "sql/V11__rename_masked_pan.sql"
-        ));
-    }
 
     @Test
     public void insertBatch() throws SQLException {
