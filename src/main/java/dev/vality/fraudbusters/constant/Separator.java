@@ -1,8 +1,9 @@
 package dev.vality.fraudbusters.constant;
 
-import lombok.experimental.UtilityClass;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@UtilityClass
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Separator {
 
     public static final String DOT = ".";
