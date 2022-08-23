@@ -29,7 +29,7 @@ public class PaymentToPaymentModelConverter implements Converter<Payment, Paymen
         paymentModel.setMobile(payment.isMobile());
         paymentModel.setRecurrent(payment.isRecurrent());
         paymentModel.setCardToken(payment.getPaymentTool().getBankCard().getToken());
-        paymentModel.setPan(payment.getPaymentTool().getBankCard().getLastDigits());
+        paymentModel.setLastDigits(payment.getPaymentTool().getBankCard().getLastDigits());
         paymentModel.setTimestamp(TimestampUtil.parseInstantFromString(payment.getEventTime()).toEpochMilli());
         return paymentModel;
     }

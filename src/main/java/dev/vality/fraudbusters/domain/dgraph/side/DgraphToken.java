@@ -15,17 +15,17 @@ import java.util.List;
 @ToString(callSuper = true)
 public class DgraphToken extends DgraphSideObject {
 
-    public DgraphToken(String tokenId, String maskedPan, String lastActTime) {
+    public DgraphToken(String tokenId, String lastDigits, String lastActTime) {
         super(lastActTime);
         this.tokenId = tokenId;
-        this.maskedPan = maskedPan;
+        this.lastDigits = lastDigits;
     }
 
     @JsonProperty("dgraph.type")
     private final String type = "Token";
 
     private String tokenId;
-    private String maskedPan;
+    private String lastDigits;
     private String tokenizationMethod;
     private String paymentSystem;
     private String issuerCountry;

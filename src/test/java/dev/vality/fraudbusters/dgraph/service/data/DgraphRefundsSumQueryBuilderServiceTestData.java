@@ -32,7 +32,7 @@ public class DgraphRefundsSumQueryBuilderServiceTestData {
 
     public static final String REFUNDS_SUM_QUERY_BY_TOKEN_ROOT_WITH_FULL_DATASET = """
             query all() {
-                aggregates(func: type(Token)) @filter(eq(maskedPan, "2424") and eq(tokenId, "token001")) @normalize {
+                aggregates(func: type(Token)) @filter(eq(lastDigits, "2424") and eq(tokenId, "token001")) @normalize {
                     refunds @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "succeeded"))  @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
@@ -80,7 +80,7 @@ public class DgraphRefundsSumQueryBuilderServiceTestData {
                     refunds @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "succeeded"))  @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         country @filter(eq(countryName, "Russia"))
                         currency @filter(eq(currencyCode, "RUB"))
                         fingerprint @filter(eq(fingerprintData, "finger001"))
@@ -124,7 +124,7 @@ public class DgraphRefundsSumQueryBuilderServiceTestData {
                     refunds @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "succeeded"))  @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         country @filter(eq(countryName, "Russia"))
                         currency @filter(eq(currencyCode, "RUB"))
@@ -168,7 +168,7 @@ public class DgraphRefundsSumQueryBuilderServiceTestData {
                     refunds @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "succeeded"))  @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         country @filter(eq(countryName, "Russia"))
                         currency @filter(eq(currencyCode, "RUB"))
@@ -184,7 +184,7 @@ public class DgraphRefundsSumQueryBuilderServiceTestData {
 
     public static final String REFUNDS_SUM_QUERY_BY_PAN_ROOT_WITH_MINIMAL_DATASET = """
             query all() {
-                aggregates(func: type(Token)) @filter(eq(maskedPan, "2424")) @normalize {
+                aggregates(func: type(Token)) @filter(eq(lastDigits, "2424")) @normalize {
                     refunds @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "succeeded"))  @cascade {
                         amount as amount
                     }
@@ -195,7 +195,7 @@ public class DgraphRefundsSumQueryBuilderServiceTestData {
 
     public static final String REFUNDS_SUM_QUERY_BY_PAN_ROOT_WITH_USUAL_DATASET = """
             query all() {
-                aggregates(func: type(Token)) @filter(eq(maskedPan, "2424")) @normalize {
+                aggregates(func: type(Token)) @filter(eq(lastDigits, "2424")) @normalize {
                     refunds @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "succeeded"))  @cascade {
                         amount as amount
                         party @filter(eq(partyId, "party1"))
@@ -208,7 +208,7 @@ public class DgraphRefundsSumQueryBuilderServiceTestData {
 
     public static final String REFUNDS_SUM_QUERY_BY_PAN_ROOT_WITH_FULL_DATASET = """
             query all() {
-                aggregates(func: type(Token)) @filter(eq(maskedPan, "2424") and eq(tokenId, "token001")) @normalize {
+                aggregates(func: type(Token)) @filter(eq(lastDigits, "2424") and eq(tokenId, "token001")) @normalize {
                     refunds @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "succeeded"))  @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
@@ -256,7 +256,7 @@ public class DgraphRefundsSumQueryBuilderServiceTestData {
                     refunds @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "succeeded"))  @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         country @filter(eq(countryName, "Russia"))
                         fingerprint @filter(eq(fingerprintData, "finger001"))
@@ -300,7 +300,7 @@ public class DgraphRefundsSumQueryBuilderServiceTestData {
                     refunds @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "succeeded"))  @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         country @filter(eq(countryName, "Russia"))
                         currency @filter(eq(currencyCode, "RUB"))
@@ -343,7 +343,7 @@ public class DgraphRefundsSumQueryBuilderServiceTestData {
                     refunds @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "succeeded"))  @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         country @filter(eq(countryName, "Russia"))
                         currency @filter(eq(currencyCode, "RUB"))
@@ -387,7 +387,7 @@ public class DgraphRefundsSumQueryBuilderServiceTestData {
                     refunds @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "succeeded"))  @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         currency @filter(eq(currencyCode, "RUB"))
                         fingerprint @filter(eq(fingerprintData, "finger001"))
@@ -431,7 +431,7 @@ public class DgraphRefundsSumQueryBuilderServiceTestData {
                     refunds @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "succeeded"))  @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         country @filter(eq(countryName, "Russia"))
                         currency @filter(eq(currencyCode, "RUB"))
@@ -475,7 +475,7 @@ public class DgraphRefundsSumQueryBuilderServiceTestData {
                     refunds @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "succeeded"))  @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         country @filter(eq(countryName, "Russia"))
                         currency @filter(eq(currencyCode, "RUB"))
@@ -519,7 +519,7 @@ public class DgraphRefundsSumQueryBuilderServiceTestData {
                     refunds @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "succeeded"))  @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         country @filter(eq(countryName, "Russia"))
                         currency @filter(eq(currencyCode, "RUB"))
@@ -562,7 +562,7 @@ public class DgraphRefundsSumQueryBuilderServiceTestData {
                 aggregates(func: type(Bin)) @filter(eq(cardBin, "000000")) @normalize {
                     refunds @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "succeeded"))  @cascade {
                         amount as amount
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         country @filter(eq(countryName, "Russia"))
                         currency @filter(eq(currencyCode, "RUB"))

@@ -27,7 +27,7 @@ public enum PaymentField {
     PAYMENT_TOOL("paymentTool"),
     PROVIDER_ID("providerId"),
     TERMINAL("terminal"),
-    MASKED_PAN("maskedPan"),
+    LAST_DIGITS("lastDigits"),
     INVOICE_ID("invoiceId"),
     PAYMENT_ID("paymentId"),
     BIN("bin"),

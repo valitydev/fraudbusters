@@ -20,7 +20,7 @@ public enum EventField {
     bankCountry,
     currency,
     invoiceId,
-    maskedPan,
+    lastDigits,
     bankName,
     paymentId,
     checkedTemplate,

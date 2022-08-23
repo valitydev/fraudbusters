@@ -26,7 +26,7 @@ public class CheckedPaymentToPaymentConverter implements Converter<CheckedPaymen
         bankCard.setPaymentSystem(new PaymentSystemRef().setId(checkedPayment.getPaymentSystem()));
         bankCard.setBin(checkedPayment.getBin());
         bankCard.setCategory(checkedPayment.getCardCategory());
-        bankCard.setLastDigits(checkedPayment.getMaskedPan());
+        bankCard.setLastDigits(checkedPayment.getLastDigits());
         return new Payment()
                 .setId(checkedPayment.getId())
                 .setEventTime(TimestampUtil.getStringDate(checkedPayment.getEventTime()))

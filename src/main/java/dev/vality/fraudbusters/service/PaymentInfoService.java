@@ -18,13 +18,13 @@ import java.util.List;
 public class PaymentInfoService {
 
     private static final String FIELDS = """
-                                         timestamp, eventTimeHour, eventTime, id, email, phone, ip, fingerprint, bin,
-                                         maskedPan, cardToken, cardCategory, paymentSystem, paymentTool, terminal, 
-                                         providerId, bankCountry, partyId, shopId, amount, currency, status, 
-                                         errorCode, errorReason,
-                                         payerType, tokenProvider, checkedTemplate, checkedRule, resultStatus,
-                                         checkedResultsJson, mobile, recurrent
-                                         """;
+            timestamp, eventTimeHour, eventTime, id, email, phone, ip, fingerprint, bin,
+            lastDigits, cardToken, cardCategory, paymentSystem, paymentTool, terminal, 
+            providerId, bankCountry, partyId, shopId, amount, currency, status, 
+            errorCode, errorReason,
+            payerType, tokenProvider, checkedTemplate, checkedRule, resultStatus,
+            checkedResultsJson, mobile, recurrent
+            """;
 
     private final JdbcTemplate jdbcTemplate;
 

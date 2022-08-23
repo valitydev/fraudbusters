@@ -51,7 +51,7 @@ uid($constants.withdrawalUid) <cryptoWalletCurrency> uid($constants.cryptoCurren
 uid($constants.tokenUid) <dgraph.type> "$!cardToken.type" .
 uid($constants.tokenUid) <tokenId> "$!cardToken.tokenId" .
 uid($constants.tokenUid) <bin> uid($constants.binUid) .
-uid($constants.tokenUid) <maskedPan> "$!cardToken.maskedPan" .
+uid($constants.tokenUid) <lastDigits> "$!cardToken.lastDigits" .
 #if($cardToken.tokenizationMethod)
 uid($constants.tokenUid) <tokenizationMethod> "$!cardToken.tokenizationMethod" .
 #end

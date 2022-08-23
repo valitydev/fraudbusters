@@ -32,7 +32,7 @@ public class DgraphPaymentsSumQueryBuilderServiceTestData {
 
     public static final String PAYMENTS_SUM_QUERY_BY_TOKEN_ROOT_WITH_FULL_DATASET = """
             query all() {
-                aggregates(func: type(Token)) @filter(eq(maskedPan, "2424") and eq(tokenId, "token001")) @normalize {
+                aggregates(func: type(Token)) @filter(eq(lastDigits, "2424") and eq(tokenId, "token001")) @normalize {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured")) @filter(eq(mobile, false) and eq(recurrent, true)) @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
@@ -79,7 +79,7 @@ public class DgraphPaymentsSumQueryBuilderServiceTestData {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured")) @filter(eq(mobile, false) and eq(recurrent, true)) @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         country @filter(eq(countryName, "Russia"))
                         currency @filter(eq(currencyCode, "RUB"))
                         fingerprint @filter(eq(fingerprintData, "finger001"))
@@ -122,7 +122,7 @@ public class DgraphPaymentsSumQueryBuilderServiceTestData {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured")) @filter(eq(mobile, false) and eq(recurrent, true)) @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         country @filter(eq(countryName, "Russia"))
                         currency @filter(eq(currencyCode, "RUB"))
@@ -165,7 +165,7 @@ public class DgraphPaymentsSumQueryBuilderServiceTestData {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured")) @filter(eq(mobile, false) and eq(recurrent, true)) @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         country @filter(eq(countryName, "Russia"))
                         currency @filter(eq(currencyCode, "RUB"))
@@ -180,7 +180,7 @@ public class DgraphPaymentsSumQueryBuilderServiceTestData {
 
     public static final String PAYMENTS_SUM_QUERY_BY_PAN_ROOT_WITH_MINIMAL_DATASET = """
             query all() {
-                aggregates(func: type(Bin)) @filter(eq(maskedPan, "2424")) @normalize {
+                aggregates(func: type(Bin)) @filter(eq(lastDigits, "2424")) @normalize {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade {
                         amount as amount
                     }
@@ -191,7 +191,7 @@ public class DgraphPaymentsSumQueryBuilderServiceTestData {
 
     public static final String PAYMENTS_SUM_QUERY_BY_PAN_ROOT_WITH_USUAL_DATASET = """
             query all() {
-                aggregates(func: type(Bin)) @filter(eq(maskedPan, "2424")) @normalize {
+                aggregates(func: type(Bin)) @filter(eq(lastDigits, "2424")) @normalize {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade {
                         amount as amount
                         party @filter(eq(partyId, "party1"))
@@ -204,7 +204,7 @@ public class DgraphPaymentsSumQueryBuilderServiceTestData {
 
     public static final String PAYMENTS_SUM_QUERY_BY_PAN_ROOT_WITH_FULL_DATASET = """
             query all() {
-                aggregates(func: type(Token)) @filter(eq(maskedPan, "2424")) @normalize {
+                aggregates(func: type(Token)) @filter(eq(lastDigits, "2424")) @normalize {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured")) @filter(eq(mobile, false) and eq(recurrent, true)) @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
@@ -251,7 +251,7 @@ public class DgraphPaymentsSumQueryBuilderServiceTestData {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured")) @filter(eq(mobile, false) and eq(recurrent, true)) @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         country @filter(eq(countryName, "Russia"))
                         fingerprint @filter(eq(fingerprintData, "finger001"))
@@ -293,7 +293,7 @@ public class DgraphPaymentsSumQueryBuilderServiceTestData {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured")) @filter(eq(mobile, false) and eq(recurrent, true)) @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         country @filter(eq(countryName, "Russia"))
                         currency @filter(eq(currencyCode, "RUB"))
@@ -335,7 +335,7 @@ public class DgraphPaymentsSumQueryBuilderServiceTestData {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured")) @filter(eq(mobile, false) and eq(recurrent, true)) @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         country @filter(eq(countryName, "Russia"))
                         currency @filter(eq(currencyCode, "RUB"))
@@ -378,7 +378,7 @@ public class DgraphPaymentsSumQueryBuilderServiceTestData {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured")) @filter(eq(mobile, false) and eq(recurrent, true)) @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         currency @filter(eq(currencyCode, "RUB"))
                         fingerprint @filter(eq(fingerprintData, "finger001"))
@@ -421,7 +421,7 @@ public class DgraphPaymentsSumQueryBuilderServiceTestData {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured")) @filter(eq(mobile, false) and eq(recurrent, true)) @cascade {
                         amount as amount
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                         country @filter(eq(countryName, "Russia"))
                         currency @filter(eq(currencyCode, "RUB"))
@@ -470,7 +470,7 @@ public class DgraphPaymentsSumQueryBuilderServiceTestData {
             query all() {
                 src as var(func: type(Payment)) @filter(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured") and eq(mobile, false) and eq(recurrent, true)) @cascade {
                     bin @filter(eq(cardBin, "000000"))
-                    cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                    cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                     contactEmail @filter(eq(userEmail, "test@test.ru"))
                     country @filter(eq(countryName, "Russia"))
                     currency @filter(eq(currencyCode, "RUB"))
@@ -526,7 +526,7 @@ public class DgraphPaymentsSumQueryBuilderServiceTestData {
             query all() {
                 src as var(func: type(Payment)) @filter(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured") and eq(mobile, false) and eq(recurrent, true)) @cascade {
                     bin @filter(eq(cardBin, "000000"))
-                    cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                    cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                     contactEmail @filter(eq(userEmail, "test@test.ru"))
                     country @filter(eq(countryName, "Russia"))
                     currency @filter(eq(currencyCode, "RUB"))

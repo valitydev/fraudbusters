@@ -37,7 +37,7 @@ public class DatabasePaymentFieldResolver {
             case PARTY_ID -> new FieldModel(EventField.partyId.name(), model.getPartyId());
             case SHOP_ID -> new FieldModel(EventField.shopId.name(), model.getShopId());
             case CARD_TOKEN -> new FieldModel(EventField.cardToken.name(), model.getCardToken());
-            case PAN -> new FieldModel(EventField.maskedPan.name(), model.getPan());
+            case LAST_DIGITS -> new FieldModel(EventField.lastDigits.name(), model.getLastDigits());
             case MOBILE -> new FieldModel(EventField.mobile.name(), model.isMobile());
             case RECURRENT -> new FieldModel(EventField.recurrent.name(), model.isRecurrent());
             case CURRENCY -> new FieldModel(EventField.currency.name(), model.getCurrency());
@@ -54,7 +54,7 @@ public class DatabasePaymentFieldResolver {
             case IP -> EventField.ip.name();
             case EMAIL -> EventField.email.name();
             case BIN -> EventField.bin.name();
-            case PAN -> EventField.maskedPan.name();
+            case LAST_DIGITS -> EventField.lastDigits.name();
             case FINGERPRINT -> EventField.fingerprint.name();
             case PARTY_ID -> EventField.partyId.name();
             case SHOP_ID -> EventField.shopId.name();

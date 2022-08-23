@@ -70,7 +70,7 @@ public class FilterConverter {
             addSearchField(searchFields, PaymentField.ID, FieldType.STRING, filter.getPaymentId());
         }
         if (filter.isSetMaskedPan() && StringUtils.hasLength(filter.getMaskedPan())) {
-            addSearchField(searchFields, PaymentField.MASKED_PAN, FieldType.STRING, filter.getMaskedPan());
+            addSearchField(searchFields, PaymentField.LAST_DIGITS, FieldType.STRING, filter.getMaskedPan());
         }
         if (filter.isSetInvoiceId() && StringUtils.hasLength(filter.getInvoiceId())) {
             addSearchField(searchFields, PaymentField.INVOICE_ID, FieldType.STRING, filter.getInvoiceId());

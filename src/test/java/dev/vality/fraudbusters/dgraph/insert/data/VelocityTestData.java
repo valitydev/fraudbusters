@@ -82,7 +82,7 @@ public final class VelocityTestData {
             uid(sourceTokenUid) <dgraph.type> "Token" .
             uid(sourceTokenUid) <tokenId> "token-1" .
             uid(sourceTokenUid) <bin> uid(sourceBinUid) .
-            uid(sourceTokenUid) <maskedPan> "pan-1" .
+            uid(sourceTokenUid) <lastDigits> "pan-1" .
             uid(sourceTokenUid) <lastActTime> "2021-10-05T18:00:00" .
             uid(sourceTokenUid) <payments> uid(sourcePaymentUid) (createdAt = 2021-10-05T18:00:00, status = "captured") .
                         
@@ -133,7 +133,7 @@ public final class VelocityTestData {
             uid(sourceTokenUid) <dgraph.type> "Token" .
             uid(sourceTokenUid) <tokenId> "token-1" .
             uid(sourceTokenUid) <bin> uid(sourceBinUid) .
-            uid(sourceTokenUid) <maskedPan> "pan-1" .
+            uid(sourceTokenUid) <lastDigits> "pan-1" .
             uid(sourceTokenUid) <lastActTime> "2021-10-05T18:00:00" .
             uid(sourceTokenUid) <payments> uid(sourcePaymentUid) (createdAt = 2021-10-05T18:00:00, status = "captured") .
                         
@@ -322,7 +322,7 @@ public final class VelocityTestData {
             uid(sourceTokenUid) <dgraph.type> "Token" .
             uid(sourceTokenUid) <tokenId> "token" .
             uid(sourceTokenUid) <bin> uid(sourceBinUid) .
-            uid(sourceTokenUid) <maskedPan> "maskedPan" .
+            uid(sourceTokenUid) <lastDigits> "lastDigits" .
             uid(sourceTokenUid) <lastActTime> "2021-10-05T18:00:00" .
             uid(sourceTokenUid) <refunds> uid(sourceRefundUid) (createdAt = 2021-10-05T18:00:00, status = "successful") .
                         
@@ -372,7 +372,7 @@ public final class VelocityTestData {
             uid(sourceTokenUid) <dgraph.type> "Token" .
             uid(sourceTokenUid) <tokenId> "token" .
             uid(sourceTokenUid) <bin> uid(sourceBinUid) .
-            uid(sourceTokenUid) <maskedPan> "maskedPan" .
+            uid(sourceTokenUid) <lastDigits> "lastDigits" .
             uid(sourceTokenUid) <lastActTime> "2021-10-05T18:00:00" .
             uid(sourceTokenUid) <refunds> uid(sourceRefundUid) (createdAt = 2021-10-05T18:00:00, status = "successful") .
                         
@@ -526,7 +526,7 @@ public final class VelocityTestData {
             uid(sourceTokenUid) <dgraph.type> "Token" .
             uid(sourceTokenUid) <tokenId> "token" .
             uid(sourceTokenUid) <bin> uid(sourceBinUid) .
-            uid(sourceTokenUid) <maskedPan> "maskedPan" .
+            uid(sourceTokenUid) <lastDigits> "lastDigits" .
             uid(sourceTokenUid) <lastActTime> "2021-10-05T18:00:00" .
             uid(sourceTokenUid) <chargebacks> uid(sourceChargebackUid) (createdAt = 2021-10-05T18:00:00, status = "succeeded") .
                         
@@ -578,7 +578,7 @@ public final class VelocityTestData {
             uid(sourceTokenUid) <dgraph.type> "Token" .
             uid(sourceTokenUid) <tokenId> "token" .
             uid(sourceTokenUid) <bin> uid(sourceBinUid) .
-            uid(sourceTokenUid) <maskedPan> "maskedPan" .
+            uid(sourceTokenUid) <lastDigits> "lastDigits" .
             uid(sourceTokenUid) <lastActTime> "2021-10-05T18:00:00" .
             uid(sourceTokenUid) <chargebacks> uid(sourceChargebackUid) (createdAt = 2021-10-05T18:00:00, status = "succeeded") .
                         
@@ -756,7 +756,7 @@ public final class VelocityTestData {
             uid(sourceTokenUid) <dgraph.type> "Token" .
             uid(sourceTokenUid) <tokenId> "tokenID" .
             uid(sourceTokenUid) <bin> uid(sourceBinUid) .
-            uid(sourceTokenUid) <maskedPan> "MaskedPAN" .
+            uid(sourceTokenUid) <lastDigits> "LastDIGITS" .
             uid(sourceTokenUid) <lastActTime> "2021-10-05T18:00:00" .
             uid(sourceWithdrawalUid) <cardToken> uid(sourceTokenUid) .
                         

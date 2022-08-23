@@ -128,7 +128,7 @@ public class DgraphPaymentCountQueryBuilderServiceTest extends AbstractDgraphQue
     public void getPaymentsCountQueryByPanRootWithMinimalDatasetTest() {
         String query = getPaymentsCountQuery(
                 DgraphEntity.BIN,
-                Map.of(DgraphEntity.BIN, Set.of(PaymentCheckedField.PAN))
+                Map.of(DgraphEntity.BIN, Set.of(PaymentCheckedField.LAST_DIGITS))
         );
         assertNotNull(query);
         assertEquals(DgraphPaymentCountQueryBuilderServiceTestData.BY_PAN_ROOT_WITH_MINIMAL_DATASET, query);
@@ -138,7 +138,7 @@ public class DgraphPaymentCountQueryBuilderServiceTest extends AbstractDgraphQue
     public void getPaymentsCountQueryByPanRootWithUsualDatasetTest() {
         String query = getPaymentsCountQuery(
                 DgraphEntity.BIN,
-                createTestUsualDgraphEntityMap(DgraphEntity.BIN, PaymentCheckedField.PAN)
+                createTestUsualDgraphEntityMap(DgraphEntity.BIN, PaymentCheckedField.LAST_DIGITS)
         );
         assertNotNull(query);
         assertEquals(DgraphPaymentCountQueryBuilderServiceTestData.BY_PAN_ROOT_WITH_USUAL_DATASET, query);
@@ -147,7 +147,7 @@ public class DgraphPaymentCountQueryBuilderServiceTest extends AbstractDgraphQue
     @Test
     public void getPaymentsCountQueryByPanRootWithFullDatasetTest() {
         var dgraphMap = createTestFullDgraphEntityMap();
-        dgraphMap.put(DgraphEntity.TOKEN, Set.of(PaymentCheckedField.PAN));
+        dgraphMap.put(DgraphEntity.TOKEN, Set.of(PaymentCheckedField.LAST_DIGITS));
         String query = getPaymentsCountQuery(DgraphEntity.TOKEN, dgraphMap);
         assertNotNull(query);
         assertEquals(DgraphPaymentCountQueryBuilderServiceTestData.BY_PAN_ROOT_WITH_FULL_DATASET, query);

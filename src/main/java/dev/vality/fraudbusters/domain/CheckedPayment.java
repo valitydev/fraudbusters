@@ -18,7 +18,7 @@ public class CheckedPayment {
     private String fingerprint;
 
     private String bin;
-    private String maskedPan;
+    private String lastDigits;
     private String cardToken;
     private String cardCategory;
     private String paymentSystem;

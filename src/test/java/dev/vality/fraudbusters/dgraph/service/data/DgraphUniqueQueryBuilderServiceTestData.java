@@ -96,7 +96,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
             query all() {
                 predicates as var(func: type(Email))  @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
-                        cardToken @filter(eq(maskedPan, "2424"))
+                        cardToken @filter(eq(lastDigits, "2424"))
                         fingerprint @filter(eq(fingerprintData, "finger001"))
                     }
                 }
@@ -290,7 +290,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
             query all() {
                 predicates as var(func: type(Ip))  @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
-                        cardToken @filter(eq(maskedPan, "2424"))
+                        cardToken @filter(eq(lastDigits, "2424"))
                         fingerprint @filter(eq(fingerprintData, "finger001"))
                     }
                 }
@@ -490,7 +490,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
             query all() {
                 predicates as var(func: type(Fingerprint))  @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                     }
                 }
                         
@@ -690,7 +690,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
                 predicates as var(func: type(Country))  @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                     }
                 }
                         
@@ -705,7 +705,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
             query all() {
                 predicates as var(func: type(Country))  @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
-                        cardToken @filter(eq(maskedPan, "2424") and eq(tokenId, "token001"))
+                        cardToken @filter(eq(lastDigits, "2424") and eq(tokenId, "token001"))
                         currency @filter(eq(currencyCode, "RUB"))
                     }
                 }
@@ -882,7 +882,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
                 predicates as var(func: type(Ip))  @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
                         bin @filter(eq(cardBin, "000000"))
-                        cardToken @filter(eq(maskedPan, "2424"))
+                        cardToken @filter(eq(lastDigits, "2424"))
                     }
                 }
                         
@@ -897,7 +897,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
             query all() {
                 predicates as var(func: type(Ip))  @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
-                        cardToken @filter(eq(maskedPan, "2424"))
+                        cardToken @filter(eq(lastDigits, "2424"))
                         currency @filter(eq(currencyCode, "RUB"))
                     }
                 }
@@ -913,7 +913,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
             query all() {
                 predicates as var(func: type(Ip))  @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
-                        cardToken @filter(eq(maskedPan, "2424"))
+                        cardToken @filter(eq(lastDigits, "2424"))
                         shop @filter(eq(shopId, "shop1"))
                     }
                 }
@@ -929,7 +929,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
             query all() {
                 predicates as var(func: type(Ip))  @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
-                        cardToken @filter(eq(maskedPan, "2424"))
+                        cardToken @filter(eq(lastDigits, "2424"))
                         party @filter(eq(partyId, "party1"))
                     }
                 }
@@ -945,7 +945,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
             query all() {
                 predicates as var(func: type(Ip))  @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured")) @filter(eq(mobile, false)) @cascade @normalize {
-                        cardToken @filter(eq(maskedPan, "2424"))
+                        cardToken @filter(eq(lastDigits, "2424"))
                     }
                 }
                         
@@ -960,7 +960,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
             query all() {
                 predicates as var(func: type(Ip))  @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured")) @filter(eq(recurrent, true)) @cascade @normalize {
-                        cardToken @filter(eq(maskedPan, "2424"))
+                        cardToken @filter(eq(lastDigits, "2424"))
                     }
                 }
                         
@@ -1080,7 +1080,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
             query all() {
                 predicates as var(func: type(Bin))  @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
-                        cardToken @filter(eq(maskedPan, "2424"))
+                        cardToken @filter(eq(lastDigits, "2424"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                     }
                 }
@@ -1188,7 +1188,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
 
     public static final String UNIQUE_PANS_BY_EMAIL_TEST_QUERY = """
             query all() {
-                predicates as var(func: type(Token)) @filter(eq(maskedPan, "2424")) @cascade {
+                predicates as var(func: type(Token)) @filter(eq(lastDigits, "2424")) @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
                         currency @filter(eq(currencyCode, "RUB"))
                     }
@@ -1219,7 +1219,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
 
     public static final String UNIQUE_PANS_BY_FINGERPRINT_TEST_QUERY = """
             query all() {
-                predicates as var(func: type(Token)) @filter(eq(maskedPan, "2424")) @cascade {
+                predicates as var(func: type(Token)) @filter(eq(lastDigits, "2424")) @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
                         fingerprint @filter(eq(fingerprintData, "finger001"))
                     }
@@ -1234,7 +1234,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
 
     public static final String UNIQUE_PANS_BY_COUNTRY_BANK_TEST_QUERY = """
             query all() {
-                predicates as var(func: type(Token)) @filter(eq(maskedPan, "2424")) @cascade {
+                predicates as var(func: type(Token)) @filter(eq(lastDigits, "2424")) @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
                         country @filter(eq(countryName, "Russia"))
                     }
@@ -1249,7 +1249,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
 
     public static final String UNIQUE_PANS_BY_COUNTRY_IP_TEST_QUERY = """
             query all() {
-                predicates as var(func: type(Token)) @filter(eq(maskedPan, "2424")) @cascade {
+                predicates as var(func: type(Token)) @filter(eq(lastDigits, "2424")) @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
                         operationIp @filter(eq(ipAddress, "localhost"))
                     }
@@ -1264,7 +1264,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
 
     public static final String UNIQUE_PANS_BY_BIN_TEST_QUERY = """
             query all() {
-                predicates as var(func: type(Token)) @filter(eq(maskedPan, "2424")) @cascade {
+                predicates as var(func: type(Token)) @filter(eq(lastDigits, "2424")) @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
                         bin @filter(eq(cardBin, "000000"))
                     }
@@ -1280,7 +1280,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
     public static final String UNIQUE_PANS_BY_PAN_TEST_QUERY = """
             query all() {
                         
-              aggregates(func: type(Token)) @filter(eq(maskedPan, "2424")) {
+              aggregates(func: type(Token)) @filter(eq(lastDigits, "2424")) {
                   count: count(uid)
               }
                         
@@ -1289,7 +1289,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
 
     public static final String UNIQUE_PANS_BY_CURRENCY_TEST_QUERY = """
             query all() {
-                predicates as var(func: type(Token)) @filter(eq(maskedPan, "2424")) @cascade {
+                predicates as var(func: type(Token)) @filter(eq(lastDigits, "2424")) @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
                         currency @filter(eq(currencyCode, "RUB"))
                     }
@@ -1304,7 +1304,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
 
     public static final String UNIQUE_PANS_BY_SHOP_TEST_QUERY = """
             query all() {
-                predicates as var(func: type(Token)) @filter(eq(maskedPan, "2424")) @cascade {
+                predicates as var(func: type(Token)) @filter(eq(lastDigits, "2424")) @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
                         shop @filter(eq(shopId, "shop1"))
                     }
@@ -1319,7 +1319,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
 
     public static final String UNIQUE_PANS_BY_PARTY_TEST_QUERY = """
             query all() {
-                predicates as var(func: type(Token)) @filter(eq(maskedPan, "2424")) @cascade {
+                predicates as var(func: type(Token)) @filter(eq(lastDigits, "2424")) @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
                         party @filter(eq(partyId, "party1"))
                     }
@@ -1363,7 +1363,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
     public static final String UNIQUE_PANS_BY_CARD_TOKEN_TEST_QUERY = """
             query all() {
                         
-              aggregates(func: type(Token)) @filter(eq(maskedPan, "2424") and eq(tokenId, "token001")) {
+              aggregates(func: type(Token)) @filter(eq(lastDigits, "2424") and eq(tokenId, "token001")) {
                   count: count(uid)
               }
                         
@@ -1467,7 +1467,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
             query all() {
                 predicates as var(func: type(Currency))  @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
-                        cardToken @filter(eq(maskedPan, "2424"))
+                        cardToken @filter(eq(lastDigits, "2424"))
                         contactEmail @filter(eq(userEmail, "test@test.ru"))
                     }
                 }
@@ -1661,7 +1661,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
             query all() {
                 predicates as var(func: type(Shop))  @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
-                        cardToken @filter(eq(maskedPan, "2424"))
+                        cardToken @filter(eq(lastDigits, "2424"))
                     }
                 }
                         
@@ -1849,7 +1849,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
             query all() {
                 predicates as var(func: type(Party))  @cascade {
                     payments @facets(ge(createdAt, "2021-10-28T19:40:54Z") and le(createdAt, "2021-10-28T19:47:54Z") and eq(status, "captured"))  @cascade @normalize {
-                        cardToken @filter(eq(maskedPan, "2424"))
+                        cardToken @filter(eq(lastDigits, "2424"))
                     }
                 }
                         
@@ -2036,7 +2036,7 @@ public class DgraphUniqueQueryBuilderServiceTestData {
     public static final String UNIQUE_CARD_TOKENS_BY_PAN_TEST_QUERY = """
             query all() {
                         
-              aggregates(func: type(Token)) @filter(eq(maskedPan, "2424")) {
+              aggregates(func: type(Token)) @filter(eq(lastDigits, "2424")) {
                   count: count(uid)
               }
                         

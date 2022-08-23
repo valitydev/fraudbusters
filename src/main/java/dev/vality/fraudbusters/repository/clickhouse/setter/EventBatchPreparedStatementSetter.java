@@ -15,7 +15,7 @@ public class EventBatchPreparedStatementSetter implements BatchPreparedStatement
     public static final String INSERT = """
             INSERT INTO fraud.events_unique
              (id, timestamp, eventTimeHour, eventTime, ip, email, bin, fingerprint, shopId, partyId,
-             resultStatus, amount,country, checkedRule, bankCountry, currency, invoiceId, maskedPan,
+             resultStatus, amount, country, checkedRule, bankCountry, currency, invoiceId, lastDigits,
              bankName, cardToken, paymentId, checkedTemplate, payerType, tokenProvider, mobile, recurrent)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
@@ -44,7 +44,7 @@ public class EventBatchPreparedStatementSetter implements BatchPreparedStatement
         ps.setString(l++, event.getBankCountry());
         ps.setString(l++, event.getCurrency());
         ps.setString(l++, event.getInvoiceId());
-        ps.setString(l++, event.getMaskedPan());
+        ps.setString(l++, event.getLastDigits());
         ps.setString(l++, event.getBankName());
         ps.setString(l++, event.getCardToken());
         ps.setString(l++, event.getPaymentId());
