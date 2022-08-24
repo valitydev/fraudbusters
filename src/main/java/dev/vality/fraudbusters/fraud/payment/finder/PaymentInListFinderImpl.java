@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 public class PaymentInListFinderImpl implements InListFinder<PaymentModel, PaymentCheckedField> {
 
     private static final int CURRENT_ONE = 1;
+    private static final String LIST_ERROR_LOG = "InListFinderImpl error when findInList e: ";
 
     private final WbListServiceSrv.Iface wbListServiceSrv;
     private final DatabasePaymentFieldResolver databasePaymentFieldResolver;
@@ -53,12 +54,12 @@ public class PaymentInListFinderImpl implements InListFinder<PaymentModel, Payme
                             StringUtils.hasLength(entry.getSecond())
                             && findInList(model.getPartyId(), model.getShopId(), entry.getFirst(), entry.getSecond()));
         } catch (Exception e) {
-            log.warn("InListFinderImpl error when findInList e: ", e);
+            log.warn(LIST_ERROR_LOG, e);
             throw new RuleFunctionException(e);
         }
     }
 
-    public Boolean findInList(String partyId, String shopId, PaymentCheckedField field, String value) {
+    private Boolean findInList(String partyId, String shopId, PaymentCheckedField field, String value) {
         try {
             if (StringUtils.hasLength(value)) {
                 Row row = createRow(ListType.grey, partyId, shopId, field, value);
@@ -70,7 +71,7 @@ public class PaymentInListFinderImpl implements InListFinder<PaymentModel, Payme
             }
             return false;
         } catch (Exception e) {
-            log.warn("InListFinderImpl error when findInList e: ", e);
+            log.warn(LIST_ERROR_LOG, e);
             throw new RuleFunctionException(e);
         }
     }
@@ -128,7 +129,7 @@ public class PaymentInListFinderImpl implements InListFinder<PaymentModel, Payme
             }
             return false;
         } catch (Exception e) {
-            log.warn("InListFinderImpl error when findInList e: ", e);
+            log.warn(LIST_ERROR_LOG, e);
             throw new RuleFunctionException(e);
         }
     }
