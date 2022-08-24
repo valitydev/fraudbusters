@@ -323,7 +323,7 @@ class HistoricalDataHandlerTest {
         assertEquals(event.getAmount(), actualFraudResult.getTransaction().getCost().getAmount());
         assertEquals(event.getCurrency(), actualFraudResult.getTransaction().getCost().getCurrency().getSymbolicCode());
         assertEquals(getTimestampAsString(event.getEventTime()), actualFraudResult.getTransaction().getEventTime());
-        assertEquals(event.getPaymentId(), actualFraudResult.getTransaction().getId());
+        assertEquals(event.getId(), actualFraudResult.getTransaction().getId());
         assertEquals(PaymentStatus.unknown, actualFraudResult.getTransaction().getStatus());
     }
 
