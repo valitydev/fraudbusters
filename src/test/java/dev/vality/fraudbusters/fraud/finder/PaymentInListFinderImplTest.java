@@ -52,7 +52,9 @@ class PaymentInListFinderImplTest {
         PaymentModel paymentModel = new PaymentModel();
         paymentModel.setPartyId(PARTY_ID);
         paymentModel.setShopId(SHOP_ID);
-        Boolean isInList = listFinder.findInBlackList(List.of(new Pair<>(PaymentCheckedField.IP, VALUE)), paymentModel);
+        Pair<PaymentCheckedField, String> field = new Pair<>(PaymentCheckedField.IP, VALUE);
+        List<Pair<PaymentCheckedField, String>> fields = List.of(field);
+        Boolean isInList = listFinder.findInBlackList(fields, paymentModel);
         assertTrue(isInList);
     }
 
@@ -87,7 +89,9 @@ class PaymentInListFinderImplTest {
         PaymentModel paymentModel = new PaymentModel();
         paymentModel.setPartyId(PARTY_ID);
         paymentModel.setShopId(SHOP_ID);
-        Boolean isInList = listFinder.findInBlackList(List.of(new Pair<>(PaymentCheckedField.MASKED_PAN, VALUE)), paymentModel);
+        Pair<PaymentCheckedField, String> field = new Pair<>(PaymentCheckedField.MASKED_PAN, VALUE);
+        List<Pair<PaymentCheckedField, String>> fields = List.of(field);
+        Boolean isInList = listFinder.findInBlackList(fields, paymentModel);
         assertTrue(isInList);
     }
 }
