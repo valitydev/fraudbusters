@@ -37,6 +37,7 @@ public class ContextToFraudRequestConverter implements Converter<Context, FraudR
         PayerFieldExtractor.getBankCard(payer)
                 .ifPresent(bankCard -> {
                     paymentModel.setBin(bankCard.getBin());
+                    paymentModel.setLastDigits(bankCard.getLastDigits());
                     paymentModel.setBinCountryCode(bankCard.isSetIssuerCountry()
                             ? bankCard.getIssuerCountry().name()
                             : ClickhouseUtilsValue.UNKNOWN);
