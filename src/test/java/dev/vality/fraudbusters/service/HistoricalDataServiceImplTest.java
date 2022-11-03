@@ -8,6 +8,7 @@ import dev.vality.fraudbusters.domain.FraudPaymentRow;
 import dev.vality.fraudbusters.factory.TestObjectsFactory;
 import dev.vality.fraudbusters.repository.Repository;
 import dev.vality.fraudbusters.service.dto.*;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+@Slf4j
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {HistoricalDataServiceImpl.class})
 class HistoricalDataServiceImplTest {
@@ -217,7 +219,8 @@ class HistoricalDataServiceImplTest {
 
         HistoricalFraudResultsDto actualFraudResults = historicalDataService.getFraudResults(filterDto);
 
-        assertEquals(fraudResults.get(3).getPaymentId(), actualFraudResults.getLastId());
+        assertEquals(fraudResults.get(3).getId() + "|" + fraudResults.get(3).getResultStatus(),
+                actualFraudResults.getLastId());
         assertFalse(actualFraudResults.getFraudResults().isEmpty());
         assertEquals(fraudResults.size(), actualFraudResults.getFraudResults().size());
     }

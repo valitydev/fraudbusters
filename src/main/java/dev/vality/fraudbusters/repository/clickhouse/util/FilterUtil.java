@@ -9,6 +9,7 @@ import dev.vality.fraudbusters.service.dto.SearchFieldDto;
 import dev.vality.fraudbusters.util.CompositeIdUtil;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.util.CollectionUtils;
 
@@ -81,9 +82,24 @@ public class FilterUtil {
                 params.addValue(QueryParamName.ID, filter.getLastId());
             }
         }
+        return addTimeParams(params, filter);
+    }
+
+    @NotNull
+    private static MapSqlParameterSource addTimeParams(MapSqlParameterSource params, FilterDto filter) {
         params.addValue(QueryParamName.FROM, filter.getTimeFrom())
                 .addValue(QueryParamName.TO, filter.getTimeTo())
                 .addValue(QueryParamName.SIZE, filter.getSize());
         return params;
+    }
+
+    public static MapSqlParameterSource initResultStatusParams(FilterDto filter) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        if (Objects.nonNull(filter.getLastId())) {
+            List<String> compositeId = CompositeIdUtil.extract(filter.getLastId());
+            params.addValue(QueryParamName.ID, compositeId.get(0))
+                    .addValue(QueryParamName.RESULT_STATUS, compositeId.get(1));
+        }
+        return addTimeParams(params, filter);
     }
 }
