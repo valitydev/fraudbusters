@@ -57,7 +57,7 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
     @Override
     public HistoricalFraudResultsDto getFraudResults(FilterDto filter) {
         List<Event> fraudResults = fraudResultRepository.getByFilter(filter);
-        String lastId = filter.getLastId();
+        String lastId = buildLastResultId(filter.getSize(), fraudResults);
         return HistoricalFraudResultsDto.builder()
                 .fraudResults(fraudResults)
                 .lastId(lastId)
@@ -79,6 +79,14 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
         if (payments.size() == filterSize) {
             CheckedPayment lastPayment = payments.get(payments.size() - 1);
             return CompositeIdUtil.create(lastPayment.getId(), lastPayment.getPaymentStatus());
+        }
+        return null;
+    }
+
+    @Nullable
+    private String buildLastResultId(Long filterSize, List<? extends Event> payments) {
+        if (payments.size() == filterSize) {
+            return payments.get(payments.size() - 1).getId();
         }
         return null;
     }
