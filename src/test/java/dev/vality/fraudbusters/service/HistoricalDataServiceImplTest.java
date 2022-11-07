@@ -219,8 +219,7 @@ class HistoricalDataServiceImplTest {
 
         HistoricalFraudResultsDto actualFraudResults = historicalDataService.getFraudResults(filterDto);
 
-        assertEquals(fraudResults.get(3).getId() + "|" + fraudResults.get(3).getResultStatus(),
-                actualFraudResults.getLastId());
+        assertEquals(fraudResults.get(3).getId(), actualFraudResults.getLastId());
         assertFalse(actualFraudResults.getFraudResults().isEmpty());
         assertEquals(fraudResults.size(), actualFraudResults.getFraudResults().size());
     }

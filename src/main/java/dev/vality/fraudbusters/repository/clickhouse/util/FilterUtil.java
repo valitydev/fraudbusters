@@ -93,13 +93,4 @@ public class FilterUtil {
         return params;
     }
 
-    public static MapSqlParameterSource initResultStatusParams(FilterDto filter) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        if (Objects.nonNull(filter.getLastId())) {
-            List<String> compositeId = CompositeIdUtil.extract(filter.getLastId());
-            params.addValue(QueryParamName.ID, compositeId.get(0))
-                    .addValue(QueryParamName.RESULT_STATUS, compositeId.get(1));
-        }
-        return addTimeParams(params, filter);
-    }
 }

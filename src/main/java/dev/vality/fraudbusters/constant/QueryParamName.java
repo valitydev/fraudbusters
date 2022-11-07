@@ -8,7 +8,6 @@ public class QueryParamName {
 
     public static final String ID = "id";
     public static final String STATUS = "status";
-    public static final String RESULT_STATUS = "resultStatus";
     public static final String FROM = "from";
     public static final String TO = "to";
     public static final String SIZE = "size";
