@@ -172,8 +172,7 @@ public class DgraphConfig {
             SslContext sslContext = GrpcSslContexts.forClient()
                     .trustManager(new File(dgraphProperties.getTrustCertCollectionFile()))
                     .keyManager(
-                            new File(dgraphProperties.getKeyCertChainFile()),
-                            new File(dgraphProperties.getKeyFile(), dgraphProperties.getKeyPassword())
+                            new File(dgraphProperties.getKeyCertChainFile()), new File(dgraphProperties.getKeyFile())
                     )
                     .keyStoreType(PKCS_12)
                     .build();

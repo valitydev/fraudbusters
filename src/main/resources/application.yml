@@ -130,7 +130,6 @@ dgraph:
   trustCertCollectionFile: "ca.crt"
   keyCertChainFile: "degraph.crt"
   keyFile: "dgraphuser.p12"
-  keyPassword: "pswd"
 
 geo.ip.service.url: "http://localhost:29092/v1/columbus"
 
