@@ -20,5 +20,4 @@ public class DgraphProperties {
     private String trustCertCollectionFile;
     private String keyCertChainFile;
     private String keyFile;
-    private String keyPassword;
 }
