@@ -166,7 +166,6 @@ public class DgraphConfig {
 
     private DgraphGrpc.DgraphStub createStub(String target, DgraphProperties dgraphProperties) throws SSLException {
         NettyChannelBuilder channelBuilder = NettyChannelBuilder.forTarget(target);
-        channelBuilder.usePlaintext();
         if (dgraphProperties.isAuth()) {
             log.info("Connect to the Dgraph cluster with TLS config...");
             SslContext sslContext = GrpcSslContexts.forClient()
