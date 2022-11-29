@@ -70,7 +70,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
                 "kafka.dgraph.topics.chargeback.enabled=true",
                 "kafka.dgraph.topics.withdrawal.enabled=true",
                 "dgraph.port=9080",
-                "dgraph.withAuthHeader=false"
+                "dgraph.withAuthHeader=false",
+                "dgraph.negotiationType=PLAINTEXT"
         })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class DgraphAbstractIntegrationTest {

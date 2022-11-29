@@ -24,6 +24,7 @@ import io.dgraph.DgraphGrpc;
 import io.dgraph.DgraphProto;
 import io.dgraph.TxnConflictException;
 import io.grpc.netty.GrpcSslContexts;
+import io.grpc.netty.NegotiationType;
 import io.grpc.netty.NettyChannelBuilder;
 import io.netty.handler.ssl.SslContext;
 import lombok.extern.slf4j.Slf4j;
@@ -165,7 +166,8 @@ public class DgraphConfig {
     }
 
     private DgraphGrpc.DgraphStub createStub(String target, DgraphProperties dgraphProperties) throws SSLException {
-        NettyChannelBuilder channelBuilder = NettyChannelBuilder.forTarget(target);
+        NettyChannelBuilder channelBuilder = NettyChannelBuilder.forTarget(target)
+                .negotiationType(NegotiationType.valueOf(dgraphProperties.getNegotiationType().toUpperCase()));
         if (dgraphProperties.isAuth()) {
             log.info("Connect to the Dgraph cluster with TLS config...");
             SslContext sslContext = GrpcSslContexts.forClient()
