@@ -18,6 +18,7 @@ public enum PaymentCheckedField {
     MOBILE("mobile"),
     RECURRENT("recurrent"),
     CARD_TOKEN("card_token"),
+    PHONE("phone"),
     MASKED_PAN("masked_pan");
 
     private static final Map<String, PaymentCheckedField> VALUE_MAP = new HashMap<>();
