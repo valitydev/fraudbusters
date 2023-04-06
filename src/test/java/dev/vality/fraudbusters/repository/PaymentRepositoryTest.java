@@ -72,6 +72,12 @@ public class PaymentRepositoryTest {
     }
 
     @Test
+    public void countOperationByPhoneTest() throws SQLException {
+        int count = paymentRepository.countOperationByField(EventField.phone.name(), PHONE, FROM, TO);
+        assertEquals(1, count);
+    }
+
+    @Test
     public void countOperationByEmailTestWithGroupBy() throws SQLException {
         PaymentModel paymentModel = createFraudModelSecond();
 
@@ -99,6 +105,34 @@ public class PaymentRepositoryTest {
     }
 
     @Test
+    public void countOperationByPhoneTestWithGroupBy() throws SQLException {
+        PaymentModel paymentModel = createFraudModelSecond();
+
+        FieldModel fieldModel = databasePaymentFieldResolver.resolve(PaymentCheckedField.PHONE, paymentModel);
+        int count = paymentRepository.countOperationByFieldWithGroupBy(EventField.phone.name(), fieldModel.getValue(),
+                1588761200000L, 1588761209000L, List.of()
+        );
+
+        assertEquals(2, count);
+
+        FieldModel resolve = databasePaymentFieldResolver.resolve(PaymentCheckedField.PARTY_ID, paymentModel);
+        count = paymentRepository.countOperationByFieldWithGroupBy(EventField.phone.name(), fieldModel.getValue(),
+                1588761200000L, 1588761209000L, List.of(resolve)
+        );
+        assertEquals(1, count);
+
+        count = paymentRepository.countOperationSuccessWithGroupBy(EventField.phone.name(), fieldModel.getValue(),
+                1588761200000L, 1588761209000L, List.of(resolve)
+        );
+        assertEquals(1, count);
+
+        count = paymentRepository.countOperationErrorWithGroupBy(EventField.phone.name(), fieldModel.getValue(),
+                1588761200000L, 1588761209000L, List.of(resolve), ""
+        );
+        assertEquals(0, count);
+    }
+
+    @Test
     public void sumOperationByEmailTest() throws SQLException {
         Long sum =
                 paymentRepository.sumOperationByFieldWithGroupBy(EventField.email.name(), EMAIL, FROM, TO, List.of());
@@ -108,6 +142,19 @@ public class PaymentRepositoryTest {
         assertEquals(AMOUNT_FIRST, sum);
 
         sum = paymentRepository.sumOperationErrorWithGroupBy(EventField.email.name(), EMAIL, FROM, TO, List.of(), "");
+        assertEquals(0L, sum.longValue());
+    }
+
+    @Test
+    public void sumOperationByPhoneTest() throws SQLException {
+        Long sum =
+                paymentRepository.sumOperationByFieldWithGroupBy(EventField.phone.name(), PHONE, FROM, TO, List.of());
+        assertEquals(AMOUNT_FIRST, sum);
+
+        sum = paymentRepository.sumOperationSuccessWithGroupBy(EventField.phone.name(), PHONE, FROM, TO, List.of());
+        assertEquals(AMOUNT_FIRST, sum);
+
+        sum = paymentRepository.sumOperationErrorWithGroupBy(EventField.phone.name(), PHONE, FROM, TO, List.of(), "");
         assertEquals(0L, sum.longValue());
     }
 
