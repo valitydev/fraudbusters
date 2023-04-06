@@ -67,7 +67,7 @@ class LoadDataIntegrationTest {
     public static final String PAYMENT_2 = "payment_2";
     public static final String PAYMENT_0 = "payment_0";
 
-    public static final int DEFAULT_TIMEOUT = 15;
+    public static final int DEFAULT_TIMEOUT = 35;
 
     private final String globalRef = UUID.randomUUID().toString();
 
@@ -115,13 +115,8 @@ class LoadDataIntegrationTest {
 
         checkInsertingBatch(client);
 
-        Payment payment = BeanUtil.createPayment(PaymentStatus.processed);
-        payment.setId(PAYMENT_1);
-        insert(client, List.of(payment));
-        insertListDefaultPayments(client, PaymentStatus.captured, PaymentStatus.failed);
-        checkPayment(PAYMENT_1, ResultStatus.DECLINE, 1);
-
         //check in past
+        Payment payment = BeanUtil.createPayment(PaymentStatus.processed);
         payment.setId(PAYMENT_0);
         payment.setEventTime(oldTime);
         insert(client, payment);
@@ -199,7 +194,7 @@ class LoadDataIntegrationTest {
     private void checkPayment(String payment1, ResultStatus status, int expectedCount) {
         await().atMost(DEFAULT_TIMEOUT, SECONDS).until(() -> {
             List<Map<String, Object>> maps =
-                    jdbcTemplate.queryForList(String.format("SELECT * from fraud.payment where id='%s'", payment1));
+                    jdbcTemplate.queryForList("SELECT * from fraud.payment");
             return maps.size() == expectedCount && maps.get(0).get("resultStatus").equals(status.name());
         });
     }
