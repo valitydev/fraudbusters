@@ -41,6 +41,7 @@ public class DatabasePaymentFieldResolver {
             case MOBILE -> new FieldModel(EventField.mobile.name(), model.isMobile());
             case RECURRENT -> new FieldModel(EventField.recurrent.name(), model.isRecurrent());
             case CURRENCY -> new FieldModel(EventField.currency.name(), model.getCurrency());
+            case PHONE -> new FieldModel(EventField.phone.name(), model.getPhone());
             case COUNTRY_BANK -> new FieldModel(EventField.bankCountry.name(), model.getBinCountryCode());
             default -> throw new UnknownFieldException();
         };
@@ -53,6 +54,7 @@ public class DatabasePaymentFieldResolver {
         return switch (field) {
             case IP -> EventField.ip.name();
             case EMAIL -> EventField.email.name();
+            case PHONE -> EventField.phone.name();
             case BIN -> EventField.bin.name();
             case LAST_DIGITS -> EventField.lastDigits.name();
             case FINGERPRINT -> EventField.fingerprint.name();

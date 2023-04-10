@@ -27,6 +27,7 @@ public enum EventField {
     payerType,
     tokenProvider,
     cardToken,
+    phone,
 
     mobile,
     recurrent

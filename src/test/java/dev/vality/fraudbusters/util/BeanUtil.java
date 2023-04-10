@@ -36,11 +36,8 @@ public class BeanUtil {
     public static final String P_ID = "pId";
     public static final String ID_VALUE_SHOP = "2035728";
     public static final String BIN_COUNTRY_CODE = "RUS";
+    public static final String PHONE = "phone";
 
-    public static final String SOURCE_NS = "source_ns";
-
-    public static final String PAYMENT_ID = "1";
-    public static final String TEST_MAIL_RU = "test@mail.ru";
     public static final String IDENTITY_ID = "identityId";
     public static final String RUB = "RUB";
     public static final String TOKEN = "wewerwer";
@@ -128,6 +125,7 @@ public class BeanUtil {
         paymentModel.setBin(BIN + SUFIX);
         paymentModel.setAmount(AMOUNT_SECOND);
         paymentModel.setBinCountryCode(BIN_COUNTRY_CODE);
+        paymentModel.setPhone(PHONE + SUFIX);
         return paymentModel;
     }
 

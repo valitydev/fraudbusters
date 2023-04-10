@@ -75,7 +75,7 @@ public class PaymentRepositoryImpl implements Repository<CheckedPayment>, Paymen
                 and eventTime <= ?
                 and %1$s = ?  and status != ?
                 group by %1$s""", fieldName, TABLE);
-        List<Object> params = AggregationUtil.generateStatusParams(from, to, value, PaymentStatus.captured.name());
+        List<Object> params = AggregationUtil.generateStatusParams(from, to, value, PaymentStatus.processed.name());
         log.debug("AggregationGeneralRepositoryImpl countOperationByField sql: {} params: {}", sql, params);
         return jdbcTemplate.query(sql, params.toArray(), new CountExtractor());
     }
@@ -98,7 +98,7 @@ public class PaymentRepositoryImpl implements Repository<CheckedPayment>, Paymen
         StringBuilder sqlGroupBy = new StringBuilder(String.format("group by %1$s", fieldName));
         StringBuilder resultSql = AggregationUtil.appendGroupingFields(fieldModels, sql, sqlGroupBy);
         List<Object> params =
-                AggregationUtil.generateParams(from, to, fieldModels, value, PaymentStatus.captured.name());
+                AggregationUtil.generateParams(from, to, fieldModels, value, PaymentStatus.processed.name());
         log.debug("PaymentRepositoryImpl countOperationByFieldWithGroupBy sql: {} params: {}", sql, params);
         return jdbcTemplate.query(resultSql.toString(), params.toArray(), new CountExtractor());
     }
@@ -121,7 +121,7 @@ public class PaymentRepositoryImpl implements Repository<CheckedPayment>, Paymen
         StringBuilder sqlGroupBy = new StringBuilder(String.format("group by %1$s", fieldName));
         StringBuilder resultSql = AggregationUtil.appendGroupingFields(fieldModels, sql, sqlGroupBy);
         List<Object> params =
-                AggregationUtil.generateParams(from, to, fieldModels, value, PaymentStatus.captured.name());
+                AggregationUtil.generateParams(from, to, fieldModels, value, PaymentStatus.processed.name());
         log.debug("PaymentRepositoryImpl sumOperationSuccessWithGroupBy sql: {} params: {}", sql, params);
         return jdbcTemplate.query(resultSql.toString(), params.toArray(), new SumExtractor());
     }
