@@ -194,7 +194,7 @@ class LoadDataIntegrationTest {
     private void checkPayment(String payment1, ResultStatus status, int expectedCount) {
         await().atMost(DEFAULT_TIMEOUT, SECONDS).until(() -> {
             List<Map<String, Object>> maps =
-                    jdbcTemplate.queryForList("SELECT * from fraud.payment");
+                    jdbcTemplate.queryForList(String.format("SELECT * from fraud.payment where id='%s'", payment1));
             return maps.size() == expectedCount && maps.get(0).get("resultStatus").equals(status.name());
         });
     }
