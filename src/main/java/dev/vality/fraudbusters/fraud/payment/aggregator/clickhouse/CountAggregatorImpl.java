@@ -102,6 +102,40 @@ public class CountAggregatorImpl implements CountPaymentAggregator<PaymentModel,
     }
 
     @Override
+    public Integer countError(PaymentCheckedField checkedField,
+                              PaymentModel paymentModel,
+                              TimeWindow timeWindow,
+                              List<PaymentCheckedField> list) {
+        try {
+            Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
+            TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
+            FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
+            List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
+            if (Objects.isNull(resolve.getValue())) {
+                return CURRENT_ONE;
+            }
+            Integer count = paymentRepository.countOperationErrorWithGroupBy(
+                    resolve.getName(),
+                    resolve.getValue(),
+                    timeBound.getLeft().toEpochMilli(),
+                    timeBound.getRight().toEpochMilli(),
+                    eventFields
+            );
+
+            log.debug(
+                    "CountAggregatorImpl field: {} value: {}  countError: {}",
+                    resolve.getName(),
+                    resolve.getValue(),
+                    count
+            );
+            return count + CURRENT_ONE;
+        } catch (Exception e) {
+            log.warn("CountAggregatorImpl error when countError e: ", e);
+            throw new RuleFunctionException(e);
+        }
+    }
+
+    @Override
     @BasicMetric("countChargeback")
     public Integer countChargeback(
             PaymentCheckedField paymentCheckedField,

@@ -65,6 +65,17 @@ public class DgraphCountAggregatorImpl implements CountPaymentAggregator<Payment
     }
 
     @Override
+    @BasicMetric("countError")
+    public Integer countError(PaymentCheckedField paymentCheckedField,
+                              PaymentModel paymentModel,
+                              TimeWindow timeWindow,
+                              List<PaymentCheckedField> list) {
+        return getCount(
+                paymentCheckedField, paymentModel, timeWindow, list, DgraphEntity.PAYMENT, PaymentStatus.failed.name()
+        );
+    }
+
+    @Override
     @BasicMetric("countChargeback")
     public Integer countChargeback(
             PaymentCheckedField checkedField,

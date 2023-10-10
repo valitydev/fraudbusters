@@ -144,13 +144,13 @@ public class FraudResultRepository implements Repository<Event>, PaymentReposito
             String fieldName, Object value, Long from, Long to,
             List<FieldModel> fieldModels) {
         StringBuilder sql = new StringBuilder(String.format("""
-                select %1$s, count() as cnt
-                from %2$s
-                where timestamp >= ?
-                and timestamp <= ?
-                and eventTime >= ?
-                and eventTime <= ?
-                and %1$s = ? and resultStatus != ?""",
+                        select %1$s, count() as cnt
+                        from %2$s
+                        where timestamp >= ?
+                        and timestamp <= ?
+                        and eventTime >= ?
+                        and eventTime <= ?
+                        and %1$s = ? and resultStatus != ?""",
                 fieldName,
                 EventSource.FRAUD_EVENTS_UNIQUE.getTable()
         ));
@@ -171,13 +171,13 @@ public class FraudResultRepository implements Repository<Event>, PaymentReposito
                 errorCode
         );
         StringBuilder sql = new StringBuilder(String.format("""
-                select %1$s, count() as cnt
-                from %2$s
-                where timestamp >= ?
-                and timestamp <= ?
-                and eventTime >= ?
-                and eventTime <= ?
-                and %1$s = ? and resultStatus = ?""",
+                        select %1$s, count() as cnt
+                        from %2$s
+                        where timestamp >= ?
+                        and timestamp <= ?
+                        and eventTime >= ?
+                        and eventTime <= ?
+                        and %1$s = ? and resultStatus = ?""",
                 fieldName,
                 EventSource.FRAUD_EVENTS_UNIQUE.getTable()
         ));
@@ -189,17 +189,26 @@ public class FraudResultRepository implements Repository<Event>, PaymentReposito
     }
 
     @Override
+    public Integer countOperationErrorWithGroupBy(String fieldName,
+                                                  Object value,
+                                                  Long from,
+                                                  Long to,
+                                                  List<FieldModel> fieldModels) {
+        return countOperationErrorWithGroupBy(fieldName, value, from, to, fieldModels, null);
+    }
+
+    @Override
     public Long sumOperationSuccessWithGroupBy(
             String fieldName, Object value, Long from, Long to,
             List<FieldModel> fieldModels) {
         StringBuilder sql = new StringBuilder(String.format("""
-                select %1$s, sum(amount) as sum
-                from %2$s
-                where timestamp >= ?
-                and timestamp <= ?
-                and eventTime >= ?
-                and eventTime <= ?
-                and %1$s = ? and resultStatus != ?""",
+                        select %1$s, sum(amount) as sum
+                        from %2$s
+                        where timestamp >= ?
+                        and timestamp <= ?
+                        and eventTime >= ?
+                        and eventTime <= ?
+                        and %1$s = ? and resultStatus != ?""",
                 fieldName,
                 EventSource.FRAUD_EVENTS_UNIQUE.getTable()
         ));
@@ -220,13 +229,13 @@ public class FraudResultRepository implements Repository<Event>, PaymentReposito
                 errorCode
         );
         StringBuilder sql = new StringBuilder(String.format("""
-                select %1$s, sum(amount) as sum
-                from %2$s
-                where timestamp >= ?
-                and timestamp <= ?
-                and eventTime >= ?
-                and eventTime <= ?
-                and %1$s = ? and resultStatus = ?""",
+                        select %1$s, sum(amount) as sum
+                        from %2$s
+                        where timestamp >= ?
+                        and timestamp <= ?
+                        and eventTime >= ?
+                        and eventTime <= ?
+                        and %1$s = ? and resultStatus = ?""",
                 fieldName,
                 EventSource.FRAUD_EVENTS_UNIQUE.getTable()
         ));
@@ -235,6 +244,12 @@ public class FraudResultRepository implements Repository<Event>, PaymentReposito
         List<Object> params = AggregationUtil.generateParams(from, to, fieldModels, value, ResultStatus.DECLINE.name());
         log.debug("FraudResultRepository sumOperationErrorWithGroupBy sql: {} params: {}", sql, params);
         return jdbcTemplate.query(resultSql.toString(), params.toArray(), new SumExtractor());
+    }
+
+    @Override
+    public Long sumOperationErrorWithGroupBy(String fieldName, Object value, Long from, Long to,
+                                             List<FieldModel> fieldModels) {
+        return sumOperationErrorWithGroupBy(fieldName, value, from, to, fieldModels, null);
     }
 
 }

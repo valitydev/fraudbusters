@@ -21,6 +21,13 @@ public interface PaymentRepository extends AggregationRepository {
             List<FieldModel> fieldModels,
             String errorCode);
 
+    Integer countOperationErrorWithGroupBy(
+            String fieldName,
+            Object value,
+            Long from,
+            Long to,
+            List<FieldModel> fieldModels);
+
     Long sumOperationSuccessWithGroupBy(
             String fieldName,
             Object value,
@@ -35,5 +42,12 @@ public interface PaymentRepository extends AggregationRepository {
             Long to,
             List<FieldModel> fieldModels,
             String errorCode);
+
+    Long sumOperationErrorWithGroupBy(
+            String fieldName,
+            Object value,
+            Long from,
+            Long to,
+            List<FieldModel> fieldModels);
 
 }

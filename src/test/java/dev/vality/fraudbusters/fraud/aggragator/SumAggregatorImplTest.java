@@ -119,4 +119,19 @@ public class SumAggregatorImplTest {
 
         assertEquals(Double.valueOf(1050100), some);
     }
+
+    @Test
+    public void sumErrorWithoutCode() {
+        when(paymentRepository.sumOperationErrorWithGroupBy(any(), any(), any(), any(), any()))
+                .thenReturn(1050100L);
+        Double some = sumAggregator.sumError(PaymentCheckedField.BIN, new PaymentModel(),
+                TimeWindow.builder()
+                        .start(1444)
+                        .timeUnit(MINUTES)
+                        .build(),
+                null
+        );
+
+        assertEquals(Double.valueOf(1050100), some);
+    }
 }

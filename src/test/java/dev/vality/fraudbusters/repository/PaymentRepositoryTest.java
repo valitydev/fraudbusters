@@ -130,6 +130,11 @@ public class PaymentRepositoryTest {
                 1588761200000L, 1588761209000L, List.of(resolve), ""
         );
         assertEquals(0, count);
+
+        count = paymentRepository.countOperationErrorWithGroupBy(EventField.phone.name(), fieldModel.getValue(),
+                1588761200000L, 1588761209000L, List.of(resolve)
+        );
+        assertEquals(0, count);
     }
 
     @Test
@@ -143,6 +148,9 @@ public class PaymentRepositoryTest {
 
         sum = paymentRepository.sumOperationErrorWithGroupBy(EventField.email.name(), EMAIL, FROM, TO, List.of(), "");
         assertEquals(0L, sum.longValue());
+
+        sum = paymentRepository.sumOperationErrorWithGroupBy(EventField.email.name(), EMAIL, FROM, TO, List.of());
+        assertEquals(0L, sum.longValue());
     }
 
     @Test
@@ -155,6 +163,9 @@ public class PaymentRepositoryTest {
         assertEquals(AMOUNT_FIRST, sum);
 
         sum = paymentRepository.sumOperationErrorWithGroupBy(EventField.phone.name(), PHONE, FROM, TO, List.of(), "");
+        assertEquals(0L, sum.longValue());
+
+        sum = paymentRepository.sumOperationErrorWithGroupBy(EventField.phone.name(), PHONE, FROM, TO, List.of());
         assertEquals(0L, sum.longValue());
     }
 
