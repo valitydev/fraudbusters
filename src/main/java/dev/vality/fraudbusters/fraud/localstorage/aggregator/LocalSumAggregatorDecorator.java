@@ -71,9 +71,11 @@ public class LocalSumAggregatorDecorator implements SumPaymentAggregator<Payment
     }
 
     @Override
-    public Double sumError(
-            PaymentCheckedField checkedField, PaymentModel paymentModel, TimeWindow timeWindow, String errorCode,
-            List<PaymentCheckedField> list) {
+    public Double sumError(PaymentCheckedField checkedField,
+                           PaymentModel paymentModel,
+                           TimeWindow timeWindow,
+                           String errorCode,
+                           List<PaymentCheckedField> list) {
         try {
             Double sumError = sumAggregatorImpl.sumError(checkedField, paymentModel, timeWindow, errorCode, list);
             Instant now = TimestampUtil.instantFromPaymentModel(paymentModel);
@@ -87,6 +89,38 @@ public class LocalSumAggregatorDecorator implements SumPaymentAggregator<Payment
                     timeBound.getRight().getEpochSecond(),
                     eventFields,
                     errorCode
+            );
+            Double result = checkedLong(localSum) + sumError;
+            log.debug(
+                    "LocalSumAggregatorDecorator field: {} value: {}  sumError: {}",
+                    resolve.getName(),
+                    resolve.getValue(),
+                    result
+            );
+            return result;
+        } catch (Exception e) {
+            log.warn("LocalSumAggregatorDecorator error when sumError e: ", e);
+            throw new RuleFunctionException(e);
+        }
+    }
+
+    @Override
+    public Double sumError(PaymentCheckedField checkedField,
+                           PaymentModel paymentModel,
+                           TimeWindow timeWindow,
+                           List<PaymentCheckedField> list) {
+        try {
+            Double sumError = sumAggregatorImpl.sumError(checkedField, paymentModel, timeWindow, list);
+            Instant now = TimestampUtil.instantFromPaymentModel(paymentModel);
+            TimeBound timeBound = timeBoundaryService.getBoundary(now, timeWindow);
+            FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
+            List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
+            Long localSum = localStorageRepository.sumOperationErrorWithGroupBy(
+                    checkedField.name(),
+                    resolve.getValue(),
+                    timeBound.getLeft().getEpochSecond(),
+                    timeBound.getRight().getEpochSecond(),
+                    eventFields
             );
             Double result = checkedLong(localSum) + sumError;
             log.debug(

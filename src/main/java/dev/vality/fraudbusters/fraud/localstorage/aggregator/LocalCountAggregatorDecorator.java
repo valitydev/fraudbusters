@@ -99,6 +99,36 @@ public class LocalCountAggregatorDecorator implements CountPaymentAggregator<Pay
     }
 
     @Override
+    public Integer countError(PaymentCheckedField paymentCheckedField, PaymentModel paymentModel, TimeWindow timeWindow,
+                              List<PaymentCheckedField> list) {
+        try {
+            Integer countError = countAggregator.countError(paymentCheckedField, paymentModel, timeWindow, list);
+            Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
+            TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
+            FieldModel resolve = databasePaymentFieldResolver.resolve(paymentCheckedField, paymentModel);
+            List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
+            Integer localCount = localStorageRepository.countOperationErrorWithGroupBy(
+                    paymentCheckedField.name(),
+                    resolve.getValue(),
+                    timeBound.getLeft().getEpochSecond(),
+                    timeBound.getRight().getEpochSecond(),
+                    eventFields
+            );
+            int result = localCount + countError;
+            log.debug(
+                    "LocalStorageCountAggregatorImpl field: {} value: {}  countError: {}",
+                    resolve.getName(),
+                    resolve.getValue(),
+                    result
+            );
+            return result;
+        } catch (Exception e) {
+            log.warn("LocalStorageCountAggregatorImpl error when countError e: ", e);
+            throw new RuleFunctionException(e);
+        }
+    }
+
+    @Override
     public Integer countChargeback(
             PaymentCheckedField checkedField,
             PaymentModel model,

@@ -61,6 +61,13 @@ public class DgraphSumAggregatorImpl implements SumPaymentAggregator<PaymentMode
     }
 
     @Override
+    @BasicMetric("sumError")
+    public Double sumError(PaymentCheckedField checkedField, PaymentModel model, TimeWindow timeWindow,
+                           List<PaymentCheckedField> fields) {
+        return getSum(checkedField, model, timeWindow, fields, DgraphEntity.PAYMENT, PaymentStatus.failed.name());
+    }
+
+    @Override
     public Double sumChargeback(PaymentCheckedField checkedField,
                                 PaymentModel model,
                                 TimeWindow timeWindow,
