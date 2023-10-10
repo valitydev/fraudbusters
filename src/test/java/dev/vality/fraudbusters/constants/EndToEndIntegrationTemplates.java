@@ -20,7 +20,7 @@ public class EndToEndIntegrationTemplates {
             """;
 
     public static final String TEMPLATE_CONCRETE =
-            "rule:TEMPLATE_CONCRETE: sumSuccess(\"email\", 10) >= 29000 or sumError(\"email\", 10) > 0 -> decline;";
+            "rule:TEMPLATE_CONCRETE: sumSuccess(\"email\", 10) >= 29000 or countError(\"email\", 10) > 2 -> decline;";
     public static final String GROUP_DECLINE =
             "rule:GROUP_DECLINE:  1 >= 0  -> decline;";
     public static final String GROUP_NORMAL =
