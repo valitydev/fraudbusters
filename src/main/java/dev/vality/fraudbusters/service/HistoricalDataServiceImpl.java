@@ -27,7 +27,7 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
     @Override
     public HistoricalPaymentsDto getPayments(FilterDto filter) {
         List<CheckedPayment> payments = paymentRepository.getByFilter(filter);
-        String lastId = buildLastPaymentId(filter.getSize(), payments);
+        String lastId = buildLastPaymentId(filter.getLastId(), payments);
         return HistoricalPaymentsDto.builder()
                 .payments(payments)
                 .lastId(lastId)
@@ -67,18 +67,15 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
     @Override
     public HistoricalPaymentsDto getFraudPayments(FilterDto filter) {
         List<FraudPaymentRow> payments = fraudPaymentRepository.getByFilter(filter);
-        String lastId = buildLastPaymentId(filter.getSize(), payments);
+        String lastId = buildLastPaymentId(filter.getLastId(), payments);
         return HistoricalPaymentsDto.builder()
                 .payments(payments)
                 .lastId(lastId)
                 .build();
     }
 
-    private String buildLastPaymentId(Long filterSize, List<? extends CheckedPayment> payments) {
-        if (payments.size() == filterSize) {
-            return String.valueOf(filterSize + payments.size() - 1);
-        }
-        return String.valueOf(payments.size() - 1);
+    private String buildLastPaymentId(String lastId, List<? extends CheckedPayment> payments) {
+        return String.valueOf(Integer.parseInt(lastId != null ? lastId : "0") + payments.size() - 1);
     }
 
     @Nullable
