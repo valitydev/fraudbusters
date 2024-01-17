@@ -27,7 +27,7 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
     @Override
     public HistoricalPaymentsDto getPayments(FilterDto filter) {
         List<CheckedPayment> payments = paymentRepository.getByFilter(filter);
-        String lastId = buildLastPaymentId(filter.getSize(), payments);
+        String lastId = buildLastPaymentId(filter.getLastId(), filter.getSize(), payments);
         return HistoricalPaymentsDto.builder()
                 .payments(payments)
                 .lastId(lastId)
@@ -67,7 +67,7 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
     @Override
     public HistoricalPaymentsDto getFraudPayments(FilterDto filter) {
         List<FraudPaymentRow> payments = fraudPaymentRepository.getByFilter(filter);
-        String lastId = buildLastPaymentId(filter.getSize(), payments);
+        String lastId = buildLastPaymentId(filter.getLastId(), filter.getSize(), payments);
         return HistoricalPaymentsDto.builder()
                 .payments(payments)
                 .lastId(lastId)
@@ -75,12 +75,11 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
     }
 
     @Nullable
-    private String buildLastPaymentId(Long filterSize, List<? extends CheckedPayment> payments) {
-        if (payments.size() == filterSize) {
-            CheckedPayment lastPayment = payments.get(payments.size() - 1);
-            return CompositeIdUtil.create(lastPayment.getId(), lastPayment.getPaymentStatus());
+    private String buildLastPaymentId(String lastId, Long size, List<? extends CheckedPayment> payments) {
+        if (lastId == null && payments.isEmpty() || size > payments.size()) {
+            return null;
         }
-        return null;
+        return String.valueOf(Integer.parseInt(lastId != null ? lastId : "0") + payments.size());
     }
 
     @Nullable
@@ -95,7 +94,7 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
     private String buildLastRefundId(Long filterSize, List<Refund> refunds) { // TODO перейти на внутреннюю модель
         if (refunds.size() == filterSize) {
             Refund lastRefund = refunds.get(refunds.size() - 1);
-            return CompositeIdUtil.create(lastRefund.getId(), lastRefund.getStatus().name());
+            return CompositeIdUtil.create(lastRefund.getId(), lastRefund.getEventTime());
         }
         return null;
     }

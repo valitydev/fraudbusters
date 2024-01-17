@@ -122,7 +122,7 @@ class HistoricalFraudResultDataTest {
         FilterDto filter = new FilterDto();
         filter.setTimeFrom("2020-05-01T18:04:53");
         filter.setTimeTo("2020-10-01T18:04:53");
-        filter.setLastId("1DkraVdGJfs.1");
+        filter.setLastId("4");
         SortDto sortDto = new SortDto();
         sortDto.setOrder(SortOrder.DESC);
         filter.setSort(sortDto);
@@ -139,7 +139,6 @@ class HistoricalFraudResultDataTest {
         filter.setTimeFrom("2020-05-01T18:04:53");
         filter.setTimeTo("2020-10-01T18:04:53");
         filter.setSize(3L);
-        filter.setLastId("1DkraVdGJfs.1");
         SortDto sortDto = new SortDto();
         sortDto.setOrder(SortOrder.DESC);
         filter.setSort(sortDto);
