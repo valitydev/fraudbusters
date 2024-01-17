@@ -78,7 +78,7 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
     private String buildLastPaymentId(Long filterSize, List<? extends CheckedPayment> payments) {
         if (payments.size() == filterSize) {
             CheckedPayment lastPayment = payments.get(payments.size() - 1);
-            return CompositeIdUtil.create(lastPayment.getId(), lastPayment.getPaymentStatus());
+            return CompositeIdUtil.create(lastPayment.getId(), lastPayment.getEventTime().toString());
         }
         return null;
     }
@@ -95,7 +95,7 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
     private String buildLastRefundId(Long filterSize, List<Refund> refunds) { // TODO перейти на внутреннюю модель
         if (refunds.size() == filterSize) {
             Refund lastRefund = refunds.get(refunds.size() - 1);
-            return CompositeIdUtil.create(lastRefund.getId(), lastRefund.getStatus().name());
+            return CompositeIdUtil.create(lastRefund.getId(), lastRefund.getEventTime());
         }
         return null;
     }

@@ -76,7 +76,7 @@ public class FilterUtil {
                 List<String> compositeId = CompositeIdUtil.extract(filter.getLastId());
                 if (compositeId.size() == 2) {
                     params.addValue(QueryParamName.ID, compositeId.get(0))
-                            .addValue(QueryParamName.STATUS, compositeId.get(1));
+                            .addValue(QueryParamName.EVENT_TIME, compositeId.get(1));
                 }
             } else {
                 params.addValue(QueryParamName.ID, filter.getLastId());

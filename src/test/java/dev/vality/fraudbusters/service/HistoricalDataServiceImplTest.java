@@ -96,7 +96,7 @@ class HistoricalDataServiceImplTest {
 
         HistoricalPaymentsDto actualPayments = historicalDataService.getPayments(filterDto);
 
-        String expectedLastId = checkedPayments.get(3).getId() + "|" + checkedPayments.get(3).getPaymentStatus();
+        String expectedLastId = checkedPayments.get(3).getId() + "|" + checkedPayments.get(3).getEventTime();
         assertEquals(expectedLastId, actualPayments.getLastId());
         assertFalse(actualPayments.getPayments().isEmpty());
         assertEquals(checkedPayments.size(), actualPayments.getPayments().size());
@@ -136,7 +136,7 @@ class HistoricalDataServiceImplTest {
 
         HistoricalRefundsDto actualRefunds = historicalDataService.getRefunds(filterDto);
 
-        String expectedLastId = refunds.get(3).getId() + "|" + refunds.get(3).getStatus();
+        String expectedLastId = refunds.get(3).getId() + "|" + refunds.get(3).getEventTime();
         assertEquals(expectedLastId, actualRefunds.getLastId());
         assertFalse(actualRefunds.getRefunds().isEmpty());
         assertEquals(refunds.size(), actualRefunds.getRefunds().size());
@@ -260,7 +260,7 @@ class HistoricalDataServiceImplTest {
 
         HistoricalPaymentsDto actualFraudPayments = historicalDataService.getFraudPayments(filterDto);
 
-        String expectedLastId = fraudPaymentRows.get(3).getId() + "|" + fraudPaymentRows.get(3).getPaymentStatus();
+        String expectedLastId = fraudPaymentRows.get(3).getId() + "|" + fraudPaymentRows.get(3).getEventTime();
         assertEquals(expectedLastId, actualFraudPayments.getLastId());
         assertFalse(actualFraudPayments.getPayments().isEmpty());
         assertEquals(fraudPaymentRows.size(), actualFraudPayments.getPayments().size());
