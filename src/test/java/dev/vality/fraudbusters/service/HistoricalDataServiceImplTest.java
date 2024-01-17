@@ -96,7 +96,7 @@ class HistoricalDataServiceImplTest {
 
         HistoricalPaymentsDto actualPayments = historicalDataService.getPayments(filterDto);
 
-        String expectedLastId = checkedPayments.get(3).getId() + "|" + checkedPayments.get(3).getEventTime();
+        String expectedLastId = String.valueOf(checkedPayments.size());
         assertEquals(expectedLastId, actualPayments.getLastId());
         assertFalse(actualPayments.getPayments().isEmpty());
         assertEquals(checkedPayments.size(), actualPayments.getPayments().size());
@@ -260,7 +260,7 @@ class HistoricalDataServiceImplTest {
 
         HistoricalPaymentsDto actualFraudPayments = historicalDataService.getFraudPayments(filterDto);
 
-        String expectedLastId = String.valueOf(fraudPaymentRows.size() - 1);
+        String expectedLastId = String.valueOf(fraudPaymentRows.size());
         assertEquals(expectedLastId, actualFraudPayments.getLastId());
         assertFalse(actualFraudPayments.getPayments().isEmpty());
         assertEquals(fraudPaymentRows.size(), actualFraudPayments.getPayments().size());
