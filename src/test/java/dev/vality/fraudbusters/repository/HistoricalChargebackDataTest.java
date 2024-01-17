@@ -124,7 +124,7 @@ class HistoricalChargebackDataTest {
         FilterDto filter = new FilterDto();
         filter.setTimeFrom("2020-05-01T18:04:53");
         filter.setTimeTo("2020-10-01T18:04:53");
-        filter.setLastId("1DkraVdGJfs.1|rejected");
+        filter.setLastId("3");
         SortDto sortDto = new SortDto();
         sortDto.setOrder(SortOrder.DESC);
         filter.setSort(sortDto);
@@ -141,7 +141,6 @@ class HistoricalChargebackDataTest {
         filter.setTimeFrom("2020-05-01T18:04:53");
         filter.setTimeTo("2020-10-01T18:04:53");
         filter.setSize(3L);
-        filter.setLastId("1DkraVdGJfs.1|rejected");
         SortDto sortDto = new SortDto();
         sortDto.setOrder(SortOrder.DESC);
         filter.setSort(sortDto);

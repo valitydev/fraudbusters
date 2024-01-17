@@ -74,13 +74,11 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
                 .build();
     }
 
-    @Nullable
     private String buildLastPaymentId(Long filterSize, List<? extends CheckedPayment> payments) {
         if (payments.size() == filterSize) {
-            CheckedPayment lastPayment = payments.get(payments.size() - 1);
-            return CompositeIdUtil.create(lastPayment.getId(), lastPayment.getEventTime().toString());
+            return String.valueOf(filterSize + payments.size() - 1);
         }
-        return null;
+        return String.valueOf(payments.size() - 1);
     }
 
     @Nullable
