@@ -7,7 +7,6 @@ import dev.vality.fraudbusters.domain.Event;
 import dev.vality.fraudbusters.domain.FraudPaymentRow;
 import dev.vality.fraudbusters.repository.Repository;
 import dev.vality.fraudbusters.service.dto.*;
-import dev.vality.fraudbusters.util.CompositeIdUtil;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,7 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
     @Override
     public HistoricalPaymentsDto getPayments(FilterDto filter) {
         List<CheckedPayment> payments = paymentRepository.getByFilter(filter);
-        String lastId = buildLastPaymentId(filter.getLastId(), filter.getSize(), payments);
+        String lastId = buildContinuationId(filter.getLastId(), filter.getSize(), payments);
         return HistoricalPaymentsDto.builder()
                 .payments(payments)
                 .lastId(lastId)
@@ -37,7 +36,7 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
     @Override
     public HistoricalRefundsDto getRefunds(FilterDto filter) {
         List<Refund> refunds = refundRepository.getByFilter(filter);
-        String lastId = buildLastRefundId(filter.getSize(), refunds);
+        String lastId = buildContinuationId(filter.getLastId(), filter.getSize(), refunds);
         return HistoricalRefundsDto.builder()
                 .refunds(refunds)
                 .lastId(lastId)
@@ -47,7 +46,7 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
     @Override
     public HistoricalChargebacksDto getChargebacks(FilterDto filter) {
         List<Chargeback> chargebacks = chargebackRepository.getByFilter(filter);
-        String lastId = buildLastChargebackId(filter.getSize(), chargebacks);
+        String lastId = buildContinuationId(filter.getLastId(), filter.getSize(), chargebacks);
         return HistoricalChargebacksDto.builder()
                 .chargebacks(chargebacks)
                 .lastId(lastId)
@@ -57,7 +56,7 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
     @Override
     public HistoricalFraudResultsDto getFraudResults(FilterDto filter) {
         List<Event> fraudResults = fraudResultRepository.getByFilter(filter);
-        String lastId = buildLastResultId(filter.getSize(), fraudResults);
+        String lastId = buildContinuationId(filter.getLastId(), filter.getSize(), fraudResults);
         return HistoricalFraudResultsDto.builder()
                 .fraudResults(fraudResults)
                 .lastId(lastId)
@@ -67,7 +66,7 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
     @Override
     public HistoricalPaymentsDto getFraudPayments(FilterDto filter) {
         List<FraudPaymentRow> payments = fraudPaymentRepository.getByFilter(filter);
-        String lastId = buildLastPaymentId(filter.getLastId(), filter.getSize(), payments);
+        String lastId = buildContinuationId(filter.getLastId(), filter.getSize(), payments);
         return HistoricalPaymentsDto.builder()
                 .payments(payments)
                 .lastId(lastId)
@@ -75,37 +74,11 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
     }
 
     @Nullable
-    private String buildLastPaymentId(String lastId, Long size, List<? extends CheckedPayment> payments) {
-        if (lastId == null && payments.isEmpty() || size > payments.size()) {
+    private String buildContinuationId(String lastId, Long size, List<?> items) {
+        if (lastId == null && items.isEmpty() || size > items.size()) {
             return null;
         }
-        return String.valueOf(Integer.parseInt(lastId != null ? lastId : "0") + payments.size());
+        return String.valueOf(Integer.parseInt(lastId != null ? lastId : "0") + items.size());
     }
 
-    @Nullable
-    private String buildLastResultId(Long filterSize, List<? extends Event> payments) {
-        if (payments.size() == filterSize) {
-            return payments.get(payments.size() - 1).getId();
-        }
-        return null;
-    }
-
-    @Nullable
-    private String buildLastRefundId(Long filterSize, List<Refund> refunds) { // TODO перейти на внутреннюю модель
-        if (refunds.size() == filterSize) {
-            Refund lastRefund = refunds.get(refunds.size() - 1);
-            return CompositeIdUtil.create(lastRefund.getId(), lastRefund.getEventTime());
-        }
-        return null;
-    }
-
-    @Nullable
-    private String buildLastChargebackId(Long filterSize,
-                                         List<Chargeback> chargebacks) { // TODO перейти на внутреннюю модель
-        if (chargebacks.size() == filterSize) {
-            Chargeback lastChargeback = chargebacks.get(chargebacks.size() - 1);
-            return CompositeIdUtil.create(lastChargeback.getId(), lastChargeback.getStatus().name());
-        }
-        return null;
-    }
 }
