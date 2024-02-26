@@ -1,8 +1,11 @@
 package dev.vality.fraudbusters.resource.payment.handler;
 
+import dev.vality.damsel.base.InvalidRequest;
 import dev.vality.damsel.domain.RiskScore;
+import dev.vality.damsel.proxy_inspector.BlackListContext;
 import dev.vality.damsel.proxy_inspector.Context;
 import dev.vality.damsel.proxy_inspector.InspectorProxySrv;
+import dev.vality.damsel.wb_list.*;
 import dev.vality.fraudbusters.converter.CheckedResultToRiskScoreConverter;
 import dev.vality.fraudbusters.converter.ContextToFraudRequestConverter;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
@@ -24,6 +27,7 @@ public class FraudInspectorHandler implements InspectorProxySrv.Iface {
     private final ContextToFraudRequestConverter requestConverter;
     private final TemplateVisitor<PaymentModel, CheckedResultModel> templateVisitor;
     private final KafkaTemplate<String, FraudResult> kafkaFraudResultTemplate;
+    private final WbListServiceSrv.Iface wbListServiceSrv;
 
     @Override
     public RiskScore inspectPayment(Context context) throws TException {
@@ -43,5 +47,21 @@ public class FraudInspectorHandler implements InspectorProxySrv.Iface {
         }
     }
 
+    @Override
+    public boolean isExistInBlackList(BlackListContext blackListContext) throws InvalidRequest, TException {
+        try {
+            Row row = new Row()
+                    .setId(IdInfo.payment_id(new PaymentId()
+                            .setPartyId(blackListContext.first_id)
+                            .setShopId(blackListContext.second_id)))
+                    .setListName(blackListContext.field_name)
+                    .setListType(ListType.black)
+                    .setValue(blackListContext.getValue());
+            return wbListServiceSrv.isExist(row);
+        } catch (Exception e) {
+            log.warn("InListFinderImpl error when findInList e: ", e);
+            return false;
+        }
+    }
 
 }
