@@ -59,7 +59,7 @@ public class FraudInspectorHandler implements InspectorProxySrv.Iface {
                     .setValue(blackListContext.getValue());
             return wbListServiceSrv.isExist(row);
         } catch (Exception e) {
-            log.warn("InListFinderImpl error when findInList e: ", e);
+            log.warn("FraudInspectorHandler error when isExistInBlackList e: ", e);
             return false;
         }
     }
