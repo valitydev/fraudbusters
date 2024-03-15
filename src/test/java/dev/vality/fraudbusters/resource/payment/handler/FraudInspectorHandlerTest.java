@@ -47,15 +47,15 @@ class FraudInspectorHandlerTest {
         );
 
         when(wbListServiceSrv.isExist(any())).thenReturn(false);
-        boolean existInBlackList = fraudInspectorHandler.isExistInBlackList(createBlackListContext());
+        boolean existInBlackList = fraudInspectorHandler.isBlacklisted(createBlackListContext());
         assertEquals(false, existInBlackList);
 
         when(wbListServiceSrv.isExist(any())).thenReturn(true);
-        existInBlackList = fraudInspectorHandler.isExistInBlackList(createBlackListContext());
+        existInBlackList = fraudInspectorHandler.isBlacklisted(createBlackListContext());
         assertEquals(true, existInBlackList);
 
         when(wbListServiceSrv.isExist(any())).thenThrow(new ListNotFound());
-        existInBlackList = fraudInspectorHandler.isExistInBlackList(createBlackListContext());
+        existInBlackList = fraudInspectorHandler.isBlacklisted(createBlackListContext());
         assertEquals(false, existInBlackList);
     }
 
