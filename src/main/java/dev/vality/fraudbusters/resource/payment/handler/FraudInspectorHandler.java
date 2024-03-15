@@ -48,7 +48,7 @@ public class FraudInspectorHandler implements InspectorProxySrv.Iface {
     }
 
     @Override
-    public boolean isExistInBlackList(BlackListContext blackListContext) throws InvalidRequest, TException {
+    public boolean isBlacklisted(BlackListContext blackListContext) throws InvalidRequest, TException {
         try {
             Row row = new Row()
                     .setId(IdInfo.payment_id(new PaymentId()
