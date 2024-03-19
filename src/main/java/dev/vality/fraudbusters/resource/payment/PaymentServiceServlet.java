@@ -2,10 +2,10 @@ package dev.vality.fraudbusters.resource.payment;
 
 import dev.vality.damsel.fraudbusters.PaymentServiceSrv;
 import dev.vality.woody.thrift.impl.http.THServiceBuilder;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebServlet;
 import lombok.RequiredArgsConstructor;
 
-import javax.servlet.*;
-import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
 
 @WebServlet("/fraud_payment/v1/")

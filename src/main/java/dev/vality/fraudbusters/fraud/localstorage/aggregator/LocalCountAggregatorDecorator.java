@@ -15,8 +15,8 @@ import dev.vality.fraudo.model.TimeWindow;
 import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.List;
 

@@ -7,7 +7,7 @@
     <parent>
         <groupId>dev.vality</groupId>
         <artifactId>service-parent-pom</artifactId>
-        <version>1.0.16</version>
+        <version>3.0.0</version>
     </parent>
 
     <name>fraudbusters</name>
@@ -27,17 +27,13 @@
         <trusted.tokens.proto.version>1.7-6d29f86</trusted.tokens.proto.version>
         <wb.list.proto.version>1.44-5dbd6d4</wb.list.proto.version>
         <dgraph4j.version>21.12.0</dgraph4j.version>
-        <velocity.version>2.2</velocity.version>
+        <velocity.version>2.3</velocity.version>
         <columbus-proto.version>1.3-979c2b6</columbus-proto.version>
-        <testcontainers-annotations.version>1.4.3</testcontainers-annotations.version>
+        <testcontainers-annotations.version>2.0.3</testcontainers-annotations.version>
 
-        <sonar.issue.ignore.multicriteria>e1</sonar.issue.ignore.multicriteria>
-        <sonar.issue.ignore.multicriteria.e1.ruleKey>squid:S2095</sonar.issue.ignore.multicriteria.e1.ruleKey>
-        <sonar.issue.ignore.multicriteria.e1.resourceKey>
-            **/*StreamFactoryImpl.java
-        </sonar.issue.ignore.multicriteria.e1.resourceKey>
         <checkstyle.config.suppressions.path>./src/main/resources/checkstyle/checkstyle-suppressions.xml
         </checkstyle.config.suppressions.path>
+        <shared-resources.version>2.1.0</shared-resources.version>
     </properties>
     <dependencies>
         <!--spring-->
@@ -118,6 +114,7 @@
         <dependency>
             <groupId>dev.vality.woody</groupId>
             <artifactId>woody-thrift</artifactId>
+            <version>2.0.0</version>
         </dependency>
         <dependency>
             <groupId>dev.vality</groupId>
@@ -143,11 +140,6 @@
             <artifactId>columbus-proto</artifactId>
             <version>${columbus-proto.version}</version>
         </dependency>
-        <dependency>
-            <groupId>dev.vality</groupId>
-            <artifactId>shared-resources</artifactId>
-        </dependency>
-
         <!--Thrirdparty libs-->
         <dependency>
             <groupId>org.jetbrains</groupId>

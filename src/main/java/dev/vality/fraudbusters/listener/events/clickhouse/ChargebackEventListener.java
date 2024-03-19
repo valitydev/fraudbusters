@@ -22,7 +22,7 @@ public class ChargebackEventListener {
     @KafkaListener(topics = "${kafka.topic.event.sink.chargeback}",
             containerFactory = "kafkaChargebackResultListenerContainerFactory")
     public void listen(
-            List<Chargeback> chargeback, @Header(KafkaHeaders.RECEIVED_PARTITION_ID) Integer partition,
+            List<Chargeback> chargeback, @Header(KafkaHeaders.RECEIVED_PARTITION) Integer partition,
             @Header(KafkaHeaders.OFFSET) Long offset) throws InterruptedException {
         try {
             log.info(

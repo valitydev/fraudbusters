@@ -23,7 +23,7 @@ public class RefundEventListener {
             containerFactory = "kafkaRefundResultListenerContainerFactory")
     public void listen(
             List<Refund> refunds,
-            @Header(KafkaHeaders.RECEIVED_PARTITION_ID) Integer partition,
+            @Header(KafkaHeaders.RECEIVED_PARTITION) Integer partition,
             @Header(KafkaHeaders.OFFSET) Long offset) throws InterruptedException {
         try {
             log.info(
