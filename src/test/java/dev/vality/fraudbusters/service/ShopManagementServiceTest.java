@@ -1,6 +1,5 @@
 package dev.vality.fraudbusters.service;
 
-import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import dev.vality.damsel.fraudbusters.MerchantInfo;
 import dev.vality.damsel.fraudbusters.ReferenceInfo;
 import dev.vality.fraudbusters.config.RestTemplateConfig;
@@ -20,7 +19,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-@WireMockTest(httpPort = 8089)
 @ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ContextConfiguration(classes = {ShopManagementService.class,

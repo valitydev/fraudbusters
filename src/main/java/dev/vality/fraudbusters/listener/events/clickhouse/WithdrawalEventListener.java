@@ -26,7 +26,7 @@ public class WithdrawalEventListener {
             containerFactory = "kafkaWithdrawalResultListenerContainerFactory")
     public void listen(
             List<Withdrawal> withdrawals,
-            @Header(KafkaHeaders.RECEIVED_PARTITION_ID) Integer partition,
+            @Header(KafkaHeaders.RECEIVED_PARTITION) Integer partition,
             @Header(KafkaHeaders.OFFSET) Long offset) throws InterruptedException {
         try {
             log.info("Listen withdrawals size: {} partition: {} offset: {}", withdrawals.size(), partition, offset);

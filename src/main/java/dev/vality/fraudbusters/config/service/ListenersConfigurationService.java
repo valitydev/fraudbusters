@@ -3,7 +3,7 @@ package dev.vality.fraudbusters.config.service;
 import dev.vality.damsel.fraudbusters.Command;
 import dev.vality.fraudbusters.serde.CommandDeserializer;
 import dev.vality.fraudbusters.service.ConsumerGroupIdService;
-import dev.vality.kafka.common.exception.handler.SeekToCurrentWithSleepBatchErrorHandler;
+import dev.vality.kafka.common.util.ExponentialBackOffDefaultErrorHandlerFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Deserializer;
@@ -14,7 +14,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
-import org.springframework.kafka.listener.LoggingErrorHandler;
+import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.retry.RetryPolicy;
 import org.springframework.retry.backoff.BackOffPolicy;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
@@ -62,8 +62,7 @@ public class ListenersConfigurationService {
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(stringCommandConsumerFactory);
         factory.setConcurrency(1);
-        factory.setRetryTemplate(retryTemplate());
-        factory.setErrorHandler(new LoggingErrorHandler());
+        factory.setCommonErrorHandler(new DefaultErrorHandler());
         return factory;
     }
 
@@ -118,7 +117,7 @@ public class ListenersConfigurationService {
         props.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, MAX_WAIT_FETCH_MS);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         final ConcurrentKafkaListenerContainerFactory<String, T> factory = createFactoryWithProps(deserializer, props);
-        factory.setBatchErrorHandler(new SeekToCurrentWithSleepBatchErrorHandler());
+        factory.setCommonErrorHandler(ExponentialBackOffDefaultErrorHandlerFactory.create());
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         factory.setConcurrency(dgraphPaymentConcurrency);
         return factory;

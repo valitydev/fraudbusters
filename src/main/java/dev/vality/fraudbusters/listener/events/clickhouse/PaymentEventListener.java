@@ -44,7 +44,7 @@ public class PaymentEventListener {
             containerFactory = "kafkaPaymentResultListenerContainerFactory")
     public void listen(
             List<Payment> payments,
-            @Header(KafkaHeaders.RECEIVED_PARTITION_ID) Integer partition,
+            @Header(KafkaHeaders.RECEIVED_PARTITION) Integer partition,
             @Header(KafkaHeaders.OFFSET) Long offset) throws InterruptedException {
         try {
             log.info(
