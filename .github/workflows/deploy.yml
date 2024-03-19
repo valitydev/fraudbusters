@@ -1,15 +1,20 @@
-name: Deploy Docker Image
+name: Maven Deploy Artifact
 
 on:
   push:
     branches:
       - 'master'
+      - 'main'
+      - 'epic/**'
 
 jobs:
-  build-and-deploy:
-    uses: valitydev/java-workflow/.github/workflows/maven-service-deploy.yml@v1
-    with:
-      ignore-coverage: true
+  deploy:
+    uses: empayre/java-workflow/.github/workflows/maven-service-deploy.yml@v2
     secrets:
-      github-token: ${{ secrets.GITHUB_TOKEN }}
+      action-fetch-token: ${{ secrets.ACTIONS_FETCH_TOKEN }}
       mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+      github-pkg-ro-pat: ${{ secrets.GH_PACKAGES_RO_PAT2 }}
+      github-pkg-ro-user: 'empayre-bot'
+      aws-ecr-access_key: ${{ secrets.ECR_ACCESS_KEY }}
+      aws-ecr-secret-key: ${{ secrets.ECR_SECRET_KEYS }}
+      aws-region: ${{ secrets.AWS_REGION }}
