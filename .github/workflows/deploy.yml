@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-deploy:
-    uses: valitydev/java-workflow/.github/workflows/maven-service-deploy.yml@v2
+    uses: valitydev/java-workflow/.github/workflows/maven-service-deploy.yml@v2.0.12
     with:
       ignore-coverage: true
     secrets:
