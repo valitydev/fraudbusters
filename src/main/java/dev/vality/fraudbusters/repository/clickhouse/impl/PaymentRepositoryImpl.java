@@ -138,7 +138,8 @@ public class PaymentRepositoryImpl implements Repository<CheckedPayment>, Paymen
                 and eventTime <= ?
                 and %1$s = ? and status in (?)
                 group by %1$s""", fieldNameBy, fieldNameCount, TABLE);
-        List<Object> params = AggregationUtil.generateStatusParams(from, to, value, AggregationUtil.getFinalStatusValues());
+        List<Object> params =
+                AggregationUtil.generateStatusParams(from, to, value, AggregationUtil.getFinalStatusValues());
         log.debug("AggregationGeneralRepositoryImpl uniqCountOperation sql: {} params: {}", sql, params);
         return jdbcTemplate.query(sql, params.toArray(), new CountExtractor());
     }

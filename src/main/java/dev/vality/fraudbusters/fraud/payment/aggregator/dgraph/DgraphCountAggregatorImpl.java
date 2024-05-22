@@ -76,7 +76,8 @@ public class DgraphCountAggregatorImpl implements CountPaymentAggregator<Payment
     }
 
     @Override
-    public Integer countPending(PaymentCheckedField paymentCheckedField, PaymentModel paymentModel, TimeWindow timeWindow,
+    public Integer countPending(PaymentCheckedField paymentCheckedField, PaymentModel paymentModel,
+                                TimeWindow timeWindow,
                                 List<PaymentCheckedField> list) {
         return getCount(
                 paymentCheckedField, paymentModel, timeWindow, list, DgraphEntity.PAYMENT, PaymentStatus.pending.name()
