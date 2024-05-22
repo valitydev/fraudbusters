@@ -136,6 +136,18 @@ public class CountAggregatorImpl implements CountPaymentAggregator<PaymentModel,
     }
 
     @Override
+    public Integer countPending(PaymentCheckedField checkedField, PaymentModel paymentModel, TimeWindow timeWindow,
+                                List<PaymentCheckedField> list) {
+        return getCount(
+                checkedField,
+                paymentModel,
+                timeWindow,
+                list,
+                paymentRepository::countOperationSuccessWithGroupBy
+        );
+    }
+
+    @Override
     @BasicMetric("countChargeback")
     public Integer countChargeback(
             PaymentCheckedField paymentCheckedField,

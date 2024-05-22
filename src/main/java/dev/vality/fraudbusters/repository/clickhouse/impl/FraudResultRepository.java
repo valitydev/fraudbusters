@@ -162,6 +162,27 @@ public class FraudResultRepository implements Repository<Event>, PaymentReposito
     }
 
     @Override
+    public Integer countOperationPendingWithGroupBy(String fieldName, Object value, Long from, Long to,
+                                                    List<FieldModel> fieldModels) {
+        StringBuilder sql = new StringBuilder(String.format("""
+                        select %1$s, count() as cnt
+                        from %2$s
+                        where timestamp >= ?
+                        and timestamp <= ?
+                        and eventTime >= ?
+                        and eventTime <= ?
+                        and %1$s = ? and resultStatus = ?""",
+                fieldName,
+                EventSource.FRAUD_EVENTS_UNIQUE.getTable()
+        ));
+        StringBuilder sqlGroupBy = new StringBuilder(String.format("group by %1$s", fieldName));
+        StringBuilder resultSql = AggregationUtil.appendGroupingFields(fieldModels, sql, sqlGroupBy);
+        List<Object> params = AggregationUtil.generateParams(from, to, fieldModels, value, ResultStatus.DECLINE.name());
+        log.debug("FraudResultRepository countOperationPendingWithGroupBy sql: {} params: {}", sql, params);
+        return jdbcTemplate.query(resultSql.toString(), params.toArray(), new CountExtractor());
+    }
+
+    @Override
     public Integer countOperationErrorWithGroupBy(
             String fieldName, Object value, Long from, Long to,
             List<FieldModel> fieldModels, String errorCode) {

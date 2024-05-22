@@ -13,6 +13,13 @@ public interface PaymentRepository extends AggregationRepository {
             Long to,
             List<FieldModel> fieldModels);
 
+    Integer countOperationPendingWithGroupBy(
+            String fieldName,
+            Object value,
+            Long from,
+            Long to,
+            List<FieldModel> fieldModels);
+
     Integer countOperationErrorWithGroupBy(
             String fieldName,
             Object value,

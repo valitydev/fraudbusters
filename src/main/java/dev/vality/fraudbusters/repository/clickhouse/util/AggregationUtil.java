@@ -1,5 +1,6 @@
 package dev.vality.fraudbusters.repository.clickhouse.util;
 
+import dev.vality.fraudbusters.constant.PaymentStatus;
 import dev.vality.fraudbusters.fraud.model.FieldModel;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,6 +15,8 @@ import java.util.stream.Collectors;
 import static java.time.ZoneOffset.UTC;
 
 public class AggregationUtil {
+
+    public static final String SEPPARATOR = ",";
 
     public static StringBuilder appendGroupingFields(
             List<FieldModel> fieldModels,
@@ -86,5 +89,12 @@ public class AggregationUtil {
                     .collect(Collectors.toCollection(() -> objects));
         }
         return objects;
+    }
+
+    @NotNull
+    public static String getFinalStatusValues() {
+        return PaymentStatus.captured.name() +
+                SEPPARATOR + PaymentStatus.failed.name() +
+                SEPPARATOR + PaymentStatus.cancelled.name();
     }
 }
