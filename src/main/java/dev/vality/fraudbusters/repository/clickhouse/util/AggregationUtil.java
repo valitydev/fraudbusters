@@ -17,6 +17,7 @@ import static java.time.ZoneOffset.UTC;
 public class AggregationUtil {
 
     public static final String SEPPARATOR = ",";
+    public static final String BRACKET = "'";
 
     public static StringBuilder appendGroupingFields(
             List<FieldModel> fieldModels,
@@ -89,12 +90,5 @@ public class AggregationUtil {
                     .collect(Collectors.toCollection(() -> objects));
         }
         return objects;
-    }
-
-    @NotNull
-    public static String getFinalStatusValues() {
-        return PaymentStatus.captured.name() +
-                SEPPARATOR + PaymentStatus.failed.name() +
-                SEPPARATOR + PaymentStatus.cancelled.name();
     }
 }
