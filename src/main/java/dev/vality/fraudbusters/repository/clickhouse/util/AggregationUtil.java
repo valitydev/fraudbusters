@@ -44,21 +44,6 @@ public class AggregationUtil {
         return generateParams(from, to, fieldModels, value, status, null);
     }
 
-    public static List<Object> generateStatusesParams(
-            Long from,
-            Long to,
-            List<FieldModel> fieldModels,
-            Object value,
-            List<String> statuses) {
-        return generateParams(from, to, fieldModels, value, statuses, null);
-    }
-
-    public static List<Object> generateStatusesParams(
-            Long from, Long to, Object value,
-            List<String> statuses) {
-        return generateParams(from, to, null, value, statuses, null);
-    }
-
     public static List<Object> generateParams(
             Long from,
             Long to,
@@ -80,6 +65,10 @@ public class AggregationUtil {
                 status,
                 errorCode
         );
+    }
+
+    public static List<Object> generateParams(Long from, Long to, Object value) {
+        return generateParams(from, to, null, value);
     }
 
     public static List<Object> generateParams(
@@ -111,9 +100,19 @@ public class AggregationUtil {
         return objects;
     }
 
-    public static List<Object> generateParams(Long from, Long to, Object value) {
-        return generateParams(from, to, null, value);
+    public static List<Object> generateStatusesParams(
+            Long from,
+            Long to,
+            List<FieldModel> fieldModels,
+            Object value,
+            List<String> statuses) {
+        return generateParams(from, to, fieldModels, value, statuses, null);
     }
+
+    public static List<Object> generateStatusesParams(Long from, Long to, Object value, List<String> statuses) {
+        return generateParams(from, to, null, value, statuses, null);
+    }
+
 
     public static List<Object> generateStatusParams(Long from, Long to, Object value, String status) {
         return generateParams(from, to, null, value, status);
