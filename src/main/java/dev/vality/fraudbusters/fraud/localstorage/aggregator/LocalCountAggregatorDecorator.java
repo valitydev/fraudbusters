@@ -129,6 +129,21 @@ public class LocalCountAggregatorDecorator implements CountPaymentAggregator<Pay
     }
 
     @Override
+    public Integer countPending(PaymentCheckedField checkedField, PaymentModel paymentModel, TimeWindow timeWindow,
+                                List<PaymentCheckedField> list) {
+        Integer countPending = countAggregator.countPending(checkedField, paymentModel, timeWindow, list);
+        Integer resultCount = getCount(
+                checkedField,
+                paymentModel,
+                timeWindow,
+                list,
+                localStorageRepository::countOperationPendingWithGroupBy
+        ) + countPending;
+        log.debug("LocalStorageCountAggregatorImpl resultCount: {}", resultCount);
+        return resultCount;
+    }
+
+    @Override
     public Integer countChargeback(
             PaymentCheckedField checkedField,
             PaymentModel model,

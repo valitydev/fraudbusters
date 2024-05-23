@@ -83,6 +83,8 @@ class EndToEndIntegrationTest {
 
     public static final String CAPTURED = "captured";
     public static final String PROCESSED = "processed";
+
+    public static final String PENDING = "pending";
     public static final String FAILED = "failed";
 
     private static final String P_ID = "test";
@@ -128,7 +130,7 @@ class EndToEndIntegrationTest {
     int serverPort;
 
     @BeforeEach
-    public void init() throws ExecutionException, InterruptedException, TException {
+    public void init() throws InterruptedException, TException {
         testThriftKafkaProducer.send(kafkaTopics.getFullTemplate(),
                 createCommandTemplate(GLOBAL_REF, EndToEndIntegrationTemplates.TEMPLATE));
         testThriftKafkaProducer.send(kafkaTopics.getFullReference(),
@@ -191,6 +193,7 @@ class EndToEndIntegrationTest {
         RiskScore riskScore = client.inspectPayment(context);
         assertEquals(RiskScore.high, riskScore);
 
+        paymentRepository.insertBatch(List.of(BeanUtil.convertContextToPayment(context, PENDING)));
         paymentRepository.insertBatch(List.of(BeanUtil.convertContextToPayment(context, PROCESSED)));
         paymentRepository.insertBatch(List.of(BeanUtil.convertContextToPayment(context, CAPTURED)));
 
