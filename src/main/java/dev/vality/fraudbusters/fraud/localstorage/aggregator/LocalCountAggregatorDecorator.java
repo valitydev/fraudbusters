@@ -137,7 +137,7 @@ public class LocalCountAggregatorDecorator implements CountPaymentAggregator<Pay
                 paymentModel,
                 timeWindow,
                 list,
-                localStorageRepository::countOperationSuccessWithGroupBy
+                localStorageRepository::countOperationPendingWithGroupBy
         ) + countPending;
         log.debug("LocalStorageCountAggregatorImpl resultCount: {}", resultCount);
         return resultCount;
