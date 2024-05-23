@@ -143,7 +143,7 @@ public class CountAggregatorImpl implements CountPaymentAggregator<PaymentModel,
                 paymentModel,
                 timeWindow,
                 list,
-                paymentRepository::countOperationSuccessWithGroupBy
+                paymentRepository::countOperationPendingWithGroupBy
         );
     }
 
