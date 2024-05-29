@@ -49,7 +49,8 @@ public class SumAggregatorImpl implements SumPaymentAggregator<PaymentModel, Pay
             PaymentModel paymentModel,
             TimeWindow timeWindow,
             List<PaymentCheckedField> list) {
-        return getSum(checkedField, paymentModel, timeWindow, list, paymentRepository::sumOperationSuccessWithGroupBy);
+        return getSum(checkedField, paymentModel, timeWindow, list, paymentRepository::sumOperationSuccessWithGroupBy,
+                false);
     }
 
     @Override
@@ -73,7 +74,7 @@ public class SumAggregatorImpl implements SumPaymentAggregator<PaymentModel, Pay
                     eventFields,
                     errorCode
             );
-            double resultSum = (double) checkedLong(sum) + checkedLong(paymentModel.getAmount());
+            double resultSum = (double) checkedLong(sum);
             log.debug(
                     "SumAggregatorImpl field: {} value: {}  sumError: {}",
                     resolve.getName(),
