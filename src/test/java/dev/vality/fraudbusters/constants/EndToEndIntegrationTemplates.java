@@ -10,7 +10,7 @@ public class EndToEndIntegrationTemplates {
             rule:TEMPLATE: count("email", 10, 0, "party_id", "shop_id") > 1
               AND count("email", 10) < 3
               AND sum("email", 10, "party_id", "shop_id") >= 18000
-              AND countSuccess("card_token", 10, "party_id", "shop_id") > 1
+              AND countSuccess("card_token", 10, "party_id", "shop_id") > 0
               AND in(countryBy("country_bank"), "RUS")
               OR sumRefund("card_token", 10, "party_id", "shop_id") > 0
               OR countRefund("card_token", 10, "party_id", "shop_id") > 0
