@@ -62,7 +62,8 @@ public class CountAggregatorImpl implements CountPaymentAggregator<PaymentModel,
                 paymentModel,
                 timeWindow,
                 list,
-                paymentRepository::countOperationSuccessWithGroupBy
+                paymentRepository::countOperationSuccessWithGroupBy,
+                false
         );
     }
 
@@ -94,7 +95,7 @@ public class CountAggregatorImpl implements CountPaymentAggregator<PaymentModel,
                     resolve.getValue(),
                     count
             );
-            return count + CURRENT_ONE;
+            return count;
         } catch (Exception e) {
             log.warn("CountAggregatorImpl error when countError e: ", e);
             throw new RuleFunctionException(e);
