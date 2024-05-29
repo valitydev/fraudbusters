@@ -131,6 +131,21 @@ public class LocalResultStorageRepository implements PaymentRepository {
     }
 
     @Override
+    public Integer countOperationPendingWithGroupBy(String fieldName, Object value, Long from, Long to,
+                                                    List<FieldModel> fieldModels) {
+        List<CheckedPayment> checkedPayments = localStorage.get();
+        return (int) checkedPayments.stream()
+                .filter(checkedPayment -> filterByStatusAndFields(
+                        from,
+                        to,
+                        fieldModels,
+                        checkedPayment,
+                        PaymentStatus.pending
+                ))
+                .count();
+    }
+
+    @Override
     public Integer countOperationErrorWithGroupBy(
             String fieldName,
             Object value,
