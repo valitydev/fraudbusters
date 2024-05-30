@@ -139,13 +139,14 @@ public class CountAggregatorImpl implements CountPaymentAggregator<PaymentModel,
     @Override
     public Integer countPending(PaymentCheckedField checkedField, PaymentModel paymentModel, TimeWindow timeWindow,
                                 List<PaymentCheckedField> list) {
+        Integer countFinished = count(checkedField, paymentModel, timeWindow, list);
         return getCount(
                 checkedField,
                 paymentModel,
                 timeWindow,
                 list,
                 paymentRepository::countOperationPendingWithGroupBy
-        );
+        ) - countFinished;
     }
 
     @Override
