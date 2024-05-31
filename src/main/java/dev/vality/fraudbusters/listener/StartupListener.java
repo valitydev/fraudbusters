@@ -59,6 +59,7 @@ public class StartupListener implements ApplicationListener<ContextRefreshedEven
     private final TemplateReferenceListener timeTemplateReferenceListener;
 
     private final Pool<ParserRuleContext> templatePoolImpl;
+    private final Pool<String> referencePoolImpl;
 
     private final PreloadListener<String, Command> preloadListener = new PreloadListenerImpl<>();
     private final KafkaTopics kafkaTopics;
@@ -146,7 +147,8 @@ public class StartupListener implements ApplicationListener<ContextRefreshedEven
 
             log.info("StartupListener start stream preloadTime: {} ms", System.currentTimeMillis() - startPreloadTime);
             log.info(
-                    "StartupListener load pool payment template size: {} templates: {}",
+                    "StartupListener load pool payment reference size: {} template size: {} templates: {}",
+                    referencePoolImpl.size(),
                     templatePoolImpl.size(),
                     templatePoolImpl
             );
