@@ -49,9 +49,10 @@ public class ContextToFraudRequestConverter implements Converter<Context, FraudR
 
         PayerFieldExtractor.getContactInfo(payer)
                 .ifPresent(contract -> {
-                            paymentModel.setEmail(contract.isSetEmail() ? contract.getEmail() : ClickhouseUtilsValue.UNKNOWN);
-                            paymentModel.setPhone(
-                                    contract.isSetPhoneNumber() ? contract.getPhoneNumber() : ClickhouseUtilsValue.UNKNOWN);
+                            paymentModel.setEmail(contract.isSetEmail()
+                                    ? contract.getEmail() : ClickhouseUtilsValue.UNKNOWN);
+                            paymentModel.setPhone(contract.isSetPhoneNumber()
+                                    ? contract.getPhoneNumber() : ClickhouseUtilsValue.UNKNOWN);
                         }
                 );
 
