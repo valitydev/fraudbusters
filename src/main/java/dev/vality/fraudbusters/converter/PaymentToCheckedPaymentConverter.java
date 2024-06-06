@@ -33,10 +33,10 @@ public class PaymentToCheckedPaymentConverter implements Converter<Payment, Chec
         checkedPayment.setId(payment.getId());
 
         ClientInfo clientInfo = payment.getClientInfo();
-        checkedPayment.setEmail(clientInfo.getEmail());
-        checkedPayment.setPhone(clientInfo.getPhone());
-        checkedPayment.setIp(clientInfo.getIp());
-        checkedPayment.setFingerprint(clientInfo.getFingerprint());
+        checkedPayment.setEmail(clientInfo.isSetEmail() ? clientInfo.getEmail() : UNKNOWN);
+        checkedPayment.setPhone(clientInfo.isSetPhone() ? clientInfo.getPhone() : UNKNOWN);
+        checkedPayment.setIp(clientInfo.isSetIp() ? clientInfo.getIp() : UNKNOWN);
+        checkedPayment.setFingerprint(clientInfo.isSetFingerprint() ? clientInfo.getFingerprint() : UNKNOWN);
 
         PaymentTool paymentTool = payment.getPaymentTool();
         checkedPayment.setPaymentTool(TBaseUtil.unionFieldToEnum(paymentTool, PaymentToolType.class).name());
