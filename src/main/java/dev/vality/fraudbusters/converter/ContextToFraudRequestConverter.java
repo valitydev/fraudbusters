@@ -49,8 +49,9 @@ public class ContextToFraudRequestConverter implements Converter<Context, FraudR
 
         PayerFieldExtractor.getContactInfo(payer)
                 .ifPresent(contract -> {
-                            paymentModel.setEmail(contract.getEmail());
-                            paymentModel.setPhone(contract.getPhoneNumber());
+                            paymentModel.setEmail(contract.isSetEmail() ? contract.getEmail() : ClickhouseUtilsValue.UNKNOWN);
+                            paymentModel.setPhone(
+                                    contract.isSetPhoneNumber() ? contract.getPhoneNumber() : ClickhouseUtilsValue.UNKNOWN);
                         }
                 );
 
@@ -60,8 +61,8 @@ public class ContextToFraudRequestConverter implements Converter<Context, FraudR
         paymentModel.setCurrency(cost.getCurrency().symbolic_code);
 
         PayerFieldExtractor.getClientInfo(payer).ifPresent(info -> {
-            paymentModel.setIp(info.getIpAddress());
-            paymentModel.setFingerprint(info.getFingerprint());
+            paymentModel.setIp(info.isSetIpAddress() ? info.getIpAddress() : ClickhouseUtilsValue.UNKNOWN);
+            paymentModel.setFingerprint(info.isSetFingerprint() ? info.getFingerprint() : ClickhouseUtilsValue.UNKNOWN);
         });
         FraudRequest fraudRequest = new FraudRequest();
         fraudRequest.setFraudModel(paymentModel);

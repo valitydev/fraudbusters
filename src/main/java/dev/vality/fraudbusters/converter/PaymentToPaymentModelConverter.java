@@ -1,6 +1,8 @@
 package dev.vality.fraudbusters.converter;
 
+import dev.vality.damsel.fraudbusters.ClientInfo;
 import dev.vality.damsel.fraudbusters.Payment;
+import dev.vality.fraudbusters.constant.ClickhouseUtilsValue;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.util.TimestampUtil;
 import org.springframework.core.convert.converter.Converter;
@@ -22,8 +24,10 @@ public class PaymentToPaymentModelConverter implements Converter<Payment, Paymen
         paymentModel.setBinCountryCode(payment.getPaymentTool().getBankCard().isSetIssuerCountry()
                 ? payment.getPaymentTool().getBankCard().getIssuerCountry().name()
                 : UNKNOWN);
-        paymentModel.setIp(payment.getClientInfo().getIp());
-        paymentModel.setFingerprint(payment.getClientInfo().getFingerprint());
+        ClientInfo clientInfo = payment.getClientInfo();
+        paymentModel.setIp(clientInfo.isSetIp() ? clientInfo.getIp() : ClickhouseUtilsValue.UNKNOWN);
+        paymentModel.setFingerprint(
+                clientInfo.isSetFingerprint() ? clientInfo.getFingerprint() : ClickhouseUtilsValue.UNKNOWN);
         paymentModel.setAmount(payment.getCost().getAmount());
         paymentModel.setCurrency(payment.getCost().getCurrency().getSymbolicCode());
         paymentModel.setMobile(payment.isMobile());
