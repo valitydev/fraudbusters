@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration scan = "true" scanPeriod="60 seconds">
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
-    <root level="ERROR">
-        <appender-ref ref="CONSOLE"/>
-    </root>
-    <logger name="dev.vality" level="INFO"/>
-    <logger name="io.dgraph" level="ERROR"/>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc/>
+                <threadName/>
+                <message/>
+                <version/>
+                <loggerName/>
+                <context/>
+                <pattern>
+                    <pattern>
+                        {
+                        "@timestamp": "%date{yyy-MM-dd'T'HH:mm:ss.SSSXXX, UTC}",
+                        "@severity": "%level",
+                        "application": "${LOGBACK_SERVICE_NAME}"
+                        }
+                    </pattern>
+                </pattern>
+                <stackTrace>
+                    <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                        <shortenedClassNameLength>20</shortenedClassNameLength>
+                        <rootCauseFirst>true</rootCauseFirst>
+                    </throwableConverter>
+                </stackTrace>
+            </providers>
+        </encoder>
+    </appender>
 
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+    <include file="loggers.xml"/>
 </configuration>
