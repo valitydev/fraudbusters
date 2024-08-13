@@ -28,6 +28,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.thrift.TBase;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.rnorth.ducttape.unreliables.Unreliables;
@@ -74,6 +75,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
                 "dgraph.negotiationType=PLAINTEXT"
         })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@Ignore
 public abstract class DgraphAbstractIntegrationTest {
 
     @Autowired

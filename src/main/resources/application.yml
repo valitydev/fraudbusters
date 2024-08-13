@@ -148,3 +148,5 @@ result.full.check:
   enabled: true
 
 time.pool.cleanup.gap: 60
+
+otel.resource: http://localhost:4318
