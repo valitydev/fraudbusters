@@ -80,7 +80,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
                 "spring.main.allow-bean-definition-overriding=true"
         })
 @ExtendWith({ClickHouseContainerExtension.class})
-@Import({MockExternalServiceConfig.class, OtelConfig.class, OtelProperties.class})
+@Import({MockExternalServiceConfig.class})
 class EndToEndIntegrationTest {
 
     public static final String CAPTURED = "captured";

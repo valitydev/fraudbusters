@@ -48,7 +48,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         topicsKeys = {
                 "kafka.topic.template",
                 "kafka.topic.reference"})
-@ContextConfiguration(classes = {KafkaProducerConfig.class, OtelConfig.class, OtelProperties.class})
+@ContextConfiguration(classes = {KafkaProducerConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @SpringBootTest(webEnvironment = RANDOM_PORT,
         properties = {"kafka.listen.result.concurrency=1", "kafka.historical.listener.enable=true"})

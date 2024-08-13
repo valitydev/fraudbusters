@@ -62,7 +62,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         "kafka.historical.listener.enable=true",
         "kafka.aggr.payment.min.bytes=1"},
         classes = TestClickhouseConfig.class)
-@Import({MockExternalServiceConfig.class, KafkaProducerConfig.class, OtelConfig.class, OtelProperties.class})
+@Import({MockExternalServiceConfig.class, KafkaProducerConfig.class})
 class LoadDataIntegrationTest {
 
     public static final String PAYMENT_1 = "payment_1";

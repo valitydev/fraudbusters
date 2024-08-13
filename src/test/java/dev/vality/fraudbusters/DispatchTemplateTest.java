@@ -42,7 +42,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @KafkaSpringBootTest
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-@Import({MockExternalServiceConfig.class, OtelConfig.class, OtelProperties.class})
+@Import({MockExternalServiceConfig.class})
 class DispatchTemplateTest {
 
     public static final String TEMPLATE = "rule: 12 >= 1 -> accept;";
