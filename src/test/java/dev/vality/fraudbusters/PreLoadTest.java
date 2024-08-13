@@ -5,7 +5,9 @@ import dev.vality.damsel.fraudbusters.Command;
 import dev.vality.damsel.proxy_inspector.Context;
 import dev.vality.damsel.proxy_inspector.InspectorProxySrv;
 import dev.vality.fraudbusters.config.MockExternalServiceConfig;
+import dev.vality.fraudbusters.config.OtelConfig;
 import dev.vality.fraudbusters.config.properties.KafkaTopics;
+import dev.vality.fraudbusters.config.properties.OtelProperties;
 import dev.vality.fraudbusters.factory.TestObjectsFactory;
 import dev.vality.fraudbusters.pool.HistoricalPool;
 import dev.vality.fraudbusters.repository.clickhouse.impl.FraudResultRepository;
@@ -46,7 +48,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         topicsKeys = {
                 "kafka.topic.template",
                 "kafka.topic.reference"})
-@ContextConfiguration(classes = {KafkaProducerConfig.class})
+@ContextConfiguration(classes = {KafkaProducerConfig.class, OtelConfig.class, OtelProperties.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @SpringBootTest(webEnvironment = RANDOM_PORT,
         properties = {"kafka.listen.result.concurrency=1", "kafka.historical.listener.enable=true"})

@@ -6,8 +6,10 @@ import dev.vality.damsel.fraudbusters.*;
 import dev.vality.damsel.proxy_inspector.Context;
 import dev.vality.damsel.proxy_inspector.InspectorProxySrv;
 import dev.vality.fraudbusters.config.MockExternalServiceConfig;
+import dev.vality.fraudbusters.config.OtelConfig;
 import dev.vality.fraudbusters.config.TestClickhouseConfig;
 import dev.vality.fraudbusters.config.properties.KafkaTopics;
+import dev.vality.fraudbusters.config.properties.OtelProperties;
 import dev.vality.fraudbusters.constants.EndToEndIntegrationTemplates;
 import dev.vality.fraudbusters.constants.TestProperties;
 import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
@@ -78,7 +80,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
                 "spring.main.allow-bean-definition-overriding=true"
         })
 @ExtendWith({ClickHouseContainerExtension.class})
-@Import({MockExternalServiceConfig.class})
+@Import({MockExternalServiceConfig.class, OtelConfig.class, OtelProperties.class})
 class EndToEndIntegrationTest {
 
     public static final String CAPTURED = "captured";

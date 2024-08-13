@@ -3,8 +3,10 @@ package dev.vality.fraudbusters;
 import dev.vality.columbus.ColumbusServiceSrv;
 import dev.vality.damsel.fraudbusters.*;
 import dev.vality.fraudbusters.config.MockExternalServiceConfig;
+import dev.vality.fraudbusters.config.OtelConfig;
 import dev.vality.fraudbusters.config.TestClickhouseConfig;
 import dev.vality.fraudbusters.config.properties.KafkaTopics;
+import dev.vality.fraudbusters.config.properties.OtelProperties;
 import dev.vality.fraudbusters.constant.EventSource;
 import dev.vality.fraudbusters.constants.LoadDataIntegrationsTemplates;
 import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
@@ -60,7 +62,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         "kafka.historical.listener.enable=true",
         "kafka.aggr.payment.min.bytes=1"},
         classes = TestClickhouseConfig.class)
-@Import({MockExternalServiceConfig.class, KafkaProducerConfig.class})
+@Import({MockExternalServiceConfig.class, KafkaProducerConfig.class, OtelConfig.class, OtelProperties.class})
 class LoadDataIntegrationTest {
 
     public static final String PAYMENT_1 = "payment_1";
