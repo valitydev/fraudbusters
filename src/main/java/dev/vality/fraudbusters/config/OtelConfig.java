@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.config;
 
-import dev.vality.fraudbusters.management.config.properties.OtelProperties;
+import dev.vality.fraudbusters.config.properties.OtelProperties;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
 import io.opentelemetry.context.propagation.ContextPropagators;
