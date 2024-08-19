@@ -35,7 +35,7 @@ public class OtelConfig {
         SdkTracerProvider sdkTracerProvider = SdkTracerProvider.builder()
                 .addSpanProcessor(BatchSpanProcessor.builder(OtlpHttpSpanExporter.builder()
                                 .setEndpoint(otelProperties.getResource())
-                                .setTimeout(Duration.ofMinutes(1))
+                                .setTimeout(Duration.ofMillis(otelProperties.getTimeout()))
                                 .build())
                         .build())
                 .setResource(resource)
