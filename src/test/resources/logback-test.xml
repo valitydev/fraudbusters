@@ -7,6 +7,6 @@
         <appender-ref ref="CONSOLE"/>
     </root>
     <logger name="dev.vality" level="INFO"/>
-    <logger name="io.dgraph" level="ERROR"/>
+    <logger name="io.opentelemetry" level="ALL"/>
 
 </configuration>

@@ -12,5 +12,6 @@ import org.springframework.stereotype.Component;
 public class OtelProperties {
 
     private String resource;
+    private Long timeout;
 
 }
