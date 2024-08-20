@@ -11,9 +11,11 @@ import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.BatchSpanProcessor;
+import io.opentelemetry.sdk.trace.samplers.Sampler;
 import io.opentelemetry.semconv.resource.attributes.ResourceAttributes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,13 +26,14 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class OtelConfig {
 
-    public static final String FRAUDBUSTERS = "fraudbusters";
     private final OtelProperties otelProperties;
+    @Value("${spring.application.name}")
+    private String appName;
 
     @Bean
     public OpenTelemetry openTelemetryConfig() {
         Resource resource = Resource.getDefault()
-                .merge(Resource.create(Attributes.of(ResourceAttributes.SERVICE_NAME, FRAUDBUSTERS)));
+                .merge(Resource.create(Attributes.of(ResourceAttributes.SERVICE_NAME, appName)));
 
         SdkTracerProvider sdkTracerProvider = SdkTracerProvider.builder()
                 .addSpanProcessor(BatchSpanProcessor.builder(OtlpHttpSpanExporter.builder()
@@ -38,6 +41,7 @@ public class OtelConfig {
                                 .setTimeout(Duration.ofMillis(otelProperties.getTimeout()))
                                 .build())
                         .build())
+                .setSampler(Sampler.alwaysOff())
                 .setResource(resource)
                 .build();
 
