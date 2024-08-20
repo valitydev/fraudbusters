@@ -41,7 +41,7 @@ public class OtelConfig {
                                 .setTimeout(Duration.ofMillis(otelProperties.getTimeout()))
                                 .build())
                         .build())
-                .setSampler(Sampler.alwaysOff())
+                .setSampler(Sampler.alwaysOn())
                 .setResource(resource)
                 .build();
 
