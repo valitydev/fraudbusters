@@ -10,8 +10,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+
+import static dev.vality.fraudbusters.constant.ClickhouseUtilsValue.UNKNOWN;
 
 @Slf4j
 @Component
@@ -34,7 +37,8 @@ public class FraudPaymentToRowConverter implements Converter<FraudPayment, Fraud
         payment.setEventTimeHour(checkedPayment.getEventTimeHour());
         payment.setEventTime(checkedPayment.getEventTime());
         payment.setId(checkedPayment.getId());
-        payment.setEmail(checkedPayment.getEmail());
+        payment.setEmail(
+                StringUtils.hasText(checkedPayment.getEmail()) ? checkedPayment.getEmail().toLowerCase() : UNKNOWN);
         payment.setIp(checkedPayment.getIp());
         payment.setFingerprint(checkedPayment.getFingerprint());
         payment.setPhone(checkedPayment.getPhone());
