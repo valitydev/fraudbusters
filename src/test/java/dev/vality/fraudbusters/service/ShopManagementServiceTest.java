@@ -3,9 +3,15 @@ package dev.vality.fraudbusters.service;
 import dev.vality.damsel.fraudbusters.MerchantInfo;
 import dev.vality.damsel.fraudbusters.ReferenceInfo;
 import dev.vality.fraudbusters.config.RestTemplateConfig;
+import dev.vality.fraudbusters.config.payment.PaymentPoolConfig;
 import dev.vality.fraudbusters.config.properties.DefaultTemplateProperties;
+import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
+import dev.vality.fraudbusters.fraud.model.PaymentModel;
+import dev.vality.fraudbusters.pool.Pool;
 import dev.vality.fraudbusters.repository.clickhouse.impl.AggregationGeneralRepositoryImpl;
 import dev.vality.fraudbusters.repository.clickhouse.impl.FraudResultRepository;
+import dev.vality.fraudbusters.util.CheckedResultFactory;
+import dev.vality.fraudo.payment.visitor.impl.FirstFindVisitorImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +22,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -26,6 +34,7 @@ import static org.mockito.Mockito.*;
         FraudResultRepository.class,
         RestTemplateConfig.class,
         InitiatingEntitySourceService.class,
+        PaymentPoolConfig.class,
         DefaultTemplateProperties.class})
 public class ShopManagementServiceTest {
 
@@ -39,6 +48,14 @@ public class ShopManagementServiceTest {
     private ShopManagementService shopManagementService;
     @Autowired
     private InitiatingEntitySourceService initiatingEntitySourceService;
+    @Autowired
+    private Pool<String> referencePoolImpl;
+    @Autowired
+    private Pool<String> groupReferencePoolImpl;
+    @MockBean
+    private FirstFindVisitorImpl<PaymentModel, PaymentCheckedField> firstFindVisitor;
+    @MockBean
+    private CheckedResultFactory checkedResultFactory;
 
     @Test
     public void testCreateDefaultReference() {
@@ -52,8 +69,16 @@ public class ShopManagementServiceTest {
     @Test
     public void testIsNewShop() {
         when(fraudResultRepository.countOperationByField(anyString(), anyString(), anyLong(), anyLong())).thenReturn(0);
-        shopManagementService.isNewShop("s1");
+        shopManagementService.isNewShop("partyId", "s1");
         verify(fraudResultRepository).countOperationByField(anyString(), anyString(), anyLong(), anyLong());
+
+        referencePoolImpl.add("partyId", "test");
+        boolean newShop = shopManagementService.isNewShop("partyId", "s1");
+        assertFalse(newShop);
+
+        referencePoolImpl.remove("partyId");
+        newShop = shopManagementService.isNewShop("partyId", "s1");
+        assertTrue(newShop);
     }
 
 }
