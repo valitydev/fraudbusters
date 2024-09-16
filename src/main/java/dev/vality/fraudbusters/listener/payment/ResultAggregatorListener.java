@@ -41,7 +41,7 @@ public class ResultAggregatorListener {
             List<Event> events = fraudResultToEventConverter.convertBatch(batch);
             if (defaultTemplateProperties.isEnable()) {
                 events.stream()
-                        .filter(event -> shopManagementService.isNewShop(event.getShopId()))
+                        .filter(event -> shopManagementService.isNewShop(event.getPartyId(), event.getShopId()))
                         .forEach(event -> initiatingEntitySourceService.sendToSource(ReferenceInfo.merchant_info(
                                 new MerchantInfo()
                                         .setShopId(event.getShopId())
