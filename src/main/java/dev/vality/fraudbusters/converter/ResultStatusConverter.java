@@ -14,6 +14,7 @@ public class ResultStatusConverter implements Converter<ResultStatus, dev.vality
     public dev.vality.damsel.fraudbusters.ResultStatus convert(ResultStatus resultStatus) {
         var status = new dev.vality.damsel.fraudbusters.ResultStatus();
         switch (resultStatus) {
+            case TRUST -> status.setTrust(new Trust());
             case ACCEPT -> status.setAccept(new Accept());
             case ACCEPT_AND_NOTIFY -> status.setAcceptAndNotify(new AcceptAndNotify());
             case THREE_DS -> status.setThreeDs(new ThreeDs());

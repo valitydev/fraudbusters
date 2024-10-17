@@ -11,6 +11,7 @@ public class CheckedResultToRiskScoreConverter implements Converter<CheckedResul
     @Override
     public RiskScore convert(CheckedResultModel checkedResultModel) {
         return switch (checkedResultModel.getResultModel().getResultStatus()) {
+            case TRUST -> RiskScore.trusted;
             case ACCEPT, ACCEPT_AND_NOTIFY, NOTIFY -> RiskScore.low;
             case DECLINE, DECLINE_AND_NOTIFY -> RiskScore.fatal;
             default -> RiskScore.high;
