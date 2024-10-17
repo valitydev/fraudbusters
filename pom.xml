@@ -21,9 +21,9 @@
         <management.port>8023</management.port>
         <exposed.ports>${server.port} ${management.port}</exposed.ports>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <fraudo.version>1.0.6</fraudo.version>
+        <fraudo.version>1.0.7</fraudo.version>
         <clickhouse-jdbc.version>0.3.1</clickhouse-jdbc.version>
-        <fraudbusters-proto.version>1.111-913e879</fraudbusters-proto.version>
+        <fraudbusters-proto.version>1.112-e9d16e0</fraudbusters-proto.version>
         <trusted.tokens.proto.version>1.7-6d29f86</trusted.tokens.proto.version>
         <wb.list.proto.version>1.44-5dbd6d4</wb.list.proto.version>
         <dgraph4j.version>21.12.0</dgraph4j.version>
@@ -109,7 +109,7 @@
         <dependency>
             <groupId>dev.vality</groupId>
             <artifactId>damsel</artifactId>
-            <version>1.623-f8e56c6</version>
+            <version>1.648-ad715bd</version>
         </dependency>
         <dependency>
             <groupId>dev.vality.woody</groupId>

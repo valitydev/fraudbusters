@@ -65,4 +65,11 @@ class ResultStatusConverterTest {
         status.setNotify(new Notify());
         assertEquals(status, converter.convert(ResultStatus.NOTIFY));
     }
+
+    @Test
+    void convertTrusted() {
+        var status = new dev.vality.damsel.fraudbusters.ResultStatus();
+        status.setTrust(new Trust());
+        assertEquals(status, converter.convert(ResultStatus.TRUST));
+    }
 }
