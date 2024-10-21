@@ -156,6 +156,24 @@ class RuleCheckingServiceIntegrationTest {
     }
 
     @Test
+    void applyTrustRule() {
+        PaymentModel firstTransaction = TestObjectsFactory.createPaymentModel(25L);
+        String firstTransactionId = UUID.randomUUID().toString();
+        String ruleTemplate = "rule: amount() > 1 -> trust;";
+        Map<String, CheckedResultModel> result = ruleTestingService.checkSingleRule(
+                Map.of(firstTransactionId, firstTransaction),
+                ruleTemplate
+        );
+
+        assertEquals(1, result.size());
+        CheckedResultModel firstCheckedResult = result.get(firstTransactionId);
+        assertEquals(ruleTemplate, firstCheckedResult.getCheckedTemplate());
+        assertEquals(ResultStatus.TRUST, firstCheckedResult.getResultModel().getResultStatus());
+        assertNotNull(firstCheckedResult.getResultModel().getRuleChecked());
+        assertEquals(new ArrayList<>(), firstCheckedResult.getResultModel().getNotificationsRule());
+    }
+
+    @Test
     void applyRuleWithinRulesetNoTimestampDifferentPartyShop() {
         // single templates
         addPartyAndShopTemplateRules();
