@@ -35,6 +35,7 @@ import java.util.List;
 import static dev.vality.fraudbusters.extension.ClickHouseContainerExtension.CLICKHOUSE_CONTAINER;
 import static dev.vality.fraudbusters.util.BeanUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 @ActiveProfiles("full-prod")
@@ -75,6 +76,12 @@ public class PaymentRepositoryTest {
     public void countOperationByPhoneTest() throws SQLException {
         int count = paymentRepository.countOperationByField(EventField.phone.name(), PHONE, FROM, TO);
         assertEquals(1, count);
+    }
+
+    @Test
+    public void isExistTest() throws SQLException {
+        Boolean isExist = paymentRepository.isExistByField(EventField.phone.name(), PHONE, FROM, TO);
+        assertTrue(isExist);
     }
 
     @Test

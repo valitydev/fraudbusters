@@ -57,4 +57,6 @@ public interface PaymentRepository extends AggregationRepository {
             Long to,
             List<FieldModel> fieldModels);
 
+
+    Boolean isExistByField(String fieldName, Object value, Long from, Long to);
 }

@@ -246,6 +246,18 @@ public class LocalResultStorageRepository implements PaymentRepository {
                 .sum();
     }
 
+    @Override
+    public Boolean isExistByField(String fieldName, Object value, Long from, Long to) {
+        List<CheckedPayment> checkedPayments = localStorage.get();
+        int count = (int) checkedPayments.stream()
+                .filter(checkedPayment -> checkedPayment.getEventTime() >= from
+                                          && checkedPayment.getEventTime() <= to
+                                          && paymentFieldValueFilter.filter(fieldName, value, checkedPayment))
+                .count();
+        log.debug("LocalResultStorageRepository countOperationByField: {}", count);
+        return count != 0;
+    }
+
     private boolean filterByStatusAndFields(
             Long from,
             Long to,

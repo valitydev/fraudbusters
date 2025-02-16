@@ -28,7 +28,7 @@ public class ShopManagementService {
         }
         Long to = Instant.now().toEpochMilli();
         Long from = Instant.now().minus(properties.getCountToCheckDays(), ChronoUnit.DAYS).toEpochMilli();
-        return repository.countOperationByField("shopId", shopId, from, to) == 0;
+        return repository.isExistByField("shopId", shopId, from, to);
     }
 
     private boolean hasReferenceInPools(String partyId, String shopId) {

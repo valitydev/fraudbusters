@@ -22,7 +22,7 @@ public class RuleCheckingServiceIntegrationTemplates {
     public static final String TEMPLATE = "rule: amount() > 5 -> accept;";
     public static final String TEMPLATE_PARTY = "rule: amount() > 60 -> accept;";
     public static final String TEMPLATE_SHOP = "rule: amount() > 55 -> accept;";
-    public static final String PREVIOUS_TEMPLATE_PARTY = "rule: amount() > 200 -> accept;";
+    public static final String PREVIOUS_TEMPLATE_PARTY = "rule: rand(40) > 20 -> trust;";
     public static final String PREVIOUS_TEMPLATE_SHOP = "rule: amount() > 100 -> accept;";
 
 }
