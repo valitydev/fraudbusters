@@ -335,18 +335,16 @@ public class PaymentRepositoryImpl implements Repository<CheckedPayment>, Paymen
     @Override
     public Boolean isExistByField(String fieldName, Object value, Long from, Long to) {
         String sql = String.format("""
-                select %1$s, count() as cnt
+                select 1 as cnt
                 from %2$s
                 where timestamp >= ?
                 and timestamp <= ?
                 and eventTime >= ?
                 and eventTime <= ?
-                and %1$s = ?  and status in (?, ?, ?)
-                group by %1$s 
+                and %1$s = ?
                 limit 1""", fieldName, TABLE);
-        List<Object> params =
-                AggregationUtil.generateStatusesParams(from, to, value, AggregationUtil.getFinalStatuses());
-        log.debug("AggregationGeneralRepositoryImpl countOperationByField sql: {} params: {}", sql, params);
+        List<Object> params = AggregationUtil.generateParams(from, to, value);
+        log.debug("AggregationGeneralRepositoryImpl isExistByField sql: {} params: {}", sql, params);
         return jdbcTemplate.query(sql, params.toArray(), new CountExtractor()) != 0;
     }
 
