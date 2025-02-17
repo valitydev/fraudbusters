@@ -22,4 +22,14 @@ public class CachingConfig {
                 .expireAfterAccess(100, TimeUnit.SECONDS));
         return cacheManager;
     }
+
+    @Bean
+    public CacheManager isNewShopCacheManager() {
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager("isNewShop");
+        cacheManager.setCaffeine(Caffeine.newBuilder()
+                .initialCapacity(200)
+                .maximumSize(500)
+                .expireAfterAccess(600, TimeUnit.SECONDS));
+        return cacheManager;
+    }
 }
