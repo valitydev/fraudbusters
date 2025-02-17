@@ -15,21 +15,11 @@ public class CachingConfig {
 
     @Bean
     public CacheManager cacheManager() {
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager("resolveCountry");
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager("resolveCountry", "isNewShop");
         cacheManager.setCaffeine(Caffeine.newBuilder()
                 .initialCapacity(200)
                 .maximumSize(500)
                 .expireAfterAccess(100, TimeUnit.SECONDS));
-        return cacheManager;
-    }
-
-    @Bean
-    public CacheManager isNewShopCacheManager() {
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager("isNewShop");
-        cacheManager.setCaffeine(Caffeine.newBuilder()
-                .initialCapacity(200)
-                .maximumSize(500)
-                .expireAfterAccess(600, TimeUnit.SECONDS));
         return cacheManager;
     }
 }
