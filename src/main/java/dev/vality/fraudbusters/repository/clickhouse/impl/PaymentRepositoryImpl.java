@@ -332,4 +332,20 @@ public class PaymentRepositoryImpl implements Repository<CheckedPayment>, Paymen
         return jdbcTemplate.query(resultSql.toString(), params.toArray(), new SumExtractor());
     }
 
+    @Override
+    public Boolean isExistByField(String fieldName, Object value, Long from, Long to) {
+        String sql = String.format("""
+                select 1 as cnt
+                from %2$s
+                where timestamp >= ?
+                and timestamp <= ?
+                and eventTime >= ?
+                and eventTime <= ?
+                and %1$s = ?
+                limit 1""", fieldName, TABLE);
+        List<Object> params = AggregationUtil.generateParams(from, to, value);
+        log.debug("AggregationGeneralRepositoryImpl isExistByField sql: {} params: {}", sql, params);
+        return jdbcTemplate.query(sql, params.toArray(), new CountExtractor()) != 0;
+    }
+
 }

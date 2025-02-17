@@ -273,4 +273,15 @@ public class FraudResultRepository implements Repository<Event>, PaymentReposito
         return sumOperationErrorWithGroupBy(fieldName, value, from, to, fieldModels, null);
     }
 
+    @Override
+    public Boolean isExistByField(String fieldName, Object value, Long from, Long to) {
+        return aggregationGeneralRepository.countOperationByField(
+                EventSource.FRAUD_EVENTS_UNIQUE.getTable(),
+                fieldName,
+                value,
+                from,
+                to
+        ) != 0;
+    }
+
 }

@@ -6,6 +6,7 @@ import dev.vality.fraudbusters.repository.PaymentRepository;
 import dev.vality.fraudbusters.util.ReferenceKeyGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -22,13 +23,14 @@ public class ShopManagementService {
     private final Pool<String> referencePoolImpl;
     private final Pool<String> groupReferencePoolImpl;
 
+    @Cacheable(value = "isNewShop")
     public boolean isNewShop(String partyId, String shopId) {
         if (hasReferenceInPools(partyId, shopId)) {
             return false;
         }
         Long to = Instant.now().toEpochMilli();
         Long from = Instant.now().minus(properties.getCountToCheckDays(), ChronoUnit.DAYS).toEpochMilli();
-        return repository.countOperationByField("shopId", shopId, from, to) == 0;
+        return repository.isExistByField("shopId", shopId, from, to);
     }
 
     private boolean hasReferenceInPools(String partyId, String shopId) {

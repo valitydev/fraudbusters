@@ -68,15 +68,16 @@ public class ShopManagementServiceTest {
 
     @Test
     public void testIsNewShop() {
-        when(fraudResultRepository.countOperationByField(anyString(), anyString(), anyLong(), anyLong())).thenReturn(0);
+        when(fraudResultRepository.isExistByField(anyString(), anyString(), anyLong(), anyLong())).thenReturn(false);
         shopManagementService.isNewShop("partyId", "s1");
-        verify(fraudResultRepository).countOperationByField(anyString(), anyString(), anyLong(), anyLong());
+        verify(fraudResultRepository).isExistByField(anyString(), anyString(), anyLong(), anyLong());
 
         referencePoolImpl.add("partyId", "test");
         boolean newShop = shopManagementService.isNewShop("partyId", "s1");
         assertFalse(newShop);
 
         referencePoolImpl.remove("partyId");
+        when(fraudResultRepository.isExistByField(anyString(), anyString(), anyLong(), anyLong())).thenReturn(true);
         newShop = shopManagementService.isNewShop("partyId", "s1");
         assertTrue(newShop);
     }
