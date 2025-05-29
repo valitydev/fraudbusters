@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.errors.LogAndContinueExceptionHandler;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
+import org.springframework.boot.ssl.SslBundles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,10 +21,11 @@ public class KafkaStreamConfig {
 
     public static final String SENDER = "sender";
     private final ConsumerGroupIdService consumerGroupIdService;
+    private final ObjectProvider<SslBundles> sslBundles;
 
     @Bean
     public Properties rewriteStreamProperties(KafkaProperties kafkaProperties) {
-        final Map<String, Object> props = kafkaProperties.buildStreamsProperties();
+        final Map<String, Object> props = kafkaProperties.buildStreamsProperties(sslBundles.getIfAvailable());
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, consumerGroupIdService.generateGroupId(SENDER));
         props.put(StreamsConfig.CLIENT_ID_CONFIG, consumerGroupIdService.generateGroupId(SENDER));
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
