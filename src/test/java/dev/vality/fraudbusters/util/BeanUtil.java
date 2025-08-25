@@ -62,7 +62,11 @@ public class BeanUtil {
                 new InvoicePayment(
                         paymentId,
                         TypeUtil.temporalToString(Instant.now()),
-                        Payer.payment_resource(new PaymentResourcePayer()),
+                        Payer.payment_resource(new PaymentResourcePayer()
+                                .setResource(new DisposablePaymentResource()
+                                        .setPaymentTool(createPaymentTool()))
+                                .setContactInfo(new ContactInfo()
+                                        .setEmail("test@test"))),
                         new Cash(
                                 9000L,
                                 new CurrencyRef("RUB")
