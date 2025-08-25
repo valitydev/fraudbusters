@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class PaymentTypeByContextResolver {
 
     public boolean isRecurrent(Payer payer) {
-        return payer.isSetRecurrent() || payer.isSetCustomer();
+        return payer.isSetRecurrent();
     }
 
     public boolean isMobile(BankCard bankCard) {

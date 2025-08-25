@@ -17,8 +17,6 @@ public class PayerFieldExtractor {
     public static Optional<ContactInfo> getContactInfo(Payer payer) {
         if (payer.isSetPaymentResource()) {
             return Optional.ofNullable(payer.getPaymentResource().getContactInfo());
-        } else if (payer.isSetCustomer()) {
-            return Optional.ofNullable(payer.getCustomer().getContactInfo());
         } else if (payer.isSetRecurrent()) {
             return Optional.ofNullable(payer.getRecurrent().getContactInfo());
         }
@@ -26,9 +24,7 @@ public class PayerFieldExtractor {
     }
 
     public static Optional<BankCard> getBankCard(Payer payer) {
-        if (payer.isSetCustomer() && payer.getCustomer().getPaymentTool().isSetBankCard()) {
-            return Optional.ofNullable(payer.getCustomer().getPaymentTool().getBankCard());
-        } else if (payer.isSetPaymentResource()
+        if (payer.isSetPaymentResource()
                     && payer.getPaymentResource().getResource().getPaymentTool().isSetBankCard()) {
             return Optional.ofNullable(payer.getPaymentResource().getResource().getPaymentTool().getBankCard());
         } else if (payer.isSetRecurrent() && payer.getRecurrent().getPaymentTool().isSetBankCard()) {
@@ -49,8 +45,6 @@ public class PayerFieldExtractor {
             return PayerType.PAYMENT_RESOURCE.name();
         } else if (payer.isSetRecurrent()) {
             return PayerType.RECURRENT.name();
-        } else if (payer.isSetCustomer()) {
-            return PayerType.CUSTOMER.name();
         } else {
             return ClickhouseUtilsValue.UNKNOWN;
         }

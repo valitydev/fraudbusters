@@ -56,16 +56,17 @@ public class BeanUtil {
                 new Shop(
                         ID_VALUE_SHOP,
                         new Category("pizza", "no category"),
-                        new ShopDetails("pizza-sushi"),
+                        "pizza-sushi",
                         location
                 ),
                 new InvoicePayment(
                         paymentId,
                         TypeUtil.temporalToString(Instant.now()),
-                        Payer.customer(
-                                new CustomerPayer("custId", "1", "rec_paym_tool", createPaymentTool(),
-                                        contactInfo
-                                )),
+                        Payer.payment_resource(new PaymentResourcePayer()
+                                .setResource(new DisposablePaymentResource()
+                                        .setPaymentTool(createPaymentTool()))
+                                .setContactInfo(new ContactInfo()
+                                        .setEmail("test@test"))),
                         new Cash(
                                 9000L,
                                 new CurrencyRef("RUB")
