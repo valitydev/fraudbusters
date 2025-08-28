@@ -1,7 +1,9 @@
 package dev.vality.fraudbusters;
 
 import dev.vality.columbus.ColumbusServiceSrv;
+import dev.vality.damsel.domain.PartyConfigRef;
 import dev.vality.damsel.domain.RiskScore;
+import dev.vality.damsel.domain.ShopConfigRef;
 import dev.vality.damsel.fraudbusters.*;
 import dev.vality.damsel.proxy_inspector.Context;
 import dev.vality.damsel.proxy_inspector.InspectorProxySrv;
@@ -220,8 +222,8 @@ class EndToEndIntegrationTest {
         //test chargeback functions
         String chargeTest = "charge-test";
         context = BeanUtil.createContext(chargeTest);
-        context.getPayment().getShop().setId(chargeTest);
-        context.getPayment().getParty().setPartyId(chargeTest);
+        context.getPayment().getShop().setShopRef(new ShopConfigRef(chargeTest));
+        context.getPayment().getParty().setPartyRef(new PartyConfigRef(chargeTest));
         riskScore = client.inspectPayment(context);
         assertEquals(RiskScore.high, riskScore);
 
@@ -236,7 +238,7 @@ class EndToEndIntegrationTest {
 
         //test refund functions
         String refundShopId = "refund-test";
-        context.getPayment().getShop().setId(refundShopId);
+        context.getPayment().getShop().setShopRef(new ShopConfigRef(refundShopId));
         riskScore = client.inspectPayment(context);
         assertEquals(RiskScore.high, riskScore);
 

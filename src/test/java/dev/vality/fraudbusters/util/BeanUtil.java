@@ -54,7 +54,7 @@ public class BeanUtil {
         location.setUrl("http://www.pizza-sushi.com/");
         PaymentInfo payment = new PaymentInfo(
                 new Shop(
-                        ID_VALUE_SHOP,
+                        new ShopConfigRef(ID_VALUE_SHOP),
                         new Category("pizza", "no category"),
                         "pizza-sushi",
                         location
@@ -78,7 +78,7 @@ public class BeanUtil {
                         "",
                         new InvoiceDetails("drugs guns murder")
                 ),
-                new Party(paymentId)
+                new Party(new PartyConfigRef(paymentId))
         );
 
         return new Context(payment);
@@ -205,8 +205,8 @@ public class BeanUtil {
         Payer payer = context.getPayment().getPayment().getPayer();
         ReferenceInfo referenceInfo = new ReferenceInfo();
         referenceInfo.setMerchantInfo(new MerchantInfo()
-                .setPartyId(context.getPayment().getParty().getPartyId())
-                .setShopId(context.getPayment().getShop().getId()));
+                .setPartyId(context.getPayment().getParty().getPartyRef().id)
+                .setShopId(context.getPayment().getShop().getShopRef().id));
         chargeback.setReferenceInfo(referenceInfo);
         chargeback.setPayerType(PayerType.payment_resource);
         ClientInfo clientInfo = new ClientInfo();
@@ -241,8 +241,8 @@ public class BeanUtil {
         Payer payer = context.getPayment().getPayment().getPayer();
         ReferenceInfo referenceInfo = new ReferenceInfo();
         referenceInfo.setMerchantInfo(new MerchantInfo()
-                .setPartyId(context.getPayment().getParty().getPartyId())
-                .setShopId(context.getPayment().getShop().getId()));
+                .setPartyId(context.getPayment().getParty().getPartyRef().id)
+                .setShopId(context.getPayment().getShop().getShopRef().id));
         refund.setReferenceInfo(referenceInfo);
         refund.setPayerType(PayerType.payment_resource);
         ClientInfo clientInfo = new ClientInfo();
@@ -296,8 +296,8 @@ public class BeanUtil {
                     payment.setEmail(contactInfo.getEmail());
                     payment.setPhone(contactInfo.getPhoneNumber());
                 });
-        payment.setPartyId(context.getPayment().getParty().getPartyId());
-        payment.setShopId(context.getPayment().getShop().getId());
+        payment.setPartyId(context.getPayment().getParty().getPartyRef().id);
+        payment.setShopId(context.getPayment().getShop().getShopRef().id);
         return payment;
     }
 
