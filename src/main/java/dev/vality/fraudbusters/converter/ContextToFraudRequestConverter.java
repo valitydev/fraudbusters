@@ -31,7 +31,7 @@ public class ContextToFraudRequestConverter implements Converter<Context, FraudR
         PaymentModel paymentModel = new PaymentModel();
         PaymentInfo payment = context.getPayment();
         Party party = payment.getParty();
-        paymentModel.setPartyId(party.getPartyId());
+        paymentModel.setPartyId(party.getPartyRef().getId());
         Payer payer = context.getPayment().getPayment().getPayer();
         PayerFieldExtractor.getBankCard(payer)
                 .ifPresent(bankCard -> {
@@ -56,7 +56,7 @@ public class ContextToFraudRequestConverter implements Converter<Context, FraudR
                         }
                 );
 
-        paymentModel.setShopId(payment.getShop().getId());
+        paymentModel.setShopId(payment.getShop().getShopRef().getId());
         Cash cost = payment.getPayment().getCost();
         paymentModel.setAmount(cost.getAmount());
         paymentModel.setCurrency(cost.getCurrency().symbolic_code);
