@@ -60,17 +60,6 @@ class FraudInspectorHandlerTest {
     @MockitoBean
     WbListServiceSrv.Iface wbListServiceSrv;
 
-    @BeforeEach
-    void setUp() {
-        Mockito.reset(
-                checkedResultToRiskScoreConverter,
-                requestConverter,
-                templateVisitor,
-                kafkaFraudResultTemplate,
-                wbListServiceSrv
-        );
-    }
-
     @Test
     void isExistInBlackList() throws TException {
         FraudInspectorHandler fraudInspectorHandler = new FraudInspectorHandler(
@@ -128,7 +117,7 @@ class FraudInspectorHandlerTest {
         }
     }
 
-    private static BlackListContext createBlackListContext() {
+    private BlackListContext createBlackListContext() {
         return new BlackListContext()
                 .setValue("test")
                 .setFieldName("field_test")
@@ -136,7 +125,7 @@ class FraudInspectorHandlerTest {
                 .setSecondId("test_sec_id");
     }
 
-    private static InspectUserContext createInspectUserContext() {
+    private InspectUserContext createInspectUserContext() {
         ContactInfo contactInfo = new ContactInfo();
         contactInfo.setEmail("User@Email.Com");
         contactInfo.setPhoneNumber("79990001122");
@@ -148,7 +137,7 @@ class FraudInspectorHandlerTest {
                 ));
     }
 
-    private static ShopContext createShopContext(String partyId, String shopId) {
+    private ShopContext createShopContext(String partyId, String shopId) {
         ShopLocation location = new ShopLocation();
         location.setUrl("http://example.com");
         return new ShopContext()
@@ -161,7 +150,7 @@ class FraudInspectorHandlerTest {
                 ));
     }
 
-    private static CheckedResultModel createCheckedResult(ResultStatus status) {
+    private CheckedResultModel createCheckedResult(ResultStatus status) {
         CheckedResultModel checkedResultModel = new CheckedResultModel();
         checkedResultModel.setResultModel(new ConcreteResultModel(status, null, null));
         return checkedResultModel;
