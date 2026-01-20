@@ -2,9 +2,7 @@ package dev.vality.fraudbusters.resource.payment.handler;
 
 import dev.vality.damsel.base.InvalidRequest;
 import dev.vality.damsel.domain.RiskScore;
-import dev.vality.damsel.proxy_inspector.BlackListContext;
-import dev.vality.damsel.proxy_inspector.Context;
-import dev.vality.damsel.proxy_inspector.InspectorProxySrv;
+import dev.vality.damsel.proxy_inspector.*;
 import dev.vality.damsel.wb_list.*;
 import dev.vality.fraudbusters.converter.CheckedResultToRiskScoreConverter;
 import dev.vality.fraudbusters.converter.ContextToFraudRequestConverter;
@@ -13,10 +11,19 @@ import dev.vality.fraudbusters.domain.FraudRequest;
 import dev.vality.fraudbusters.domain.FraudResult;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.stream.TemplateVisitor;
+import dev.vality.fraudbusters.util.PaymentModelFactory;
+import dev.vality.fraudbusters.util.UserCacheKeyUtil;
+import dev.vality.fraudo.constant.ResultStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.kafka.core.KafkaTemplate;
+
+import java.util.AbstractMap;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -62,6 +69,44 @@ public class FraudInspectorHandler implements InspectorProxySrv.Iface {
             log.warn("FraudInspectorHandler error when isExistInBlackList e: ", e);
             return false;
         }
+    }
+
+    @Override
+    @Cacheable(
+            cacheManager = "inspectUserCacheManager",
+            cacheNames = "inspectUser",
+            key = "#root.target.buildInspectUserCacheKey(#context)"
+    )
+    public BlockedShops inspectUser(InspectUserContext context) throws InvalidRequest, TException {
+        if (context == null || context.getShopList() == null || context.getShopList().isEmpty()) {
+            return new BlockedShops().setShopList(Collections.emptyList());
+        }
+        try {
+            List<ShopContext> blockedShops = context.getShopList().parallelStream()
+                    .map(shopContext -> {
+                        PaymentModel paymentModel = PaymentModelFactory.buildPaymentModel(context, shopContext);
+                        CheckedResultModel result = templateVisitor.visit(paymentModel);
+                        return new AbstractMap.SimpleEntry<>(shopContext, result);
+                    })
+                    .filter(entry -> isDeclineResult(entry.getValue()))
+                    .map(AbstractMap.SimpleEntry::getKey)
+                    .collect(Collectors.toList());
+            return new BlockedShops().setShopList(blockedShops);
+        } catch (Exception e) {
+            log.warn("FraudInspectorHandler error when inspectUser e: ", e);
+            return new BlockedShops().setShopList(Collections.emptyList());
+        }
+    }
+
+    public String buildInspectUserCacheKey(InspectUserContext context) {
+        return UserCacheKeyUtil.buildInspectUserCacheKey(context);
+    }
+
+    private static boolean isDeclineResult(CheckedResultModel result) {
+        return result != null
+               && result.getResultModel() != null
+               && (ResultStatus.DECLINE.equals(result.getResultModel().getResultStatus()))
+               || ResultStatus.DECLINE_AND_NOTIFY.equals(result.getResultModel().getResultStatus());
     }
 
 }
