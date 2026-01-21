@@ -82,7 +82,7 @@ public class FraudInspectorHandler implements InspectorProxySrv.Iface {
             return new BlockedShops().setShopList(Collections.emptyList());
         }
         try {
-            List<ShopContext> blockedShops = context.getShopList().parallelStream()
+            List<ShopContext> blockedShops = context.getShopList().stream()
                     .map(shopContext -> {
                         PaymentModel paymentModel = PaymentModelFactory.buildPaymentModel(context, shopContext);
                         CheckedResultModel result = templateVisitor.visit(paymentModel);
@@ -105,8 +105,8 @@ public class FraudInspectorHandler implements InspectorProxySrv.Iface {
     private static boolean isDeclineResult(CheckedResultModel result) {
         return result != null
                && result.getResultModel() != null
-               && (ResultStatus.DECLINE.equals(result.getResultModel().getResultStatus()))
-               || ResultStatus.DECLINE_AND_NOTIFY.equals(result.getResultModel().getResultStatus());
+               && (ResultStatus.DECLINE.equals(result.getResultModel().getResultStatus())
+               || ResultStatus.DECLINE_AND_NOTIFY.equals(result.getResultModel().getResultStatus()));
     }
 
 }
