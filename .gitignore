@@ -55,3 +55,4 @@ target
 # Target ant folder
 build
 /tmp/
+/.vscode/

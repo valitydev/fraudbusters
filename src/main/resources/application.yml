@@ -35,8 +35,8 @@ spring:
       reconnect.backoff.max.ms: 3000
       retry.backoff.ms: 1000
     ssl:
-      keystore-location: src/main/resources/cert/kenny-k.struzhkin.p12
-      keystore-password: kenny
+      key-store-location: src/main/resources/cert/kenny-k.struzhkin.p12
+      key-store-password: kenny
       key-password: kenny
       trust-store-password: kenny12
       trust-store-location: src/main/resources/cert/truststore.p12
@@ -46,9 +46,12 @@ spring:
     ansi:
       enabled: always
   cache:
-    cache-names: resolveCountry
+    cache-names: resolveCountry,isNewShop,inspectUser
     caffeine:
       spec: maximumSize=500,expireAfterAccess=100s
+cache:
+  expire-after-access-seconds: 100
+  inspect-user-expire-after-access-seconds: 300
 
 kafka:
   historical.listener:

@@ -109,6 +109,7 @@
         <dependency>
             <groupId>dev.vality</groupId>
             <artifactId>damsel</artifactId>
+            <version>1.681-7a97267</version>
         </dependency>
         <dependency>
             <groupId>io.opentelemetry</groupId>
