@@ -84,6 +84,14 @@ class FraudInspectorHandlerTest {
         assertEquals(false, existInBlackList);
     }
 
+    private BlackListContext createBlackListContext() {
+        return new BlackListContext()
+                .setValue("test")
+                .setFieldName("field_test")
+                .setFirstId("test_id")
+                .setSecondId("test_sec_id");
+    }
+
     @Test
     void inspectUserShopsBlocked() throws TException {
         FraudInspectorHandler fraudInspectorHandler = new FraudInspectorHandler(
@@ -115,14 +123,6 @@ class FraudInspectorHandlerTest {
             assertEquals("user@email.com", model.getEmail());
             assertEquals("79990001122", model.getPhone());
         }
-    }
-
-    private BlackListContext createBlackListContext() {
-        return new BlackListContext()
-                .setValue("test")
-                .setFieldName("field_test")
-                .setFirstId("test_id")
-                .setSecondId("test_sec_id");
     }
 
     private InspectUserContext createInspectUserContext() {
