@@ -13,11 +13,11 @@ public class PaymentModelFactory {
         paymentModel.setShopId(shopContext.getShopId());
         paymentModel.setTimestamp(System.currentTimeMillis());
         if (context.getUserInfo() != null) {
-            paymentModel.setEmail(context.getUserInfo().getEmail().isPresent()
-                    ? context.getUserInfo().getEmail().get()
+            paymentModel.setEmail(context.getUserInfo().isSetEmail()
+                    ? context.getUserInfo().getEmail()
                     : ClickhouseUtilsValue.UNKNOWN);
-            paymentModel.setPhone(context.getUserInfo().getPhone().isPresent()
-                    ? context.getUserInfo().getPhone().get()
+            paymentModel.setPhone(context.getUserInfo().isSetPhone()
+                    ? context.getUserInfo().getPhone()
                     : ClickhouseUtilsValue.UNKNOWN
             );
         } else {

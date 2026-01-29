@@ -18,11 +18,11 @@ public class WithdrawalBatchPreparedStatementSetter implements BatchPreparedStat
 
     public static final String FIELDS = """
             timestamp, eventTimeHour, eventTime, id, amount, currency, bin, lastDigits, cardToken, paymentSystem,
-            terminal, providerId, bankCountry, identityId, accountId, accountCurrency, status, errorCode,
+            terminal, providerId, bankCountry, accountId, accountCurrency, status, errorCode,
             errorReason
             """;
 
-    public static final String FIELDS_MARK = "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?";
+    public static final String FIELDS_MARK = "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?";
 
     private final List<Withdrawal> batch;
 
@@ -60,7 +60,6 @@ public class WithdrawalBatchPreparedStatementSetter implements BatchPreparedStat
                         : UNKNOWN
         );
 
-        ps.setString(l++, withdrawal.getAccount().getIdentity());
         ps.setString(l++, withdrawal.getAccount().getId());
         ps.setString(l++, withdrawal.getAccount().getCurrency().getSymbolicCode());
 
