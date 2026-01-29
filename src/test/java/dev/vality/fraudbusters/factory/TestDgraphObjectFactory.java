@@ -419,8 +419,7 @@ public final class TestDgraphObjectFactory {
         withdrawal.setAccount(
                 new Account()
                         .setId("AID-1")
-                        .setCurrency(new CurrencyRef().setSymbolicCode("RUB"))
-                        .setIdentity("IDX_P_1"));
+                        .setCurrency(new CurrencyRef().setSymbolicCode("RUB"));
         withdrawal.setError(
                 new Error()
                         .setErrorCode("CODE-1")
