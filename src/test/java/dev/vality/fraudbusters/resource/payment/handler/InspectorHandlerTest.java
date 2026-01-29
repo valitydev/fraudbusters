@@ -72,7 +72,7 @@ class InspectorHandlerTest {
 
     private InspectUserContext createInspectUserContext() {
         ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setEmail("User@Email.Com");
+        clientInfo.setEmail("user@email.com");
         clientInfo.setPhone("79990001122");
         return new InspectUserContext()
                 .setUserInfo(clientInfo)

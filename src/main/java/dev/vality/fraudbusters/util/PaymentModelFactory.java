@@ -14,7 +14,7 @@ public class PaymentModelFactory {
         paymentModel.setTimestamp(System.currentTimeMillis());
         if (context.getUserInfo() != null) {
             paymentModel.setEmail(context.getUserInfo().isSetEmail()
-                    ? context.getUserInfo().getEmail()
+                    ? context.getUserInfo().getEmail().toLowerCase()
                     : ClickhouseUtilsValue.UNKNOWN);
             paymentModel.setPhone(context.getUserInfo().isSetPhone()
                     ? context.getUserInfo().getPhone()
