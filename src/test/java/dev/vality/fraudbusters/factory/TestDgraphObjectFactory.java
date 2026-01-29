@@ -1,11 +1,11 @@
 package dev.vality.fraudbusters.factory;
 
 import dev.vality.damsel.domain.*;
+import dev.vality.damsel.fraudbusters.*;
 import dev.vality.damsel.fraudbusters.ClientInfo;
 import dev.vality.damsel.fraudbusters.CryptoWallet;
 import dev.vality.damsel.fraudbusters.DigitalWallet;
 import dev.vality.damsel.fraudbusters.Error;
-import dev.vality.damsel.fraudbusters.*;
 import dev.vality.fraudbusters.domain.dgraph.common.*;
 import dev.vality.fraudbusters.domain.dgraph.side.*;
 import dev.vality.fraudbusters.factory.properties.OperationProperties;
@@ -419,7 +419,7 @@ public final class TestDgraphObjectFactory {
         withdrawal.setAccount(
                 new Account()
                         .setId("AID-1")
-                        .setCurrency(new CurrencyRef().setSymbolicCode("RUB"));
+                        .setCurrency(new CurrencyRef().setSymbolicCode("RUB")));
         withdrawal.setError(
                 new Error()
                         .setErrorCode("CODE-1")
