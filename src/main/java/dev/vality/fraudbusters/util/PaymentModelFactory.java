@@ -1,28 +1,24 @@
 package dev.vality.fraudbusters.util;
 
-import dev.vality.damsel.proxy_inspector.InspectUserContext;
-import dev.vality.damsel.proxy_inspector.ShopContext;
+import dev.vality.damsel.fraudbusters.InspectUserContext;
+import dev.vality.damsel.fraudbusters.ShopContext;
 import dev.vality.fraudbusters.constant.ClickhouseUtilsValue;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
-import org.springframework.util.StringUtils;
 
 public class PaymentModelFactory {
 
     public static PaymentModel buildPaymentModel(InspectUserContext context, ShopContext shopContext) {
         PaymentModel paymentModel = new PaymentModel();
-        paymentModel.setPartyId(shopContext.getParty().getPartyRef().getId());
-        paymentModel.setShopId(shopContext.getShop().getShopRef().getId());
+        paymentModel.setPartyId(shopContext.getPartyId());
+        paymentModel.setShopId(shopContext.getShopId());
         paymentModel.setTimestamp(System.currentTimeMillis());
         if (context.getUserInfo() != null) {
-            paymentModel.setEmail(
-                    context.getUserInfo().isSetEmail() && StringUtils.hasLength(context.getUserInfo().getEmail())
-                            ? context.getUserInfo().getEmail().toLowerCase()
-                            : ClickhouseUtilsValue.UNKNOWN);
-            paymentModel.setPhone(
-                    context.getUserInfo().isSetPhoneNumber()
-                            && StringUtils.hasLength(context.getUserInfo().getPhoneNumber())
-                            ? context.getUserInfo().getPhoneNumber()
-                            : ClickhouseUtilsValue.UNKNOWN
+            paymentModel.setEmail(context.getUserInfo().getEmail().isPresent()
+                    ? context.getUserInfo().getEmail().get()
+                    : ClickhouseUtilsValue.UNKNOWN);
+            paymentModel.setPhone(context.getUserInfo().getPhone().isPresent()
+                    ? context.getUserInfo().getPhone().get()
+                    : ClickhouseUtilsValue.UNKNOWN
             );
         } else {
             paymentModel.setEmail(ClickhouseUtilsValue.UNKNOWN);
