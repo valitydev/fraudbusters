@@ -37,7 +37,7 @@ public class InspectorHandler implements InspectorServiceSrv.Iface {
     )
     public BlockedShops inspectUserShops(InspectUserContext context) throws InvalidRequest, TException {
         if (CollectionUtils.isEmpty(context.getShopList())) {
-            log.warn("FraudInspectorHandler inspectUser with empty shopList: {}", context);
+            log.warn("InspectorHandler inspectUser with empty shopList: {}", context);
             return new BlockedShops().setShopList(Collections.emptyList());
         }
         try {
@@ -50,10 +50,10 @@ public class InspectorHandler implements InspectorServiceSrv.Iface {
                     .filter(entry -> isDeclineResult(entry.getValue()))
                     .map(AbstractMap.SimpleEntry::getKey)
                     .collect(Collectors.toList());
-            log.debug("FraudInspectorHandler inspectUser result blockedShops: {}", blockedShops);
+            log.debug("InspectorHandler inspectUser result blockedShops: {}", blockedShops);
             return new BlockedShops().setShopList(blockedShops);
         } catch (Exception e) {
-            log.warn("FraudInspectorHandler error when inspectUser e: ", e);
+            log.warn("InspectorHandler error when inspectUser e: ", e);
             return new BlockedShops().setShopList(Collections.emptyList());
         }
     }
