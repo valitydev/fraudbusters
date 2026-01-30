@@ -1,7 +1,7 @@
 package dev.vality.fraudbusters.util;
 
-import dev.vality.damsel.proxy_inspector.InspectUserContext;
-import dev.vality.damsel.proxy_inspector.ShopContext;
+import dev.vality.damsel.fraudbusters.InspectUserContext;
+import dev.vality.damsel.fraudbusters.ShopContext;
 import dev.vality.fraudbusters.constant.ClickhouseUtilsValue;
 import org.springframework.util.StringUtils;
 
@@ -20,9 +20,9 @@ public class UserCacheKeyUtil {
             email = context.getUserInfo().isSetEmail() && StringUtils.hasLength(context.getUserInfo().getEmail())
                     ? context.getUserInfo().getEmail().toLowerCase()
                     : ClickhouseUtilsValue.UNKNOWN;
-            phone = context.getUserInfo().isSetPhoneNumber()
-                    && StringUtils.hasLength(context.getUserInfo().getPhoneNumber())
-                    ? context.getUserInfo().getPhoneNumber()
+            phone = context.getUserInfo().getPhone() != null
+                    && StringUtils.hasLength(context.getUserInfo().getPhone())
+                    ? context.getUserInfo().getPhone()
                     : ClickhouseUtilsValue.UNKNOWN;
         }
         if (context.getShopList() == null || context.getShopList().isEmpty()) {
@@ -36,11 +36,11 @@ public class UserCacheKeyUtil {
     }
 
     private static String buildShopKey(ShopContext shopContext) {
-        if (shopContext == null || shopContext.getParty() == null || shopContext.getShop() == null) {
+        if (shopContext == null || shopContext.getPartyId() == null || shopContext.getShopId() == null) {
             return ClickhouseUtilsValue.UNKNOWN;
         }
-        String partyId = shopContext.getParty().getPartyRef().getId();
-        String shopId = shopContext.getShop().getShopRef().getId();
+        String partyId = shopContext.getPartyId();
+        String shopId = shopContext.getShopId();
         return partyId + ":" + shopId;
     }
 }
