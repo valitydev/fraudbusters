@@ -9,6 +9,7 @@ import dev.vality.fraudbusters.domain.CheckedResultModel;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.stream.TemplateVisitor;
 import dev.vality.fraudbusters.util.PaymentModelFactory;
+import dev.vality.fraudbusters.util.UserCacheKeyUtil;
 import dev.vality.fraudo.constant.ResultStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,5 +66,8 @@ public class InspectorHandler implements InspectorServiceSrv.Iface {
                    || ResultStatus.DECLINE_AND_NOTIFY.equals(result.getResultModel().getResultStatus()));
     }
 
+    public String buildInspectUserCacheKey(InspectUserContext context) {
+        return UserCacheKeyUtil.buildInspectUserCacheKey(context);
+    }
 
 }
