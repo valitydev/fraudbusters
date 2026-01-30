@@ -391,8 +391,7 @@ public class BeanUtil {
     private static Account createAccount() {
         return new Account()
                 .setCurrency(createRubCurrency())
-                .setId(ACCOUNT_ID)
-                .setIdentity(IDENTITY_ID);
+                .setId(ACCOUNT_ID);
     }
 
     @NotNull

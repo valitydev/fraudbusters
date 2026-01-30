@@ -35,7 +35,6 @@ public class WithdrawalToDgraphWithdrawalConverter implements Converter<Withdraw
         Account account = withdrawal.getAccount();
         if (account != null) {
             dgraphWithdrawal.setAccountId(account.getId());
-            dgraphWithdrawal.setAccountIdentity(account.getIdentity());
             dgraphWithdrawal.setAccountCurrency(
                     account.getCurrency() == null
                             ? null : createDgraphCurrency(account.getCurrency().getSymbolicCode()));
