@@ -19,7 +19,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -50,15 +50,15 @@ class FraudInspectorHandlerTest {
 
         when(wbListServiceSrv.isExist(any())).thenReturn(false);
         boolean existInBlackList = fraudInspectorHandler.isBlacklisted(createBlackListContext());
-        assertEquals(false, existInBlackList);
+        assertFalse(existInBlackList);
 
         when(wbListServiceSrv.isExist(any())).thenReturn(true);
         existInBlackList = fraudInspectorHandler.isBlacklisted(createBlackListContext());
-        assertEquals(true, existInBlackList);
+        assertTrue(existInBlackList);
 
         when(wbListServiceSrv.isExist(any())).thenThrow(new ListNotFound());
         existInBlackList = fraudInspectorHandler.isBlacklisted(createBlackListContext());
-        assertEquals(false, existInBlackList);
+        assertFalse(existInBlackList);
     }
 
     private BlackListContext createBlackListContext() {
@@ -67,11 +67,5 @@ class FraudInspectorHandlerTest {
                 .setFieldName("field_test")
                 .setFirstId("test_id")
                 .setSecondId("test_sec_id");
-    }
-
-    private CheckedResultModel createCheckedResult(ResultStatus status) {
-        CheckedResultModel checkedResultModel = new CheckedResultModel();
-        checkedResultModel.setResultModel(new ConcreteResultModel(status, null, null));
-        return checkedResultModel;
     }
 }
