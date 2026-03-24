@@ -78,7 +78,7 @@ public class CountAggregatorImpl implements CountPaymentAggregator<PaymentModel,
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
             List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
             if (Objects.isNull(resolve.getValue())) {
-                return CURRENT_ONE;
+                return 0;
             }
             Integer count = paymentRepository.countOperationErrorWithGroupBy(
                     resolve.getName(),
@@ -113,7 +113,7 @@ public class CountAggregatorImpl implements CountPaymentAggregator<PaymentModel,
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
             List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
             if (Objects.isNull(resolve.getValue())) {
-                return CURRENT_ONE;
+                return 0;
             }
             Integer count = paymentRepository.countOperationErrorWithGroupBy(
                     resolve.getName(),
