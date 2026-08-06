@@ -21,6 +21,8 @@ protocol for managing a set of patterns and bindings
 
 Instruction for testing in https://github.com/valitydev/fraudbusters-compose
 
+System integration and load tests using `fraudbusters-api` and k6:
+[tests/k6/README.md](tests/k6/README.md).
+
 ### License
 [Apache 2.0 License.](/LICENSE)
-

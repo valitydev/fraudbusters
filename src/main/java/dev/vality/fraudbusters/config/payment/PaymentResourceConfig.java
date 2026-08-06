@@ -7,6 +7,7 @@ import dev.vality.fraudbusters.converter.ContextToFraudRequestConverter;
 import dev.vality.fraudbusters.domain.FraudResult;
 import dev.vality.fraudbusters.resource.payment.handler.FraudInspectorHandler;
 import dev.vality.fraudbusters.stream.impl.TemplateVisitorImpl;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,14 +25,16 @@ public class PaymentResourceConfig {
             CheckedResultToRiskScoreConverter checkedResultToRiskScoreConverter,
             ContextToFraudRequestConverter requestConverter,
             TemplateVisitorImpl templateVisitor,
-            WbListServiceSrv.Iface wbListServiceSrv) {
+            WbListServiceSrv.Iface wbListServiceSrv,
+            MeterRegistry meterRegistry) {
         return new FraudInspectorHandler(
                 resultTopic,
                 checkedResultToRiskScoreConverter,
                 requestConverter,
                 templateVisitor,
                 kafkaFraudResultTemplate,
-                wbListServiceSrv
+                wbListServiceSrv,
+                meterRegistry
         );
     }
 

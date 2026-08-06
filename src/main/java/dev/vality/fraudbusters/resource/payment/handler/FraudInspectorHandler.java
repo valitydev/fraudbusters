@@ -13,6 +13,8 @@ import dev.vality.fraudbusters.domain.FraudRequest;
 import dev.vality.fraudbusters.domain.FraudResult;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.stream.TemplateVisitor;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
@@ -28,9 +30,12 @@ public class FraudInspectorHandler implements InspectorProxySrv.Iface {
     private final TemplateVisitor<PaymentModel, CheckedResultModel> templateVisitor;
     private final KafkaTemplate<String, FraudResult> kafkaFraudResultTemplate;
     private final WbListServiceSrv.Iface wbListServiceSrv;
+    private final MeterRegistry meterRegistry;
 
     @Override
     public RiskScore inspectPayment(Context context) throws TException {
+        Timer.Sample sample = Timer.start(meterRegistry);
+        String outcome = "success";
         try {
             FraudRequest model = requestConverter.convert(context);
             if (model != null) {
@@ -42,8 +47,15 @@ public class FraudInspectorHandler implements InspectorProxySrv.Iface {
             }
             return RiskScore.high;
         } catch (Exception e) {
+            outcome = "error";
             log.error("Error when inspectPayment() e: ", e);
             throw new TException("Error when inspectPayment() e: ", e);
+        } finally {
+            sample.stop(Timer.builder("fraudbusters.online.inspect")
+                    .description("Online Fraudbusters inspectPayment latency")
+                    .tag("method", "inspectPayment")
+                    .tag("outcome", outcome)
+                    .register(meterRegistry));
         }
     }
 

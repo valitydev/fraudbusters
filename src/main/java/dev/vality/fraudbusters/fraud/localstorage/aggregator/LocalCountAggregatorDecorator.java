@@ -75,7 +75,8 @@ public class LocalCountAggregatorDecorator implements CountPaymentAggregator<Pay
             Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
             TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
-            List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
+            List<FieldModel> eventFields =
+                    databasePaymentFieldResolver.resolveListFieldsForLocalStorage(paymentModel, list);
             Integer localCount = localStorageRepository.countOperationErrorWithGroupBy(
                     checkedField.name(),
                     resolve.getValue(),
@@ -106,7 +107,8 @@ public class LocalCountAggregatorDecorator implements CountPaymentAggregator<Pay
             Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
             TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(paymentCheckedField, paymentModel);
-            List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
+            List<FieldModel> eventFields =
+                    databasePaymentFieldResolver.resolveListFieldsForLocalStorage(paymentModel, list);
             Integer localCount = localStorageRepository.countOperationErrorWithGroupBy(
                     paymentCheckedField.name(),
                     resolve.getValue(),
@@ -172,12 +174,13 @@ public class LocalCountAggregatorDecorator implements CountPaymentAggregator<Pay
             Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
             TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
             FieldModel resolve = databasePaymentFieldResolver.resolve(checkedField, paymentModel);
-            List<FieldModel> eventFields = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
+            List<FieldModel> eventFields =
+                    databasePaymentFieldResolver.resolveListFieldsForLocalStorage(paymentModel, list);
             Integer count = aggregateFunction.accept(
-                    resolve.getName(),
+                    checkedField.name(),
                     resolve.getValue(),
-                    timeBound.getLeft().toEpochMilli(),
-                    timeBound.getRight().toEpochMilli(),
+                    timeBound.getLeft().getEpochSecond(),
+                    timeBound.getRight().getEpochSecond(),
                     eventFields
             );
             log.debug(
