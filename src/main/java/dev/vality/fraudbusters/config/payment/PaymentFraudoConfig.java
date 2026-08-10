@@ -101,6 +101,12 @@ public class PaymentFraudoConfig {
     }
 
     @Bean
+    public LocalPaymentFieldResolver localPaymentFieldResolver(
+            DatabasePaymentFieldResolver databasePaymentFieldResolver) {
+        return new LocalPaymentFieldResolver(databasePaymentFieldResolver);
+    }
+
+    @Bean
     public InListFinder<PaymentModel, PaymentCheckedField> paymentInListFinder(
             WbListServiceSrv.Iface wbListServiceSrv,
             PaymentRepository paymentRepository,
