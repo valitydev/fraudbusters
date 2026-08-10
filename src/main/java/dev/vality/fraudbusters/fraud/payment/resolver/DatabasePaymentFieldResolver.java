@@ -25,18 +25,6 @@ public class DatabasePaymentFieldResolver {
         return new ArrayList<>();
     }
 
-    @NotNull
-    public List<FieldModel> resolveListFieldsForLocalStorage(
-            PaymentModel model,
-            List<PaymentCheckedField> list) {
-        if (list != null) {
-            return list.stream()
-                    .map(field -> new FieldModel(field.name(), resolve(field, model).getValue()))
-                    .collect(Collectors.toList());
-        }
-        return new ArrayList<>();
-    }
-
     public FieldModel resolve(PaymentCheckedField field, PaymentModel model) {
         if (field == null) {
             throw new UnknownFieldException();

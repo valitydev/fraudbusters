@@ -2,6 +2,7 @@ package dev.vality.fraudbusters.config.payment;
 
 import dev.vality.damsel.wb_list.WbListServiceSrv;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
+import dev.vality.fraudbusters.fraud.localstorage.LocalPaymentFieldResolver;
 import dev.vality.fraudbusters.fraud.localstorage.LocalResultStorageRepository;
 import dev.vality.fraudbusters.fraud.localstorage.aggregator.LocalCountAggregatorDecorator;
 import dev.vality.fraudbusters.fraud.localstorage.aggregator.LocalSumAggregatorDecorator;
@@ -139,6 +140,7 @@ public class PaymentFraudoConfig {
             RefundRepository refundRepository,
             ChargebackRepository chargebackRepository,
             DatabasePaymentFieldResolver databasePaymentFieldResolver,
+            LocalPaymentFieldResolver localPaymentFieldResolver,
             TimeBoundaryService timeBoundaryService) {
 
         CountAggregatorImpl countAggregatorDecorator = new CountAggregatorImpl(
@@ -150,7 +152,7 @@ public class PaymentFraudoConfig {
         );
         return new LocalCountAggregatorDecorator(
                 countAggregatorDecorator,
-                databasePaymentFieldResolver,
+                localPaymentFieldResolver,
                 localResultStorageRepository,
                 timeBoundaryService
         );
@@ -163,6 +165,7 @@ public class PaymentFraudoConfig {
             RefundRepository refundRepository,
             ChargebackRepository chargebackRepository,
             DatabasePaymentFieldResolver databasePaymentFieldResolver,
+            LocalPaymentFieldResolver localPaymentFieldResolver,
             TimeBoundaryService timeBoundaryService) {
 
         SumAggregatorImpl sumAggregator = new SumAggregatorImpl(
@@ -174,7 +177,7 @@ public class PaymentFraudoConfig {
         );
         return new LocalSumAggregatorDecorator(
                 sumAggregator,
-                databasePaymentFieldResolver,
+                localPaymentFieldResolver,
                 localResultStorageRepository,
                 timeBoundaryService
         );
@@ -185,13 +188,14 @@ public class PaymentFraudoConfig {
             LocalResultStorageRepository localResultStorageRepository,
             PaymentRepository fraudResultRepository,
             DatabasePaymentFieldResolver databasePaymentFieldResolver,
+            LocalPaymentFieldResolver localPaymentFieldResolver,
             TimeBoundaryService timeBoundaryService) {
         UniqueValueAggregatorImpl uniqueValueAggregator =
                 new UniqueValueAggregatorImpl(databasePaymentFieldResolver, fraudResultRepository, timeBoundaryService);
 
         return new LocalUniqueValueAggregatorDecorator(
                 uniqueValueAggregator,
-                databasePaymentFieldResolver,
+                localPaymentFieldResolver,
                 localResultStorageRepository,
                 timeBoundaryService
         );

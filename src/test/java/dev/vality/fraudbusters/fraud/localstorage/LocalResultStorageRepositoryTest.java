@@ -88,13 +88,14 @@ class LocalResultStorageRepositoryTest {
     @Test
     void shouldResolveDifferentFieldNamesForClickHouseAndLocalStorage() {
         DatabasePaymentFieldResolver resolver = new DatabasePaymentFieldResolver();
+        LocalPaymentFieldResolver localResolver = new LocalPaymentFieldResolver(resolver);
         PaymentModel payment = new PaymentModel();
         payment.setCardToken(TOKEN);
 
         List<FieldModel> clickHouseFields =
                 resolver.resolveListFields(payment, List.of(PaymentCheckedField.CARD_TOKEN));
         List<FieldModel> localFields =
-                resolver.resolveListFieldsForLocalStorage(payment, List.of(PaymentCheckedField.CARD_TOKEN));
+                localResolver.resolveListFields(payment, List.of(PaymentCheckedField.CARD_TOKEN));
 
         assertEquals("cardToken", clickHouseFields.get(0).getName());
         assertEquals("CARD_TOKEN", localFields.get(0).getName());
