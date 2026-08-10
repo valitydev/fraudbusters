@@ -3,11 +3,11 @@ package dev.vality.fraudbusters.fraud.localstorage.aggregator;
 import dev.vality.fraudbusters.domain.TimeBound;
 import dev.vality.fraudbusters.exception.RuleFunctionException;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
+import dev.vality.fraudbusters.fraud.localstorage.LocalPaymentFieldResolver;
 import dev.vality.fraudbusters.fraud.localstorage.LocalResultStorageRepository;
 import dev.vality.fraudbusters.fraud.model.FieldModel;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse.UniqueValueAggregatorImpl;
-import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
 import dev.vality.fraudbusters.service.TimeBoundaryService;
 import dev.vality.fraudbusters.util.TimestampUtil;
 import dev.vality.fraudo.aggregator.UniqueValueAggregator;
@@ -23,7 +23,7 @@ import java.util.List;
 public class LocalUniqueValueAggregatorDecorator implements UniqueValueAggregator<PaymentModel, PaymentCheckedField> {
 
     private final UniqueValueAggregatorImpl uniqueValueAggregator;
-    private final DatabasePaymentFieldResolver databasePaymentFieldResolver;
+    private final LocalPaymentFieldResolver localPaymentFieldResolver;
     private final LocalResultStorageRepository localStorageRepository;
     private final TimeBoundaryService timeBoundaryService;
 
@@ -38,14 +38,14 @@ public class LocalUniqueValueAggregatorDecorator implements UniqueValueAggregato
             Integer uniq = uniqueValueAggregator.countUniqueValue(countField, paymentModel, onField, timeWindow, list);
             Instant timestamp = TimestampUtil.instantFromPaymentModel(paymentModel);
             TimeBound timeBound = timeBoundaryService.getBoundary(timestamp, timeWindow);
-            FieldModel resolve = databasePaymentFieldResolver.resolve(countField, paymentModel);
-            List<FieldModel> fieldModels = databasePaymentFieldResolver.resolveListFields(paymentModel, list);
+            FieldModel resolve = localPaymentFieldResolver.resolve(countField, paymentModel);
+            List<FieldModel> fieldModels = localPaymentFieldResolver.resolveListFields(paymentModel, list);
             Integer localUniqCountOperation = localStorageRepository.uniqCountOperationWithGroupBy(
                     resolve.getName(),
                     resolve.getValue(),
-                    databasePaymentFieldResolver.resolve(onField),
-                    timeBound.getLeft().toEpochMilli(),
-                    timeBound.getRight().toEpochMilli(),
+                    localPaymentFieldResolver.resolveName(onField),
+                    timeBound.getLeft().getEpochSecond(),
+                    timeBound.getRight().getEpochSecond(),
                     fieldModels
             );
             int result = localUniqCountOperation + uniq;

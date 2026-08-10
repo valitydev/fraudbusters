@@ -42,7 +42,8 @@ public class LocalResultStorageRepository implements PaymentRepository {
             List<FieldModel> fieldModels) {
         List<CheckedPayment> checkedPayments = localStorage.get();
         int count = (int) checkedPayments.stream()
-                .filter(checkedPayment -> filterPaymentByValue(from, to, fieldModels, checkedPayment))
+                .filter(checkedPayment -> filterPaymentByValue(
+                        fieldName, value, from, to, fieldModels, checkedPayment))
                 .count();
         log.debug("LocalResultStorageRepository countOperationByFieldWithGroupBy: {}", count);
         return count;
@@ -57,7 +58,8 @@ public class LocalResultStorageRepository implements PaymentRepository {
             List<FieldModel> fieldModels) {
         List<CheckedPayment> checkedPayments = localStorage.get();
         long sum = checkedPayments.stream()
-                .filter(checkedPayment -> filterPaymentByValue(from, to, fieldModels, checkedPayment))
+                .filter(checkedPayment -> filterPaymentByValue(
+                        fieldName, value, from, to, fieldModels, checkedPayment))
                 .mapToLong(CheckedPayment::getAmount)
                 .sum();
         log.debug("LocalResultStorageRepository sumOperationByFieldWithGroupBy: {}", sum);
@@ -88,7 +90,8 @@ public class LocalResultStorageRepository implements PaymentRepository {
             List<FieldModel> fieldModels) {
         List<CheckedPayment> checkedPayments = localStorage.get();
         long count = checkedPayments.stream()
-                .filter(checkedPayment -> filterPaymentByValue(from, to, fieldModels, checkedPayment))
+                .filter(checkedPayment -> filterPaymentByValue(
+                        fieldNameBy, value, from, to, fieldModels, checkedPayment))
                 .map(checkedPayment -> paymentFieldValueResolver.resolve(fieldNameCount, checkedPayment))
                 .distinct()
                 .count();
@@ -97,12 +100,15 @@ public class LocalResultStorageRepository implements PaymentRepository {
     }
 
     private boolean filterPaymentByValue(
+            String fieldName,
+            Object value,
             Long from,
             Long to,
             List<FieldModel> fieldModels,
             CheckedPayment checkedPayment) {
         return checkedPayment.getEventTime() >= from
                 && checkedPayment.getEventTime() <= to
+                && paymentFieldValueFilter.filter(fieldName, value, checkedPayment)
                 && fieldModels.stream()
                 .allMatch(fieldModel -> paymentFieldValueFilter.filter(
                         fieldModel.getName(),
@@ -121,6 +127,8 @@ public class LocalResultStorageRepository implements PaymentRepository {
         List<CheckedPayment> checkedPayments = localStorage.get();
         return (int) checkedPayments.stream()
                 .filter(checkedPayment -> filterByStatusAndFields(
+                        fieldName,
+                        value,
                         from,
                         to,
                         fieldModels,
@@ -136,6 +144,8 @@ public class LocalResultStorageRepository implements PaymentRepository {
         List<CheckedPayment> checkedPayments = localStorage.get();
         return (int) checkedPayments.stream()
                 .filter(checkedPayment -> filterByStatusAndFields(
+                        fieldName,
+                        value,
                         from,
                         to,
                         fieldModels,
@@ -156,6 +166,8 @@ public class LocalResultStorageRepository implements PaymentRepository {
         List<CheckedPayment> checkedPayments = localStorage.get();
         return (int) checkedPayments.stream()
                 .filter(checkedPayment -> filterByStatusAndFields(
+                        fieldName,
+                        value,
                         from,
                         to,
                         fieldModels,
@@ -177,6 +189,8 @@ public class LocalResultStorageRepository implements PaymentRepository {
         List<CheckedPayment> checkedPayments = localStorage.get();
         return (int) checkedPayments.stream()
                 .filter(checkedPayment -> filterByStatusAndFields(
+                        fieldName,
+                        value,
                         from,
                         to,
                         fieldModels,
@@ -195,6 +209,8 @@ public class LocalResultStorageRepository implements PaymentRepository {
         List<CheckedPayment> checkedPayments = localStorage.get();
         return checkedPayments.stream()
                 .filter(checkedPayment -> filterByStatusAndFields(
+                        fieldName,
+                        value,
                         from,
                         to,
                         fieldModels,
@@ -216,6 +232,8 @@ public class LocalResultStorageRepository implements PaymentRepository {
         List<CheckedPayment> checkedPayments = localStorage.get();
         return checkedPayments.stream()
                 .filter(checkedPayment -> filterByStatusAndFields(
+                        fieldName,
+                        value,
                         from,
                         to,
                         fieldModels,
@@ -236,6 +254,8 @@ public class LocalResultStorageRepository implements PaymentRepository {
         List<CheckedPayment> checkedPayments = localStorage.get();
         return checkedPayments.stream()
                 .filter(checkedPayment -> filterByStatusAndFields(
+                        fieldName,
+                        value,
                         from,
                         to,
                         fieldModels,
@@ -259,19 +279,14 @@ public class LocalResultStorageRepository implements PaymentRepository {
     }
 
     private boolean filterByStatusAndFields(
+            String fieldName,
+            Object value,
             Long from,
             Long to,
             List<FieldModel> fieldModels,
             CheckedPayment checkedPayment,
             PaymentStatus paymentStatus) {
-        return checkedPayment.getEventTime() >= from
-                && checkedPayment.getEventTime() <= to
-                && fieldModels.stream()
-                .allMatch(fieldModel -> paymentFieldValueFilter.filter(
-                        fieldModel.getName(),
-                        fieldModel.getValue(),
-                        checkedPayment
-                ))
+        return filterPaymentByValue(fieldName, value, from, to, fieldModels, checkedPayment)
                 && paymentStatus.name().equals(checkedPayment.getPaymentStatus());
     }
 
