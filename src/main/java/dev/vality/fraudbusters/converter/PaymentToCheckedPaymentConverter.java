@@ -43,7 +43,8 @@ public class PaymentToCheckedPaymentConverter implements Converter<Payment, Chec
         checkedPayment.setBin(paymentTool.isSetBankCard() ? paymentTool.getBankCard().getBin() : UNKNOWN);
         checkedPayment.setCardCategory(paymentTool.isSetBankCard() ? paymentTool.getBankCard().getCategory() : UNKNOWN);
         checkedPayment.setLastDigits(paymentTool.isSetBankCard() ? paymentTool.getBankCard().getLastDigits() : UNKNOWN);
-        checkedPayment.setCardToken(paymentTool.isSetBankCard() ? paymentTool.getBankCard().getToken() : UNKNOWN);
+        checkedPayment.setCardToken(paymentTool.isSetBankCard() && paymentTool.getBankCard().isSetToken()
+                ? paymentTool.getBankCard().getToken() : UNKNOWN);
         checkedPayment.setPaymentSystem(paymentTool.isSetBankCard()
                 ? paymentTool.getBankCard().payment_system.getId()
                 : UNKNOWN);
