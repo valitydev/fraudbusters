@@ -32,6 +32,7 @@ public class ContextToFraudRequestConverter implements Converter<Context, FraudR
         PaymentInfo payment = context.getPayment();
         Party party = payment.getParty();
         paymentModel.setPartyId(party.getPartyRef().getId());
+        paymentModel.setCardToken(ClickhouseUtilsValue.UNKNOWN);
         Payer payer = context.getPayment().getPayment().getPayer();
         PayerFieldExtractor.getBankCard(payer)
                 .ifPresent(bankCard -> {
@@ -40,7 +41,8 @@ public class ContextToFraudRequestConverter implements Converter<Context, FraudR
                     paymentModel.setBinCountryCode(bankCard.isSetIssuerCountry()
                             ? bankCard.getIssuerCountry().name()
                             : ClickhouseUtilsValue.UNKNOWN);
-                    paymentModel.setCardToken(bankCard.getToken());
+                    paymentModel.setCardToken(bankCard.isSetToken()
+                            ? bankCard.getToken() : ClickhouseUtilsValue.UNKNOWN);
                     paymentModel.setRecurrent(
                             paymentTypeByContextResolver.isRecurrent(context.getPayment().getPayment().getPayer())
                     );
