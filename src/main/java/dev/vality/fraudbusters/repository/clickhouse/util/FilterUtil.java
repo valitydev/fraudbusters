@@ -23,14 +23,6 @@ public class FilterUtil {
         return appendFilters(filter, FraudResultFilterMode.NONE);
     }
 
-    public static String appendPaymentFilters(FilterDto filter) {
-        return appendFilters(filter, FraudResultFilterMode.PAYMENT_SUBQUERY);
-    }
-
-    public static String appendFraudResultFilters(FilterDto filter) {
-        return appendFilters(filter, FraudResultFilterMode.DIRECT);
-    }
-
     private static String appendFilters(FilterDto filter, FraudResultFilterMode fraudResultFilterMode) {
         StringBuilder filters = new StringBuilder();
         Set<SearchFieldDto> searchFields = filter.getSearchFields();
@@ -50,6 +42,14 @@ public class FilterUtil {
         }
 
         return filters.append(sorting).append(limit).toString();
+    }
+
+    public static String appendPaymentFilters(FilterDto filter) {
+        return appendFilters(filter, FraudResultFilterMode.PAYMENT_SUBQUERY);
+    }
+
+    public static String appendFraudResultFilters(FilterDto filter) {
+        return appendFilters(filter, FraudResultFilterMode.DIRECT);
     }
 
     private static void addLikeSearchFields(StringBuilder filters, Set<SearchFieldDto> searchFields) {
