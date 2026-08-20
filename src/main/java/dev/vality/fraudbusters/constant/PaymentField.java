@@ -32,6 +32,8 @@ public enum PaymentField {
     PAYMENT_ID("paymentId"),
     BIN("bin"),
     BANK_NAME("bankName"),
+    CHECKED_TEMPLATE("checkedTemplate"),
+    CHECKED_RULE("checkedRule"),
     MOBILE("mobile"),
     RECURRENT("recurrent");
 

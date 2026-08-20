@@ -75,6 +75,12 @@ public class FilterConverter {
         if (filter.isSetInvoiceId() && StringUtils.hasLength(filter.getInvoiceId())) {
             addSearchField(searchFields, PaymentField.INVOICE_ID, FieldType.STRING, filter.getInvoiceId());
         }
+        if (filter.isSetTemplate() && StringUtils.hasLength(filter.getTemplate())) {
+            addSearchField(searchFields, PaymentField.CHECKED_TEMPLATE, FieldType.FRAUD_RESULT, filter.getTemplate());
+        }
+        if (filter.isSetRule() && StringUtils.hasLength(filter.getRule())) {
+            addSearchField(searchFields, PaymentField.CHECKED_RULE, FieldType.FRAUD_RESULT, filter.getRule());
+        }
         return searchFields;
     }
 
