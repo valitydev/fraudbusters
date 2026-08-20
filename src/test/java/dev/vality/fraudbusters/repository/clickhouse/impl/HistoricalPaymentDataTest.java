@@ -50,7 +50,8 @@ class HistoricalPaymentDataTest {
     @BeforeAll
     static void setUp() throws Exception {
         ChInitializer.initAllScripts(ClickHouseContainerExtension.CLICKHOUSE_CONTAINER, List.of(
-                "sql/data/insert_history_payments.sql"
+                "sql/data/insert_history_payments.sql",
+                "sql/data/insert_history_fraud_results.sql"
         ));
     }
 
@@ -96,6 +97,38 @@ class HistoricalPaymentDataTest {
         assertEquals(1, payments.size());
         assertEquals("2035728", payments.get(0).getShopId());
         assertEquals("partyId_2", payments.get(0).getPartyId());
+    }
+
+    @Test
+    void getPaymentsByEmailTemplateAndRule() {
+        FilterDto filter = new FilterDto();
+        filter.setTimeFrom("2020-05-01T18:04:53");
+        filter.setTimeTo("2020-10-01T18:04:53");
+        filter.setSearchFields(Set.of(
+                SearchFieldDto.builder()
+                        .field(PaymentField.EMAIL)
+                        .type(FieldType.STRING)
+                        .value("email_2")
+                        .build(),
+                SearchFieldDto.builder()
+                        .field(PaymentField.CHECKED_TEMPLATE)
+                        .type(FieldType.FRAUD_RESULT)
+                        .value("3DS_TEMPLATE")
+                        .build(),
+                SearchFieldDto.builder()
+                        .field(PaymentField.CHECKED_RULE)
+                        .type(FieldType.FRAUD_RESULT)
+                        .value("3DS_RULE")
+                        .build()
+        ));
+        SortDto sortDto = new SortDto();
+        sortDto.setOrder(SortOrder.DESC);
+        filter.setSort(sortDto);
+
+        List<CheckedPayment> payments = paymentRepository.getByFilter(filter);
+
+        assertEquals(1, payments.size());
+        assertEquals("1VMI3GwdR5s.1", payments.get(0).getId());
     }
 
     @Test

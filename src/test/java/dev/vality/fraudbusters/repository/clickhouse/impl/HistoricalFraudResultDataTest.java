@@ -103,6 +103,38 @@ class HistoricalFraudResultDataTest {
     }
 
     @Test
+    void getFraudResultsByEmailTemplateAndRule() {
+        FilterDto filter = new FilterDto();
+        filter.setTimeFrom("2020-05-01T18:04:53");
+        filter.setTimeTo("2020-10-01T18:04:53");
+        filter.setSearchFields(Set.of(
+                SearchFieldDto.builder()
+                        .field(PaymentField.EMAIL)
+                        .type(FieldType.STRING)
+                        .value("email_2")
+                        .build(),
+                SearchFieldDto.builder()
+                        .field(PaymentField.CHECKED_TEMPLATE)
+                        .type(FieldType.FRAUD_RESULT)
+                        .value("3DS_TEMPLATE")
+                        .build(),
+                SearchFieldDto.builder()
+                        .field(PaymentField.CHECKED_RULE)
+                        .type(FieldType.FRAUD_RESULT)
+                        .value("3DS_RULE")
+                        .build()
+        ));
+        SortDto sortDto = new SortDto();
+        sortDto.setOrder(SortOrder.DESC);
+        filter.setSort(sortDto);
+
+        List<Event> fraudResults = fraudResultRepository.getByFilter(filter);
+
+        assertEquals(1, fraudResults.size());
+        assertEquals("1VMI3GwdR5s.1", fraudResults.get(0).getId());
+    }
+
+    @Test
     void getFraudResultsByTimeSlotAndLimitSize() {
         FilterDto filter = new FilterDto();
         filter.setTimeFrom("2020-05-01T18:04:53");
