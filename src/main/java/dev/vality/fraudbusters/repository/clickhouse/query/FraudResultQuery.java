@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FraudResultQuery {
 
-    private static final String HISTORY_FRAUD_RESULT_SOURCE = String.format("""
+    private static final String FROM_WHERE_PARAMS_SOURCE = String.format("""
                     FROM
                     %s
                     WHERE
@@ -18,7 +18,7 @@ public class FraudResultQuery {
                         and shopId != 'TEST'""",
             EventSource.FRAUD_EVENTS_UNIQUE.getTable());
 
-    public static final String SELECT_HISTORY_FRAUD_RESULT_IDS = "SELECT id\n" + HISTORY_FRAUD_RESULT_SOURCE;
+    public static final String SELECT_HISTORY_FRAUD_RESULT_IDS = "SELECT id\n" + FROM_WHERE_PARAMS_SOURCE;
 
     public static final String SELECT_HISTORY_FRAUD_RESULT = """
                     SELECT
@@ -43,5 +43,5 @@ public class FraudResultQuery {
                         checkedTemplate,
                         mobile,
                         recurrent
-                    """ + HISTORY_FRAUD_RESULT_SOURCE;
+                    """ + FROM_WHERE_PARAMS_SOURCE;
 }
