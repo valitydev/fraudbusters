@@ -117,12 +117,12 @@ class HistoricalPaymentDataTest {
                         .build(),
                 SearchFieldDto.builder()
                         .field(FraudResultField.CHECKED_TEMPLATE)
-                        .type(FieldType.EXACT)
+                        .type(FieldType.STRING)
                         .value("3DS_TEMPLATE")
                         .build(),
                 SearchFieldDto.builder()
                         .field(FraudResultField.CHECKED_RULE)
-                        .type(FieldType.EXACT)
+                        .type(FieldType.STRING)
                         .value("3DS_RULE")
                         .build()
         ));

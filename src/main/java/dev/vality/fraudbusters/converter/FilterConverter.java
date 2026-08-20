@@ -78,10 +78,10 @@ public class FilterConverter {
             addSearchField(searchFields, PaymentField.INVOICE_ID, FieldType.STRING, filter.getInvoiceId());
         }
         if (filter.isSetTemplate() && StringUtils.hasLength(filter.getTemplate())) {
-            addSearchField(searchFields, FraudResultField.CHECKED_TEMPLATE, FieldType.EXACT, filter.getTemplate());
+            addSearchField(searchFields, FraudResultField.CHECKED_TEMPLATE, FieldType.STRING, filter.getTemplate());
         }
         if (filter.isSetRule() && StringUtils.hasLength(filter.getRule())) {
-            addSearchField(searchFields, FraudResultField.CHECKED_RULE, FieldType.EXACT, filter.getRule());
+            addSearchField(searchFields, FraudResultField.CHECKED_RULE, FieldType.STRING, filter.getRule());
         }
         return searchFields;
     }

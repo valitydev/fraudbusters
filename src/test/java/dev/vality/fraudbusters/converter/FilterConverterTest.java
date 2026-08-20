@@ -97,11 +97,11 @@ class FilterConverterTest {
                 .anyMatch(value -> filter.getMaskedPan().equals(value)));
         assertTrue(searchFields.stream()
                 .anyMatch(searchFieldDto -> searchFieldDto.getField().equals(FraudResultField.CHECKED_TEMPLATE)
-                        && searchFieldDto.getType().equals(FieldType.EXACT)
+                        && searchFieldDto.getType().equals(FieldType.STRING)
                         && filter.getTemplate().equals(searchFieldDto.getValue())));
         assertTrue(searchFields.stream()
                 .anyMatch(searchFieldDto -> searchFieldDto.getField().equals(FraudResultField.CHECKED_RULE)
-                        && searchFieldDto.getType().equals(FieldType.EXACT)
+                        && searchFieldDto.getType().equals(FieldType.STRING)
                         && filter.getRule().equals(searchFieldDto.getValue())));
         assertEquals(sort.getField(), dto.getSort().getField());
         assertEquals(sort.getOrder(), SortOrder.valueOf(dto.getSort().getOrder().name()));
