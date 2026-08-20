@@ -1,5 +1,7 @@
 package dev.vality.fraudbusters.repository.clickhouse.util;
 
+import dev.vality.fraudbusters.constant.FilterField;
+import dev.vality.fraudbusters.constant.FraudResultField;
 import dev.vality.fraudbusters.constant.PaymentField;
 import dev.vality.fraudbusters.constant.SortOrder;
 import dev.vality.fraudbusters.service.dto.FieldType;
@@ -26,8 +28,8 @@ class FilterUtilTest {
         filter.setSort(sort);
         filter.setSearchFields(Set.of(
                 searchField(PaymentField.EMAIL, FieldType.STRING, "test@example.com"),
-                searchField(PaymentField.CHECKED_TEMPLATE, FieldType.FRAUD_RESULT, "shop-template"),
-                searchField(PaymentField.CHECKED_RULE, FieldType.FRAUD_RESULT, "many_emails_per_card")
+                searchField(FraudResultField.CHECKED_TEMPLATE, FieldType.EXACT, "shop-template"),
+                searchField(FraudResultField.CHECKED_RULE, FieldType.EXACT, "many_emails_per_card")
         ));
 
         String sql = FilterUtil.appendPaymentFilters(filter);
@@ -50,8 +52,8 @@ class FilterUtilTest {
         sort.setOrder(SortOrder.DESC);
         filter.setSort(sort);
         filter.setSearchFields(Set.of(
-                searchField(PaymentField.CHECKED_TEMPLATE, FieldType.FRAUD_RESULT, "shop-template"),
-                searchField(PaymentField.CHECKED_RULE, FieldType.FRAUD_RESULT, "many_emails_per_card")
+                searchField(FraudResultField.CHECKED_TEMPLATE, FieldType.EXACT, "shop-template"),
+                searchField(FraudResultField.CHECKED_RULE, FieldType.EXACT, "many_emails_per_card")
         ));
 
         String sql = FilterUtil.appendFraudResultFilters(filter);
@@ -68,8 +70,8 @@ class FilterUtilTest {
         sort.setOrder(SortOrder.DESC);
         filter.setSort(sort);
         filter.setSearchFields(Set.of(
-                searchField(PaymentField.CHECKED_TEMPLATE, FieldType.FRAUD_RESULT, "shop-template"),
-                searchField(PaymentField.CHECKED_RULE, FieldType.FRAUD_RESULT, "many_emails_per_card")
+                searchField(FraudResultField.CHECKED_TEMPLATE, FieldType.EXACT, "shop-template"),
+                searchField(FraudResultField.CHECKED_RULE, FieldType.EXACT, "many_emails_per_card")
         ));
 
         String sql = FilterUtil.appendFilters(filter);
@@ -79,7 +81,7 @@ class FilterUtilTest {
         assertFalse(sql.contains("id in (select id"));
     }
 
-    private SearchFieldDto searchField(PaymentField field, FieldType type, String value) {
+    private SearchFieldDto searchField(FilterField field, FieldType type, String value) {
         return SearchFieldDto.builder()
                 .field(field)
                 .type(type)

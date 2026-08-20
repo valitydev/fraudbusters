@@ -1,6 +1,8 @@
 package dev.vality.fraudbusters.repository.clickhouse.util;
 
 
+import dev.vality.fraudbusters.constant.FraudResultField;
+import dev.vality.fraudbusters.constant.PaymentField;
 import dev.vality.fraudbusters.constant.QueryParamName;
 import dev.vality.fraudbusters.repository.clickhouse.query.FraudResultQuery;
 import dev.vality.fraudbusters.service.dto.FieldType;
@@ -12,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -55,6 +56,7 @@ public class FilterUtil {
     private static void addLikeSearchFields(StringBuilder filters, Set<SearchFieldDto> searchFields) {
         searchFields.stream()
                 .filter(searchField -> searchField.getType().equals(FieldType.STRING))
+                .filter(searchField -> searchField.getField() instanceof PaymentField)
                 .forEach(searchField ->
                         filters
                                 .append(" and like(")
@@ -67,6 +69,7 @@ public class FilterUtil {
     private static void addEqualSearchFields(StringBuilder filters, Set<SearchFieldDto> searchFields) {
         searchFields.stream()
                 .filter(searchField -> searchField.getType().equals(FieldType.ENUM))
+                .filter(searchField -> searchField.getField() instanceof PaymentField)
                 .forEach(searchField ->
                         filters
                                 .append(" and ")
@@ -77,10 +80,9 @@ public class FilterUtil {
     }
 
     private static void addPaymentFraudResultSearchFields(StringBuilder filters, Set<SearchFieldDto> searchFields) {
-        List<SearchFieldDto> fraudResultFields = searchFields.stream()
-                .filter(searchField -> searchField.getType().equals(FieldType.FRAUD_RESULT))
-                .toList();
-        if (fraudResultFields.isEmpty()) {
+        boolean containsFraudResultFields = searchFields.stream()
+                .anyMatch(searchField -> searchField.getField() instanceof FraudResultField);
+        if (!containsFraudResultFields) {
             return;
         }
         filters.append(" and id in (")
@@ -91,7 +93,7 @@ public class FilterUtil {
 
     private static void addDirectFraudResultSearchFields(StringBuilder filters, Set<SearchFieldDto> searchFields) {
         searchFields.stream()
-                .filter(searchField -> searchField.getType().equals(FieldType.FRAUD_RESULT))
+                .filter(searchField -> searchField.getField() instanceof FraudResultField)
                 .forEach(searchField -> filters
                         .append(" and ")
                         .append(searchField.getField().getValue())
@@ -114,7 +116,7 @@ public class FilterUtil {
                 .addValue(QueryParamName.SIZE, filter.getSize());
         if (!CollectionUtils.isEmpty(filter.getSearchFields())) {
             filter.getSearchFields().stream()
-                    .filter(searchField -> searchField.getType().equals(FieldType.FRAUD_RESULT))
+                    .filter(searchField -> searchField.getField() instanceof FraudResultField)
                     .forEach(searchField -> params.addValue(
                             searchField.getField().getValue(),
                             searchField.getValue()));

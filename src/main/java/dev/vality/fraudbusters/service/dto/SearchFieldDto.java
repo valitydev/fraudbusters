@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters.service.dto;
 
-import dev.vality.fraudbusters.constant.PaymentField;
+import dev.vality.fraudbusters.constant.FilterField;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import lombok.Data;
 @Builder
 public class SearchFieldDto {
 
-    private PaymentField field;
+    private FilterField field;
     private FieldType type;
     private String value;
 }

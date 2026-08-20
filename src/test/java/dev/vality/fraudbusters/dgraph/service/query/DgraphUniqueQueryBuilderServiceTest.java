@@ -3,7 +3,6 @@ package dev.vality.fraudbusters.dgraph.service.query;
 import dev.vality.fraudbusters.constant.PaymentStatus;
 import dev.vality.fraudbusters.fraud.constant.DgraphEntity;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -16,7 +15,6 @@ import static dev.vality.fraudbusters.util.DgraphTestAggregationUtils.createTest
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Ignore
 public class DgraphUniqueQueryBuilderServiceTest extends AbstractDgraphQueryBuilderServiceTest {
 
     @Test

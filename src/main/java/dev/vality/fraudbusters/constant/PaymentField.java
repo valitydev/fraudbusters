@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
-public enum PaymentField {
+public enum PaymentField implements FilterField {
 
     EVENT_TIME("eventTime"),
     SHOP_ID("shopId"),
@@ -32,8 +32,6 @@ public enum PaymentField {
     PAYMENT_ID("paymentId"),
     BIN("bin"),
     BANK_NAME("bankName"),
-    CHECKED_TEMPLATE("checkedTemplate"),
-    CHECKED_RULE("checkedRule"),
     MOBILE("mobile"),
     RECURRENT("recurrent");
 

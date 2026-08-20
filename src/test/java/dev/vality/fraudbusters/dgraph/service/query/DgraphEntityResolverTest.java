@@ -1,9 +1,9 @@
 package dev.vality.fraudbusters.dgraph.service.query;
 
+import dev.vality.fraudbusters.dgraph.DgraphDisabled;
 import dev.vality.fraudbusters.fraud.constant.DgraphEntity;
 import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.payment.resolver.DgraphEntityResolver;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Ignore
+@DgraphDisabled
 public class DgraphEntityResolverTest {
 
     private DgraphEntityResolver dgraphEntityResolver = new DgraphEntityResolver();

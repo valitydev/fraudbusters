@@ -5,7 +5,6 @@ import dev.vality.fraudbusters.fraud.constant.PaymentCheckedField;
 import dev.vality.fraudbusters.fraud.model.PaymentModel;
 import dev.vality.fraudo.payment.aggregator.CountPaymentAggregator;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import static dev.vality.fraudbusters.util.DgraphTestAggregationUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Ignore
 @Slf4j
 @ActiveProfiles("full-prod")
 public class DgraphCountPaymentsAggregatorTest extends AbstractDgraphPaymentAggregatorTest {

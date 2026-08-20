@@ -1,6 +1,7 @@
 package dev.vality.fraudbusters.dgraph.service.query;
 
 import dev.vality.fraudbusters.config.dgraph.TemplateConfig;
+import dev.vality.fraudbusters.dgraph.DgraphDisabled;
 import dev.vality.fraudbusters.fraud.payment.aggregator.dgraph.query.builder.DgraphCountQueryBuilderService;
 import dev.vality.fraudbusters.fraud.payment.aggregator.dgraph.query.builder.DgraphSumQueryBuilderService;
 import dev.vality.fraudbusters.fraud.payment.aggregator.dgraph.query.builder.DgraphUniqueQueryBuilderService;
@@ -15,6 +16,7 @@ import dev.vality.fraudbusters.service.template.aggregate.unique.RootUniqueQuery
 import dev.vality.fraudbusters.service.template.aggregate.unique.UniqueQueryTemplateService;
 import org.apache.velocity.app.VelocityEngine;
 
+@DgraphDisabled
 public abstract class AbstractDgraphQueryBuilderServiceTest {
 
     private VelocityEngine velocityEngine = new TemplateConfig().velocityEngine();

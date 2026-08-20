@@ -3,6 +3,7 @@ package dev.vality.fraudbusters.repository.clickhouse.impl;
 import dev.vality.clickhouse.initializer.ChInitializer;
 import dev.vality.fraudbusters.config.TestClickhouseConfig;
 import dev.vality.fraudbusters.config.properties.ClickhouseProperties;
+import dev.vality.fraudbusters.constant.FraudResultField;
 import dev.vality.fraudbusters.constant.PaymentField;
 import dev.vality.fraudbusters.constant.SortOrder;
 import dev.vality.fraudbusters.domain.CheckedPayment;
@@ -115,13 +116,13 @@ class HistoricalPaymentDataTest {
                         .value("rule_filter_email")
                         .build(),
                 SearchFieldDto.builder()
-                        .field(PaymentField.CHECKED_TEMPLATE)
-                        .type(FieldType.FRAUD_RESULT)
+                        .field(FraudResultField.CHECKED_TEMPLATE)
+                        .type(FieldType.EXACT)
                         .value("3DS_TEMPLATE")
                         .build(),
                 SearchFieldDto.builder()
-                        .field(PaymentField.CHECKED_RULE)
-                        .type(FieldType.FRAUD_RESULT)
+                        .field(FraudResultField.CHECKED_RULE)
+                        .type(FieldType.EXACT)
                         .value("3DS_RULE")
                         .build()
         ));
