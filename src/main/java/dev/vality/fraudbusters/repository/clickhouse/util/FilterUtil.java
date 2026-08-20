@@ -23,10 +23,6 @@ public class FilterUtil {
         return appendFilters(filter, false);
     }
 
-    public static String appendFraudResultFilters(FilterDto filter) {
-        return appendFilters(filter, true);
-    }
-
     private static String appendFilters(FilterDto filter, boolean directFraudResultSearch) {
         StringBuilder filters = new StringBuilder();
         Set<SearchFieldDto> searchFields = filter.getSearchFields();
@@ -46,6 +42,10 @@ public class FilterUtil {
         }
 
         return filters.append(sorting).append(limit).toString();
+    }
+
+    public static String appendFraudResultFilters(FilterDto filter) {
+        return appendFilters(filter, true);
     }
 
     private static void addLikeSearchFields(StringBuilder filters, Set<SearchFieldDto> searchFields) {
