@@ -30,10 +30,13 @@ class FilterUtilTest {
                 searchField(PaymentField.CHECKED_RULE, FieldType.FRAUD_RESULT, "many_emails_per_card")
         ));
 
-        String sql = FilterUtil.appendFilters(filter);
+        String sql = FilterUtil.appendPaymentFilters(filter);
 
         assertTrue(sql.contains("like(email,'test@example.com')"));
-        assertTrue(sql.contains("id in (select id from fraud.events_unique"));
+        assertTrue(sql.contains("id in ("));
+        assertTrue(sql.contains("SELECT id"));
+        assertTrue(sql.contains("fraud.events_unique"));
+        assertTrue(sql.contains("shopId != 'TEST'"));
         assertTrue(sql.contains("checkedTemplate = :checkedTemplate"));
         assertTrue(sql.contains("checkedRule = :checkedRule"));
         assertEquals("shop-template", FilterUtil.initParams(filter).getValue("checkedTemplate"));
@@ -55,6 +58,24 @@ class FilterUtilTest {
 
         assertTrue(sql.contains("checkedTemplate = :checkedTemplate"));
         assertTrue(sql.contains("checkedRule = :checkedRule"));
+        assertFalse(sql.contains("id in (select id"));
+    }
+
+    @Test
+    void doesNotApplyFraudResultFieldsToOtherHistoryQueries() {
+        FilterDto filter = new FilterDto();
+        SortDto sort = new SortDto();
+        sort.setOrder(SortOrder.DESC);
+        filter.setSort(sort);
+        filter.setSearchFields(Set.of(
+                searchField(PaymentField.CHECKED_TEMPLATE, FieldType.FRAUD_RESULT, "shop-template"),
+                searchField(PaymentField.CHECKED_RULE, FieldType.FRAUD_RESULT, "many_emails_per_card")
+        ));
+
+        String sql = FilterUtil.appendFilters(filter);
+
+        assertFalse(sql.contains("checkedTemplate"));
+        assertFalse(sql.contains("checkedRule"));
         assertFalse(sql.contains("id in (select id"));
     }
 

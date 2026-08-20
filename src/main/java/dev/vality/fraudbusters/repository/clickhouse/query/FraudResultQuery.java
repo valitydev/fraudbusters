@@ -7,7 +7,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FraudResultQuery {
 
-    public static final String SELECT_HISTORY_FRAUD_RESULT = String.format("""
+    private static final String HISTORY_FRAUD_RESULT_SOURCE = String.format("""
+                    FROM
+                    %s
+                    WHERE
+                        timestamp >= toDate(:from)
+                        and timestamp <= toDate(:to)
+                        and toDateTime(eventTime) >= toDateTime(:from)
+                        and toDateTime(eventTime) <= toDateTime(:to)
+                        and shopId != 'TEST'""",
+            EventSource.FRAUD_EVENTS_UNIQUE.getTable());
+
+    public static final String SELECT_HISTORY_FRAUD_RESULT_IDS = "SELECT id\n" + HISTORY_FRAUD_RESULT_SOURCE;
+
+    public static final String SELECT_HISTORY_FRAUD_RESULT = """
                     SELECT
                         eventTime,
                         partyId,
@@ -30,13 +43,5 @@ public class FraudResultQuery {
                         checkedTemplate,
                         mobile,
                         recurrent
-                     FROM
-                    %s
-                     WHERE
-                        timestamp >= toDate(:from)
-                        and timestamp <= toDate(:to)
-                        and toDateTime(eventTime) >= toDateTime(:from)
-                        and toDateTime(eventTime) <= toDateTime(:to)
-                        and shopId != 'TEST'""",
-            EventSource.FRAUD_EVENTS_UNIQUE.getTable());
+                    """ + HISTORY_FRAUD_RESULT_SOURCE;
 }

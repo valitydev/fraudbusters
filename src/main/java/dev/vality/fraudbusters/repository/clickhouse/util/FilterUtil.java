@@ -1,8 +1,8 @@
 package dev.vality.fraudbusters.repository.clickhouse.util;
 
 
-import dev.vality.fraudbusters.constant.EventSource;
 import dev.vality.fraudbusters.constant.QueryParamName;
+import dev.vality.fraudbusters.repository.clickhouse.query.FraudResultQuery;
 import dev.vality.fraudbusters.service.dto.FieldType;
 import dev.vality.fraudbusters.service.dto.FilterDto;
 import dev.vality.fraudbusters.service.dto.SearchFieldDto;
@@ -20,19 +20,27 @@ import java.util.Set;
 public class FilterUtil {
 
     public static String appendFilters(FilterDto filter) {
-        return appendFilters(filter, false);
+        return appendFilters(filter, FraudResultFilterMode.NONE);
     }
 
-    private static String appendFilters(FilterDto filter, boolean directFraudResultSearch) {
+    public static String appendPaymentFilters(FilterDto filter) {
+        return appendFilters(filter, FraudResultFilterMode.PAYMENT_SUBQUERY);
+    }
+
+    public static String appendFraudResultFilters(FilterDto filter) {
+        return appendFilters(filter, FraudResultFilterMode.DIRECT);
+    }
+
+    private static String appendFilters(FilterDto filter, FraudResultFilterMode fraudResultFilterMode) {
         StringBuilder filters = new StringBuilder();
         Set<SearchFieldDto> searchFields = filter.getSearchFields();
         if (!CollectionUtils.isEmpty(searchFields)) {
             addLikeSearchFields(filters, searchFields);
             addEqualSearchFields(filters, searchFields);
-            if (directFraudResultSearch) {
+            if (fraudResultFilterMode == FraudResultFilterMode.DIRECT) {
                 addDirectFraudResultSearchFields(filters, searchFields);
-            } else {
-                addFraudResultSearchFields(filters, searchFields);
+            } else if (fraudResultFilterMode == FraudResultFilterMode.PAYMENT_SUBQUERY) {
+                addPaymentFraudResultSearchFields(filters, searchFields);
             }
         }
         String sorting = String.format(" ORDER BY (eventTime, id) %s ", filter.getSort().getOrder().name());
@@ -42,10 +50,6 @@ public class FilterUtil {
         }
 
         return filters.append(sorting).append(limit).toString();
-    }
-
-    public static String appendFraudResultFilters(FilterDto filter) {
-        return appendFilters(filter, true);
     }
 
     private static void addLikeSearchFields(StringBuilder filters, Set<SearchFieldDto> searchFields) {
@@ -72,24 +76,16 @@ public class FilterUtil {
                                 .append("'"));
     }
 
-    private static void addFraudResultSearchFields(StringBuilder filters, Set<SearchFieldDto> searchFields) {
+    private static void addPaymentFraudResultSearchFields(StringBuilder filters, Set<SearchFieldDto> searchFields) {
         List<SearchFieldDto> fraudResultFields = searchFields.stream()
                 .filter(searchField -> searchField.getType().equals(FieldType.FRAUD_RESULT))
                 .toList();
         if (fraudResultFields.isEmpty()) {
             return;
         }
-        filters.append(" and id in (select id from ")
-                .append(EventSource.FRAUD_EVENTS_UNIQUE.getTable())
-                .append(" where timestamp >= toDate(:from)")
-                .append(" and timestamp <= toDate(:to)")
-                .append(" and toDateTime(eventTime) >= toDateTime(:from)")
-                .append(" and toDateTime(eventTime) <= toDateTime(:to)");
-        fraudResultFields.forEach(searchField -> filters
-                .append(" and ")
-                .append(searchField.getField().getValue())
-                .append(" = :")
-                .append(searchField.getField().getValue()));
+        filters.append(" and id in (")
+                .append(FraudResultQuery.SELECT_HISTORY_FRAUD_RESULT_IDS);
+        addDirectFraudResultSearchFields(filters, searchFields);
         filters.append(")");
     }
 
@@ -124,6 +120,12 @@ public class FilterUtil {
                             searchField.getValue()));
         }
         return params;
+    }
+
+    private enum FraudResultFilterMode {
+        NONE,
+        PAYMENT_SUBQUERY,
+        DIRECT
     }
 
 }
