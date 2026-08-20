@@ -102,14 +102,12 @@ class ManyEmailsPerCardRuleTest {
     }
 
     @Test
-    void nullCardTokenProducesNotificationInsteadOfDecline() {
+    void doesNotQueryHistoryForNullCardToken() {
         RepositoryStub repository = new RepositoryStub(100);
 
         ResultModel result = applyRule(RULE, createPayment(null), repository);
 
-        assertEquals(1, result.getRuleResults().size());
-        assertEquals(ResultStatus.NOTIFY, result.getRuleResults().get(0).getResultStatus());
-        assertEquals("many_emails_per_card", result.getRuleResults().get(0).getRuleChecked());
+        assertTrue(result.getRuleResults().isEmpty());
         assertNull(repository.getAggregationFields());
     }
 

@@ -25,6 +25,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,7 +53,8 @@ class HistoricalPaymentDataTest {
     static void setUp() throws Exception {
         ChInitializer.initAllScripts(ClickHouseContainerExtension.CLICKHOUSE_CONTAINER, List.of(
                 "sql/data/insert_history_payments.sql",
-                "sql/data/insert_history_fraud_results.sql"
+                "sql/data/insert_history_fraud_results.sql",
+                "sql/data/insert_recent_payment_rule_filter.sql"
         ));
     }
 
@@ -101,14 +104,15 @@ class HistoricalPaymentDataTest {
 
     @Test
     void getPaymentsByEmailTemplateAndRule() {
+        LocalDate today = LocalDate.now(ZoneOffset.UTC);
         FilterDto filter = new FilterDto();
-        filter.setTimeFrom("2020-05-01T18:04:53");
-        filter.setTimeTo("2020-10-01T18:04:53");
+        filter.setTimeFrom(today.minusDays(1) + "T00:00:00");
+        filter.setTimeTo(today.plusDays(1) + "T00:00:00");
         filter.setSearchFields(Set.of(
                 SearchFieldDto.builder()
                         .field(PaymentField.EMAIL)
                         .type(FieldType.STRING)
-                        .value("email_2")
+                        .value("rule_filter_email")
                         .build(),
                 SearchFieldDto.builder()
                         .field(PaymentField.CHECKED_TEMPLATE)
@@ -128,7 +132,7 @@ class HistoricalPaymentDataTest {
         List<CheckedPayment> payments = paymentRepository.getByFilter(filter);
 
         assertEquals(1, payments.size());
-        assertEquals("1VMI3GwdR5s.1", payments.get(0).getId());
+        assertEquals("rule-filter-payment.1", payments.get(0).getId());
     }
 
     @Test
