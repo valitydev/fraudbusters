@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
-public enum FraudResultField {
+public enum FraudResultField implements FilterField {
 
     RESULT_STATUS("resultStatus"),
     CHECKED_RULE("checkedRule"),

@@ -4,8 +4,10 @@ import dev.vality.damsel.fraudbusters.Filter;
 import dev.vality.damsel.fraudbusters.Page;
 import dev.vality.damsel.fraudbusters.Sort;
 import dev.vality.damsel.fraudbusters.SortOrder;
+import dev.vality.fraudbusters.constant.FraudResultField;
 import dev.vality.fraudbusters.constant.PaymentField;
 import dev.vality.fraudbusters.factory.TestObjectsFactory;
+import dev.vality.fraudbusters.service.dto.FieldType;
 import dev.vality.fraudbusters.service.dto.FilterDto;
 import dev.vality.fraudbusters.service.dto.SearchFieldDto;
 import org.junit.jupiter.api.Test;
@@ -93,6 +95,14 @@ class FilterConverterTest {
                 .filter(searchFieldDto -> searchFieldDto.getField().equals(PaymentField.LAST_DIGITS))
                 .map(SearchFieldDto::getValue)
                 .anyMatch(value -> filter.getMaskedPan().equals(value)));
+        assertTrue(searchFields.stream()
+                .anyMatch(searchFieldDto -> searchFieldDto.getField().equals(FraudResultField.CHECKED_TEMPLATE)
+                        && searchFieldDto.getType().equals(FieldType.STRING)
+                        && filter.getTemplate().equals(searchFieldDto.getValue())));
+        assertTrue(searchFields.stream()
+                .anyMatch(searchFieldDto -> searchFieldDto.getField().equals(FraudResultField.CHECKED_RULE)
+                        && searchFieldDto.getType().equals(FieldType.STRING)
+                        && filter.getRule().equals(searchFieldDto.getValue())));
         assertEquals(sort.getField(), dto.getSort().getField());
         assertEquals(sort.getOrder(), SortOrder.valueOf(dto.getSort().getOrder().name()));
     }

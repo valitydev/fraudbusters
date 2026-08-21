@@ -96,6 +96,8 @@ public abstract class TestObjectsFactory {
         filter.setPaymentId(id);
         filter.setMaskedPan(lastDigits);
         filter.setInvoiceId(invoiceId);
+        filter.setTemplate(randomString());
+        filter.setRule(randomString());
         TimestampInterval timestampInterval = new TimestampInterval();
         TimestampIntervalBound lowerBound = new TimestampIntervalBound();
         String lowerBoundTime = LocalDateTime.now().toString();

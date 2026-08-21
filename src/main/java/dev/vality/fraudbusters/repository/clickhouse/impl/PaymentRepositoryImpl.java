@@ -58,7 +58,7 @@ public class PaymentRepositoryImpl implements Repository<CheckedPayment>, Paymen
 
     @Override
     public List<CheckedPayment> getByFilter(FilterDto filter) {
-        String filters = FilterUtil.appendFilters(filter);
+        String filters = FilterUtil.appendPaymentFilters(filter);
         String query = PaymentQuery.SELECT_HISTORY_PAYMENT + filters;
         MapSqlParameterSource params = FilterUtil.initParams(filter);
         return namedParameterJdbcTemplate.query(query, params, checkedPaymentMapper);

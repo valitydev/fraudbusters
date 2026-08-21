@@ -3,6 +3,7 @@ package dev.vality.fraudbusters.repository.clickhouse.impl;
 import dev.vality.clickhouse.initializer.ChInitializer;
 import dev.vality.fraudbusters.config.TestClickhouseConfig;
 import dev.vality.fraudbusters.config.properties.ClickhouseProperties;
+import dev.vality.fraudbusters.constant.FraudResultField;
 import dev.vality.fraudbusters.constant.PaymentField;
 import dev.vality.fraudbusters.constant.SortOrder;
 import dev.vality.fraudbusters.domain.CheckedPayment;
@@ -25,6 +26,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,7 +53,9 @@ class HistoricalPaymentDataTest {
     @BeforeAll
     static void setUp() throws Exception {
         ChInitializer.initAllScripts(ClickHouseContainerExtension.CLICKHOUSE_CONTAINER, List.of(
-                "sql/data/insert_history_payments.sql"
+                "sql/data/insert_history_payments.sql",
+                "sql/data/insert_history_fraud_results.sql",
+                "sql/data/insert_recent_payment_rule_filter.sql"
         ));
     }
 
@@ -96,6 +101,39 @@ class HistoricalPaymentDataTest {
         assertEquals(1, payments.size());
         assertEquals("2035728", payments.get(0).getShopId());
         assertEquals("partyId_2", payments.get(0).getPartyId());
+    }
+
+    @Test
+    void getPaymentsByEmailTemplateAndRule() {
+        LocalDate today = LocalDate.now(ZoneOffset.UTC);
+        FilterDto filter = new FilterDto();
+        filter.setTimeFrom(today.minusDays(1) + "T00:00:00");
+        filter.setTimeTo(today.plusDays(1) + "T00:00:00");
+        filter.setSearchFields(Set.of(
+                SearchFieldDto.builder()
+                        .field(PaymentField.EMAIL)
+                        .type(FieldType.STRING)
+                        .value("rule_filter_email")
+                        .build(),
+                SearchFieldDto.builder()
+                        .field(FraudResultField.CHECKED_TEMPLATE)
+                        .type(FieldType.STRING)
+                        .value("3DS_TEMPLATE")
+                        .build(),
+                SearchFieldDto.builder()
+                        .field(FraudResultField.CHECKED_RULE)
+                        .type(FieldType.STRING)
+                        .value("3DS_RULE")
+                        .build()
+        ));
+        SortDto sortDto = new SortDto();
+        sortDto.setOrder(SortOrder.DESC);
+        filter.setSort(sortDto);
+
+        List<CheckedPayment> payments = paymentRepository.getByFilter(filter);
+
+        assertEquals(1, payments.size());
+        assertEquals("rule-filter-payment.1", payments.get(0).getId());
     }
 
     @Test

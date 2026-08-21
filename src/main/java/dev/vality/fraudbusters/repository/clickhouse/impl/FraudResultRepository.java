@@ -65,7 +65,7 @@ public class FraudResultRepository implements Repository<Event>, PaymentReposito
 
     @Override
     public List<Event> getByFilter(FilterDto filter) {
-        String filters = FilterUtil.appendFilters(filter);
+        String filters = FilterUtil.appendFraudResultFilters(filter);
         String query = FraudResultQuery.SELECT_HISTORY_FRAUD_RESULT + filters;
         MapSqlParameterSource params = FilterUtil.initParams(filter);
         return namedParameterJdbcTemplate.query(query, params, eventMapper);

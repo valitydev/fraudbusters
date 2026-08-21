@@ -3,6 +3,8 @@ package dev.vality.fraudbusters.converter;
 import dev.vality.damsel.fraudbusters.Filter;
 import dev.vality.damsel.fraudbusters.Page;
 import dev.vality.damsel.fraudbusters.Sort;
+import dev.vality.fraudbusters.constant.FilterField;
+import dev.vality.fraudbusters.constant.FraudResultField;
 import dev.vality.fraudbusters.constant.PaymentField;
 import dev.vality.fraudbusters.constant.SortOrder;
 import dev.vality.fraudbusters.service.dto.FieldType;
@@ -75,18 +77,24 @@ public class FilterConverter {
         if (filter.isSetInvoiceId() && StringUtils.hasLength(filter.getInvoiceId())) {
             addSearchField(searchFields, PaymentField.INVOICE_ID, FieldType.STRING, filter.getInvoiceId());
         }
+        if (filter.isSetTemplate() && StringUtils.hasLength(filter.getTemplate())) {
+            addSearchField(searchFields, FraudResultField.CHECKED_TEMPLATE, FieldType.STRING, filter.getTemplate());
+        }
+        if (filter.isSetRule() && StringUtils.hasLength(filter.getRule())) {
+            addSearchField(searchFields, FraudResultField.CHECKED_RULE, FieldType.STRING, filter.getRule());
+        }
         return searchFields;
     }
 
     private void addSearchField(Set<SearchFieldDto> searchFields,
-                                PaymentField cardToken,
-                                FieldType string,
-                                String filter) {
+                                FilterField field,
+                                FieldType type,
+                                String filterValue) {
         searchFields.add(
                 SearchFieldDto.builder()
-                        .field(cardToken)
-                        .type(string)
-                        .value(filter)
+                        .field(field)
+                        .type(type)
+                        .value(filterValue)
                         .build()
         );
     }

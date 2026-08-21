@@ -3,6 +3,7 @@ package dev.vality.fraudbusters.repository.clickhouse.impl;
 import dev.vality.clickhouse.initializer.ChInitializer;
 import dev.vality.fraudbusters.config.TestClickhouseConfig;
 import dev.vality.fraudbusters.config.properties.ClickhouseProperties;
+import dev.vality.fraudbusters.constant.FraudResultField;
 import dev.vality.fraudbusters.constant.PaymentField;
 import dev.vality.fraudbusters.constant.SortOrder;
 import dev.vality.fraudbusters.domain.Event;
@@ -100,6 +101,38 @@ class HistoricalFraudResultDataTest {
         assertEquals(1, fraudResults.size());
         assertEquals("2035728", fraudResults.get(0).getShopId());
         assertEquals("partyId_2", fraudResults.get(0).getPartyId());
+    }
+
+    @Test
+    void getFraudResultsByEmailTemplateAndRule() {
+        FilterDto filter = new FilterDto();
+        filter.setTimeFrom("2020-05-01T18:04:53");
+        filter.setTimeTo("2020-10-01T18:04:53");
+        filter.setSearchFields(Set.of(
+                SearchFieldDto.builder()
+                        .field(PaymentField.EMAIL)
+                        .type(FieldType.STRING)
+                        .value("email_2")
+                        .build(),
+                SearchFieldDto.builder()
+                        .field(FraudResultField.CHECKED_TEMPLATE)
+                        .type(FieldType.STRING)
+                        .value("3DS_TEMPLATE")
+                        .build(),
+                SearchFieldDto.builder()
+                        .field(FraudResultField.CHECKED_RULE)
+                        .type(FieldType.STRING)
+                        .value("3DS_RULE")
+                        .build()
+        ));
+        SortDto sortDto = new SortDto();
+        sortDto.setOrder(SortOrder.DESC);
+        filter.setSort(sortDto);
+
+        List<Event> fraudResults = fraudResultRepository.getByFilter(filter);
+
+        assertEquals(1, fraudResults.size());
+        assertEquals("1VMI3GwdR5s.1", fraudResults.get(0).getId());
     }
 
     @Test
