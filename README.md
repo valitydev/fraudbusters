@@ -28,6 +28,38 @@ enough free disk space to start Kafka and ClickHouse.
 
 Instruction for testing in https://github.com/valitydev/fraudbusters-compose
 
+### Tracing
+
+The Docker runtime starts the OpenTelemetry Java agent. Configure tracing through
+environment variables in the Helm values, independently of Spring's `application.yml`:
+
+```properties
+OTEL_JAVAAGENT_ENABLED=true
+OTEL_SERVICE_NAME=fraudbusters
+OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://localhost:4318/v1/traces
+OTEL_EXPORTER_OTLP_TRACES_TIMEOUT=60000
+OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+OTEL_TRACES_SAMPLER=always_on
+OTEL_PROPAGATORS=tracecontext
+OTEL_METRICS_EXPORTER=none
+OTEL_LOGS_EXPORTER=none
+OTEL_INSTRUMENTATION_LOGBACK_MDC_ENABLED=false
+```
+
+The endpoint must address the collector reachable from the running service.
+`OTEL_JAVAAGENT_ENABLED=false` disables the agent. Prometheus metrics continue to
+use Micrometer. The former `otel.resource` and `otel.timeout` Spring properties
+are no longer used; no custom OpenTelemetry SDK is created by the application.
+
+Deploy the updated service image together with the Helm environment changes.
+Older images still require the former `otel.resource` application property.
+
+When running the JAR outside Docker, attach the agent explicitly:
+
+```shell
+java -javaagent:target/maven-shared-archive-resources/opentelemetry-javaagent.jar -jar target/fraudbusters-1.0-SNAPSHOT.jar
+```
+
 ### License
 [Apache 2.0 License.](/LICENSE)
 

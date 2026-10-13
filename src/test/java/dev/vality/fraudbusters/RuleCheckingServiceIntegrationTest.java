@@ -1,6 +1,6 @@
 package dev.vality.fraudbusters;
 
-import dev.vality.fraudbusters.config.MockExternalServiceConfig;
+import dev.vality.fraudbusters.config.MockExternalServices;
 import dev.vality.fraudbusters.config.payment.HistoricalPaymentPoolConfig;
 import dev.vality.fraudbusters.config.payment.PaymentFraudoConfig;
 import dev.vality.fraudbusters.domain.CheckedResultModel;
@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -61,7 +60,7 @@ import static org.junit.jupiter.api.Assertions.*;
         PaymentTypeResolverImpl.class,
         DatabasePaymentFieldResolver.class,
         HistoricalPaymentPoolConfig.class})
-@Import({MockExternalServiceConfig.class})
+@MockExternalServices
 class RuleCheckingServiceIntegrationTest {
 
     @MockitoBean

@@ -90,14 +90,6 @@
             <artifactId>woody-thrift</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.opentelemetry</groupId>
-            <artifactId>opentelemetry-sdk</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.opentelemetry</groupId>
-            <artifactId>opentelemetry-exporter-otlp</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-core</artifactId>
         </dependency>
@@ -123,11 +115,6 @@
             <groupId>dev.vality</groupId>
             <artifactId>damsel</artifactId>
             <version>1.681-7a97267</version>
-        </dependency>
-        <dependency>
-            <groupId>io.opentelemetry</groupId>
-            <artifactId>opentelemetry-semconv</artifactId>
-            <version>1.29.0-alpha</version>
         </dependency>
         <dependency>
             <groupId>dev.vality</groupId>

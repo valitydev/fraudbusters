@@ -7,11 +7,9 @@ import dev.vality.damsel.domain.ShopConfigRef;
 import dev.vality.damsel.fraudbusters.*;
 import dev.vality.damsel.proxy_inspector.Context;
 import dev.vality.damsel.proxy_inspector.InspectorProxySrv;
-import dev.vality.fraudbusters.config.MockExternalServiceConfig;
-import dev.vality.fraudbusters.config.OtelConfig;
+import dev.vality.fraudbusters.config.MockExternalServices;
 import dev.vality.fraudbusters.config.TestClickhouseConfig;
 import dev.vality.fraudbusters.config.properties.KafkaTopics;
-import dev.vality.fraudbusters.config.properties.OtelProperties;
 import dev.vality.fraudbusters.constants.EndToEndIntegrationTemplates;
 import dev.vality.fraudbusters.constants.TestProperties;
 import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
@@ -40,7 +38,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -82,7 +79,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
                 "spring.main.allow-bean-definition-overriding=true"
         })
 @ExtendWith({ClickHouseContainerExtension.class})
-@Import({MockExternalServiceConfig.class})
+@MockExternalServices
 class EndToEndIntegrationTest {
 
     public static final String CAPTURED = "captured";
