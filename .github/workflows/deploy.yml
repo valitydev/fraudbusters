@@ -7,8 +7,9 @@ on:
 
 jobs:
   build-and-deploy:
-    uses: valitydev/java-workflow/.github/workflows/maven-service-deploy.yml@v3
+    uses: valitydev/java-workflow/.github/workflows/maven-service-deploy.yml@v4
     with:
+      java-version: "25"
       ignore-coverage: true
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -16,7 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
@@ -38,25 +38,25 @@ class RuleCheckingServiceImplTest {
     @Autowired
     private RuleCheckingServiceImpl service;
 
-    @MockBean
+    @MockitoBean
     private PaymentTemplateValidator paymentTemplateValidator;
 
-    @MockBean
+    @MockitoBean
     private FraudContextParser<FraudoPaymentParser.ParseContext> paymentContextParser;
 
-    @MockBean
+    @MockitoBean
     private RuleCheckingApplierImpl<PaymentModel> ruleCheckingApplier;
 
-    @MockBean
+    @MockitoBean
     private HistoricalPool<List<String>> timeGroupPoolImpl;
 
-    @MockBean(name = "timeReferencePoolImpl")
+    @MockitoBean(name = "timeReferencePoolImpl")
     private HistoricalPool<String> timeReferencePoolImpl;
 
-    @MockBean(name = "timeGroupReferencePoolImpl")
+    @MockitoBean(name = "timeGroupReferencePoolImpl")
     private HistoricalPool<String> timeGroupReferencePoolImpl;
 
-    @MockBean
+    @MockitoBean
     private CheckedResultFactory checkedResultFactory;
 
     private static final Long TIMESTAMP = Instant.now().toEpochMilli();

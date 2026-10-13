@@ -30,7 +30,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -64,15 +64,15 @@ import static org.junit.jupiter.api.Assertions.*;
 @Import({MockExternalServiceConfig.class})
 class RuleCheckingServiceIntegrationTest {
 
-    @MockBean
+    @MockitoBean
     private RefundRepository refundRepository;
-    @MockBean
+    @MockitoBean
     private ChargebackRepository chargebackRepository;
-    @MockBean
+    @MockitoBean
     private CountryByIpResolver countryByIpResolver;
-    @MockBean
+    @MockitoBean
     private CustomerTypeResolverImpl customerTypeResolver;
-    @MockBean
+    @MockitoBean
     private LocalResultStorageRepository localResultStorageRepository;
 
     @Autowired

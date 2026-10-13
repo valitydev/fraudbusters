@@ -32,6 +32,9 @@ public class OtelConfig {
 
     @Bean
     public OpenTelemetry openTelemetryConfig() {
+        if (GlobalOpenTelemetry.isSet()) {
+            return GlobalOpenTelemetry.get();
+        }
         Resource resource = Resource.getDefault()
                 .merge(Resource.create(Attributes.of(ResourceAttributes.SERVICE_NAME, appName)));
 

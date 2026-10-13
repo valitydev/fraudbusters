@@ -19,6 +19,13 @@ protocol for managing a set of patterns and bindings
 
 ### Installation and testing
 
+Build with JDK 25 and Maven. The service uses Spring Boot 4.1 via Vality's
+`service-parent-pom` 4.0.1. CI also runs on Java 25; shared resources provide the
+Java 25 container runtime and OpenTelemetry agent.
+
+Run `mvn clean verify` to build and test. Container tests require Docker with
+enough free disk space to start Kafka and ClickHouse.
+
 Instruction for testing in https://github.com/valitydev/fraudbusters-compose
 
 ### License

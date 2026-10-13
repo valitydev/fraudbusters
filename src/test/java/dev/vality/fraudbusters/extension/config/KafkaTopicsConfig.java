@@ -1,10 +1,8 @@
 package dev.vality.fraudbusters.extension.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
-import org.springframework.boot.ssl.SslBundles;
+import org.springframework.boot.kafka.autoconfigure.KafkaProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.config.TopicBuilder;
@@ -14,14 +12,11 @@ import org.springframework.kafka.core.KafkaAdmin;
 public class KafkaTopicsConfig {
 
     @Autowired
-    private ObjectProvider<SslBundles> sslBundles;
-
-    @Autowired
     private KafkaProperties kafkaProperties;
 
     @Bean
     public KafkaAdmin adminClient() {
-        return new KafkaAdmin(kafkaProperties.buildAdminProperties(sslBundles.getIfAvailable()));
+        return new KafkaAdmin(kafkaProperties.buildAdminProperties());
     }
 
     @Bean
