@@ -86,28 +86,6 @@ kafka:
       withdrawal: withdrawal
     fraud:
       payment: fraud_payment
-  dgraph:
-    topics:
-      payment:
-        name: payment_event
-        concurrency: 1
-        enabled: false
-      fraud_payment:
-        name: fraud_payment
-        concurrency: 1
-        enabled: false
-      refund:
-        name: refund_event
-        concurrency: 1
-        enabled: false
-      chargeback:
-        name: chargeback_event
-        concurrency: 1
-        enabled: false
-      withdrawal:
-        name: withdrawal
-        concurrency: 1
-        enabled: false
   aggr.payment.min.bytes: 50000
 
 clickhouse.db:
@@ -119,21 +97,6 @@ clickhouse.db:
   compress: false
   distributed-connections-pool-size: 50
   max-distributed-connections: 50
-
-dgraph:
-  targets:
-    - "localhost:9080"
-  auth: false
-  login: "login"
-  password: "password"
-  maxAttempts: -1
-  backoffPeriod: 1000
-  service:
-    enabled: false
-  trustCertCollectionFile: "ca.crt"
-  keyCertChainFile: "degraph.crt"
-  keyFile: "dgraphuser.p12"
-  negotiationType: "TLS"
 
 geo.ip.service.url: "http://localhost:29092/v1/columbus"
 

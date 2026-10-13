@@ -1,8 +1,0 @@
-## @vtlvariable name="queryModel" type="dev.vality.fraudbusters.fraud.model.DgraphAggregationQueryModel"
-query all() {
-
-  aggregates(func: type($queryModel.rootType)) $queryModel.rootFilter {
-      count: count(uid)
-  }
-
-}

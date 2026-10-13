@@ -26,8 +26,6 @@
         <fraudbusters-proto.version>1.134-b64531d</fraudbusters-proto.version>
         <trusted.tokens.proto.version>1.7-6d29f86</trusted.tokens.proto.version>
         <wb.list.proto.version>1.44-5dbd6d4</wb.list.proto.version>
-        <dgraph4j.version>21.12.0</dgraph4j.version>
-        <velocity.version>2.3</velocity.version>
         <columbus-proto.version>1.3-979c2b6</columbus-proto.version>
         <testcontainers-annotations.version>2.0.3</testcontainers-annotations.version>
 
@@ -168,26 +166,6 @@
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity-engine-core</artifactId>
-            <version>${velocity.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.dgraph</groupId>
-            <artifactId>dgraph4j</artifactId>
-            <version>${dgraph4j.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-simple</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>software.amazon.msk</groupId>
