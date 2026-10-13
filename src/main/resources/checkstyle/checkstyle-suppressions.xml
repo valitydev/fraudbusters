@@ -5,11 +5,4 @@
         "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 
 <suppressions>
-    <suppress checks="LineLength" files="VelocityTestData.java"/>
-    <suppress checks="LineLength" files="DgraphRefundCountQueryBuilderServiceTestData.java"/>
-    <suppress checks="LineLength" files="DgraphPaymentsSumQueryBuilderServiceTestData.java"/>
-    <suppress checks="LineLength" files="DgraphRefundsSumQueryBuilderServiceTestData.java"/>
-    <suppress checks="LineLength" files="DgraphPaymentCountQueryBuilderServiceTestData.java"/>
-    <suppress checks="LineLength" files="DgraphUniqueQueryBuilderServiceTestData.java"/>
-    <suppress checks="Indentation" files="DgraphQueryConditionResolver.java"/>
 </suppressions>

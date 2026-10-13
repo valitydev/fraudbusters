@@ -3,7 +3,6 @@ package dev.vality.fraudbusters.config.service;
 import dev.vality.damsel.fraudbusters.Command;
 import dev.vality.fraudbusters.serde.CommandDeserializer;
 import dev.vality.fraudbusters.service.ConsumerGroupIdService;
-import dev.vality.kafka.common.util.ExponentialBackOffDefaultErrorHandlerFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Deserializer;
@@ -13,7 +12,6 @@ import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.retry.RetryPolicy;
 import org.springframework.retry.backoff.BackOffPolicy;
@@ -44,8 +42,6 @@ public class ListenersConfigurationService {
     private int backoffInterval;
     @Value("${kafka.listen.result.concurrency}")
     private int listenResultConcurrency;
-    @Value("${kafka.dgraph.topics.payment.concurrency}")
-    private int dgraphPaymentConcurrency;
 
     public Map<String, Object> createDefaultProperties(String groupId) {
         final Map<String, Object> props = kafkaProperties.buildConsumerProperties();
@@ -105,22 +101,6 @@ public class ListenersConfigurationService {
         props.put(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, fetchMinBytes);
         props.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, MAX_WAIT_FETCH_MS);
         return createFactoryWithProps(deserializer, props);
-    }
-
-    public <T> ConcurrentKafkaListenerContainerFactory<String, T> createDgraphFactory(
-            Deserializer<T> deserializer,
-            String groupId,
-            Integer fetchMinBytes) {
-        String consumerGroup = consumerGroupIdService.generateGroupId(groupId);
-        final Map<String, Object> props = createDefaultProperties(consumerGroup);
-        props.put(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, fetchMinBytes);
-        props.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, MAX_WAIT_FETCH_MS);
-        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
-        final ConcurrentKafkaListenerContainerFactory<String, T> factory = createFactoryWithProps(deserializer, props);
-        factory.setCommonErrorHandler(ExponentialBackOffDefaultErrorHandlerFactory.create());
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
-        factory.setConcurrency(dgraphPaymentConcurrency);
-        return factory;
     }
 
     public <T> ConcurrentKafkaListenerContainerFactory<String, T> createFactoryWithProps(

@@ -12,16 +12,10 @@ import dev.vality.fraudbusters.fraud.payment.CountryByIpResolver;
 import dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse.CountAggregatorImpl;
 import dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse.SumAggregatorImpl;
 import dev.vality.fraudbusters.fraud.payment.aggregator.clickhouse.UniqueValueAggregatorImpl;
-import dev.vality.fraudbusters.fraud.payment.aggregator.dgraph.DgraphCountAggregatorImpl;
-import dev.vality.fraudbusters.fraud.payment.aggregator.dgraph.DgraphSumAggregatorImpl;
-import dev.vality.fraudbusters.fraud.payment.aggregator.dgraph.DgraphUniqueAggregatorImpl;
-import dev.vality.fraudbusters.fraud.payment.aggregator.dgraph.query.builder.DgraphAggregationQueryBuilderService;
 import dev.vality.fraudbusters.fraud.payment.finder.PaymentInListFinderImpl;
 import dev.vality.fraudbusters.fraud.payment.resolver.CountryResolverImpl;
 import dev.vality.fraudbusters.fraud.payment.resolver.DatabasePaymentFieldResolver;
-import dev.vality.fraudbusters.fraud.payment.resolver.DgraphEntityResolver;
 import dev.vality.fraudbusters.fraud.payment.resolver.PaymentModelFieldResolver;
-import dev.vality.fraudbusters.repository.DgraphAggregatesRepository;
 import dev.vality.fraudbusters.repository.PaymentRepository;
 import dev.vality.fraudbusters.repository.clickhouse.impl.ChargebackRepository;
 import dev.vality.fraudbusters.repository.clickhouse.impl.RefundRepository;
@@ -45,7 +39,6 @@ import dev.vality.fraudo.resolver.CountryResolver;
 import dev.vality.fraudo.resolver.FieldResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 
 @Configuration
 public class PaymentFraudoConfig {
@@ -230,55 +223,6 @@ public class PaymentFraudoConfig {
         FinderBundle<PaymentModel, PaymentCheckedField> finderBundle = new FinderBundle<>(paymentInListFinder);
         return new FullVisitorFactoryImpl()
                 .createVisitor(new VisitorBundle<>(aggregatorBundle, resolverBundle, finderBundle));
-    }
-
-    @Bean
-    @Lazy
-    public UniqueValueAggregator<PaymentModel, PaymentCheckedField> dgraphUniqueAggregator(
-            DgraphAggregationQueryBuilderService dgraphUniqueQueryBuilderService,
-            DgraphEntityResolver dgraphEntityResolver,
-            DgraphAggregatesRepository dgraphAggregatesRepository,
-            DatabasePaymentFieldResolver databasePaymentFieldResolver,
-            TimeBoundaryService timeBoundaryService) {
-        return new DgraphUniqueAggregatorImpl(
-                dgraphUniqueQueryBuilderService,
-                dgraphEntityResolver,
-                dgraphAggregatesRepository,
-                databasePaymentFieldResolver,
-                timeBoundaryService
-        );
-    }
-
-    @Bean
-    @Lazy
-    public CountPaymentAggregator<PaymentModel, PaymentCheckedField> dgraphCountAggregator(
-            DgraphAggregationQueryBuilderService dgraphCountQueryBuilderService,
-            DgraphEntityResolver dgraphEntityResolver,
-            DgraphAggregatesRepository dgraphAggregatesRepository,
-            TimeBoundaryService timeBoundaryService
-    ) {
-        return new DgraphCountAggregatorImpl(
-                dgraphCountQueryBuilderService,
-                dgraphEntityResolver,
-                dgraphAggregatesRepository,
-                timeBoundaryService
-        );
-    }
-
-    @Bean
-    @Lazy
-    public SumPaymentAggregator<PaymentModel, PaymentCheckedField> dgraphSumAggregator(
-            DgraphAggregationQueryBuilderService dgraphSumQueryBuilderService,
-            DgraphEntityResolver dgraphEntityResolver,
-            DgraphAggregatesRepository dgraphAggregatesRepository,
-            TimeBoundaryService timeBoundaryService
-    ) {
-        return new DgraphSumAggregatorImpl(
-                dgraphSumQueryBuilderService,
-                dgraphEntityResolver,
-                dgraphAggregatesRepository,
-                timeBoundaryService
-        );
     }
 
 }
