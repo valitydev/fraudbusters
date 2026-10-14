@@ -11,7 +11,7 @@ import java.util.Map;
 @Slf4j
 public class FraudResultDeserializer implements Deserializer<FraudResult> {
 
-    private final JsonMapper om = JsonMapper.builder().configureForJackson2().build();
+    private final JsonMapper om = JsonMapper.builder().build();
 
     @Override
     public void configure(Map<String, ?> configs, boolean isKey) {

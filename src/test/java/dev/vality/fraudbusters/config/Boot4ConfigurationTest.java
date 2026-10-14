@@ -26,8 +26,7 @@ class Boot4ConfigurationTest {
                         KafkaTemplateConfigurationService.class, ListenersConfigurationService.class,
                         ConsumerGroupIdService.class)
                 .withPropertyValues("kafka.consumer.prefix=fraudbusters", "kafka.max.poll.records=100",
-                        "kafka.listen.result.concurrency=1", "kafka.aggr.payment.min.bytes=50000",
-                        "spring.jackson.use-jackson2-defaults=true")
+                        "kafka.listen.result.concurrency=1", "kafka.aggr.payment.min.bytes=50000")
                 .run(context -> {
                     assertThat(context).hasNotFailed().hasSingleBean(JsonMapper.class);
                     assertThat(context).hasBean("kafkaPaymentResultListenerContainerFactory")

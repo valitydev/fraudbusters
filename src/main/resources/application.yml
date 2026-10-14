@@ -27,8 +27,6 @@ management:
       exposure:
         include: health,info,prometheus
 spring:
-  jackson:
-    use-jackson2-defaults: true
   kafka:
     bootstrap-servers: "localhost:29092"
     properties:

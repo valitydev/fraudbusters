@@ -46,7 +46,7 @@ class FraudResultJsonCompatibilityTest {
         try (var serializer = new JacksonJsonSerializer<FraudResult>()) {
             byte[] data = serializer.serialize("result", expected);
             assertEquals(expected, deserializer.deserialize("result", data));
-            var mapper = JsonMapper.builder().configureForJackson2().build();
+            var mapper = JsonMapper.builder().build();
             assertEquals(mapper.readTree(LEGACY_JSON).get("resultModel"), mapper.readTree(data).get("resultModel"));
         }
     }
