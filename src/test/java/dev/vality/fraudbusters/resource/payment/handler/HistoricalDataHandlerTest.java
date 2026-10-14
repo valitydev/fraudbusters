@@ -21,7 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
@@ -44,19 +44,19 @@ class HistoricalDataHandlerTest {
     @Autowired
     private HistoricalDataHandler handler;
 
-    @MockBean
+    @MockitoBean
     private HistoricalDataService service;
 
-    @MockBean
+    @MockitoBean
     private RuleCheckingService ruleCheckingService;
 
-    @MockBean
+    @MockitoBean
     private PaymentToPaymentModelConverter paymentModelConverter;
 
-    @MockBean
+    @MockitoBean
     private HistoricalTransactionCheckFactory historicalTransactionCheckFactory;
 
-    @MockBean
+    @MockitoBean
     private CascadingTemplateEmulationToCascadingTemplateDtoConverter cascadingTemplateDtoConverter;
 
     private static final String TEMPLATE = "TEMPLATE";

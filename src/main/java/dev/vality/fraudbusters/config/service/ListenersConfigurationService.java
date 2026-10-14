@@ -8,16 +8,11 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
+import org.springframework.boot.kafka.autoconfigure.KafkaProperties;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.DefaultErrorHandler;
-import org.springframework.retry.RetryPolicy;
-import org.springframework.retry.backoff.BackOffPolicy;
-import org.springframework.retry.backoff.ExponentialBackOffPolicy;
-import org.springframework.retry.policy.SimpleRetryPolicy;
-import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -36,10 +31,6 @@ public class ListenersConfigurationService {
 
     @Value("${kafka.max.poll.records}")
     private String maxPollRecords;
-    @Value("${kafka.max.retry.attempts}")
-    private int maxRetryAttempts;
-    @Value("${spring.kafka.properties.backoff.interval}")
-    private int backoffInterval;
     @Value("${kafka.listen.result.concurrency}")
     private int listenResultConcurrency;
 
@@ -60,28 +51,6 @@ public class ListenersConfigurationService {
         factory.setConcurrency(1);
         factory.setCommonErrorHandler(new DefaultErrorHandler());
         return factory;
-    }
-
-    /*
-     * Retry template.
-     */
-    private RetryPolicy retryPolicy() {
-        SimpleRetryPolicy policy = new SimpleRetryPolicy();
-        policy.setMaxAttempts(maxRetryAttempts);
-        return policy;
-    }
-
-    private BackOffPolicy backOffPolicy() {
-        ExponentialBackOffPolicy policy = new ExponentialBackOffPolicy();
-        policy.setInitialInterval(backoffInterval);
-        return policy;
-    }
-
-    private RetryTemplate retryTemplate() {
-        RetryTemplate template = new RetryTemplate();
-        template.setRetryPolicy(retryPolicy());
-        template.setBackOffPolicy(backOffPolicy());
-        return template;
     }
 
     public <T> ConcurrentKafkaListenerContainerFactory<String, T> createFactory(

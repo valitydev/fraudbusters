@@ -2,7 +2,7 @@ package dev.vality.fraudbusters;
 
 import dev.vality.damsel.fraudbusters.PaymentServiceSrv;
 import dev.vality.damsel.fraudbusters.PaymentStatus;
-import dev.vality.fraudbusters.config.MockExternalServiceConfig;
+import dev.vality.fraudbusters.config.MockExternalServices;
 import dev.vality.fraudbusters.config.TestClickhouseConfig;
 import dev.vality.fraudbusters.extension.ClickHouseContainerExtension;
 import dev.vality.fraudbusters.repository.FraudPaymentRepositoryTest;
@@ -17,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -40,7 +39,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @ExtendWith({ClickHouseContainerExtension.class})
 @SpringBootTest(webEnvironment = RANDOM_PORT, properties = {"spring.main.allow-bean-definition-overriding=true"},
         classes = TestClickhouseConfig.class)
-@Import({MockExternalServiceConfig.class})
+@MockExternalServices
 class FraudPaymentTest {
 
     public static final String ID_PAYMENT = "inv";

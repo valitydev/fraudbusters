@@ -1,17 +1,17 @@
 package dev.vality.fraudbusters.serde;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.vality.fraudbusters.domain.FraudResult;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Deserializer;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Map;
 
 @Slf4j
 public class FraudResultDeserializer implements Deserializer<FraudResult> {
 
-    private final ObjectMapper om = new ObjectMapper();
+    private final JsonMapper om = JsonMapper.builder().build();
 
     @Override
     public void configure(Map<String, ?> configs, boolean isKey) {

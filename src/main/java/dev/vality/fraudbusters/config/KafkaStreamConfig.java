@@ -6,9 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.errors.LogAndContinueExceptionHandler;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
-import org.springframework.boot.ssl.SslBundles;
+import org.springframework.boot.kafka.autoconfigure.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,19 +19,18 @@ public class KafkaStreamConfig {
 
     public static final String SENDER = "sender";
     private final ConsumerGroupIdService consumerGroupIdService;
-    private final ObjectProvider<SslBundles> sslBundles;
 
     @Bean
     public Properties rewriteStreamProperties(KafkaProperties kafkaProperties) {
-        final Map<String, Object> props = kafkaProperties.buildStreamsProperties(sslBundles.getIfAvailable());
+        final Map<String, Object> props = kafkaProperties.buildStreamsProperties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, consumerGroupIdService.generateGroupId(SENDER));
         props.put(StreamsConfig.CLIENT_ID_CONFIG, consumerGroupIdService.generateGroupId(SENDER));
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, CommandSerde.class);
         props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 10 * 1000);
-        props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
+        props.put(StreamsConfig.STATESTORE_CACHE_MAX_BYTES_CONFIG, 0);
         props.put(
-                StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG,
+                StreamsConfig.DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG,
                 LogAndContinueExceptionHandler.class
         );
 

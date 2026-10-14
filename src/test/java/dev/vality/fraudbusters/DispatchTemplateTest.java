@@ -1,10 +1,8 @@
 package dev.vality.fraudbusters;
 
 import dev.vality.damsel.fraudbusters.Command;
-import dev.vality.fraudbusters.config.MockExternalServiceConfig;
-import dev.vality.fraudbusters.config.OtelConfig;
+import dev.vality.fraudbusters.config.MockExternalServices;
 import dev.vality.fraudbusters.config.properties.KafkaTopics;
-import dev.vality.fraudbusters.config.properties.OtelProperties;
 import dev.vality.fraudbusters.factory.TestObjectsFactory;
 import dev.vality.fraudbusters.pool.Pool;
 import dev.vality.testcontainers.annotations.KafkaSpringBootTest;
@@ -17,8 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -42,7 +39,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @KafkaSpringBootTest
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-@Import({MockExternalServiceConfig.class})
+@MockExternalServices
 class DispatchTemplateTest {
 
     public static final String TEMPLATE = "rule: 12 >= 1 -> accept;";
@@ -54,9 +51,9 @@ class DispatchTemplateTest {
     @Autowired
     private KafkaProducer<TBase<?, ?>> testThriftKafkaProducer;
 
-    @MockBean
+    @MockitoBean
     private Pool<ParserRuleContext> templatePoolImpl;
-    @MockBean
+    @MockitoBean
     @Qualifier("referencePoolImpl")
     private Pool<String> referencePoolImpl;
 

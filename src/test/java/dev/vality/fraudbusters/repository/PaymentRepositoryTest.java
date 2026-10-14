@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -61,7 +61,7 @@ public class PaymentRepositoryTest {
     DatabasePaymentFieldResolver databasePaymentFieldResolver;
     @Autowired
     JdbcTemplate jdbcTemplate;
-    @MockBean
+    @MockitoBean
     ColumbusServiceSrv.Iface iface;
     @Autowired
     private PaymentRepository paymentRepository;

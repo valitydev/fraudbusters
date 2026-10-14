@@ -1,7 +1,5 @@
 package dev.vality.fraudbusters.listener.events.clickhouse;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.vality.damsel.fraudbusters.Payment;
 import dev.vality.damsel.fraudbusters.PaymentStatus;
 import dev.vality.fraudbusters.config.service.ListenersConfigurationService;
@@ -19,6 +17,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +35,7 @@ public class PaymentEventListener {
     private final PaymentToCheckedPaymentConverter paymentToCheckedPaymentConverter;
 
     private final LocalResultStorage localResultStorage;
-    private final ObjectMapper objectMapper;
+    private final JsonMapper objectMapper;
 
     @Value("${result.full.check.enabled:true}")
     private boolean isEnabledFullCheck;
@@ -82,7 +82,7 @@ public class PaymentEventListener {
                 checkedPayment.setCheckedRule(checkedResultModel.getResultModel().getRuleChecked());
                 try {
                     checkedPayment.setCheckedResultsJson(objectMapper.writeValueAsString(listResults));
-                } catch (JsonProcessingException e) {
+                } catch (JacksonException e) {
                     log.warn("PaymentEventListener problem with serialize json! listResults: {}", listResults);
                 }
             }

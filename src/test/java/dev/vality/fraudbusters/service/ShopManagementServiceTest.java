@@ -15,7 +15,7 @@ import dev.vality.fraudo.payment.visitor.impl.FirstFindVisitorImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.annotation.DirtiesContext;
@@ -38,11 +38,11 @@ import static org.mockito.Mockito.*;
         DefaultTemplateProperties.class})
 public class ShopManagementServiceTest {
 
-    @MockBean
+    @MockitoBean
     KafkaTemplate<String, ReferenceInfo> kafkaTemplate;
-    @MockBean
+    @MockitoBean
     private FraudResultRepository fraudResultRepository;
-    @MockBean
+    @MockitoBean
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private ShopManagementService shopManagementService;
@@ -52,9 +52,9 @@ public class ShopManagementServiceTest {
     private Pool<String> referencePoolImpl;
     @Autowired
     private Pool<String> groupReferencePoolImpl;
-    @MockBean
+    @MockitoBean
     private FirstFindVisitorImpl<PaymentModel, PaymentCheckedField> firstFindVisitor;
-    @MockBean
+    @MockitoBean
     private CheckedResultFactory checkedResultFactory;
 
     @Test

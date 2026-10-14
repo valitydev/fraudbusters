@@ -61,8 +61,8 @@ public class InspectorHandler implements InspectorServiceSrv.Iface {
 
     private static boolean isDeclineResult(CheckedResultModel result) {
         return result != null
-               && result.getResultModel() != null
-               && (ResultStatus.DECLINE.equals(result.getResultModel().getResultStatus())
+                && result.getResultModel() != null
+                && (ResultStatus.DECLINE.equals(result.getResultModel().getResultStatus())
                    || ResultStatus.DECLINE_AND_NOTIFY.equals(result.getResultModel().getResultStatus()));
     }
 
